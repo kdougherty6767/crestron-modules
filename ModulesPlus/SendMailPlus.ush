@@ -1,0 +1,159 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.04.01
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=||3This module utilizes the CrestronMailFunctions features with||1
+  Cmn2=Crestron's SIMPL+ framework. \\   GMX Webmail SMTP servers have||1
+  Cmn3=been verified.
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,
+  Exclusions_CDS=5
+  Inclusions_CDS=6
+  Name=SendMailPlus
+  SmplCName=SendMailPlus.usp
+  Code=1
+  SysRev5=4.006
+  SMWRev=3.00.00
+  InputCue1=send
+  InputSigType1=Digital
+  InputList2Cue1=sendTo
+  InputList2SigType1=Serial
+  InputList2Cue2=subject
+  InputList2SigType2=Serial
+  InputList2Cue3=body
+  InputList2SigType3=Serial
+  InputList2Cue4=cc
+  InputList2SigType4=Serial
+  OutputList2Cue1=Error_msg
+  OutputList2SigType1=Analog
+  ParamCue1=[Reference Name]
+  ParamCue2=[~UNUSED~]
+  ParamSigType2=Constant
+  ParamCue3=[~UNUSED~]
+  ParamSigType3=Constant
+  ParamCue4=[~UNUSED~]
+  ParamSigType4=Constant
+  ParamCue5=[~UNUSED~]
+  ParamSigType5=Constant
+  ParamCue6=[~UNUSED~]
+  ParamSigType6=Constant
+  ParamCue7=server
+  ParamSigType7=String
+  ParamCue8=user
+  ParamSigType8=String
+  ParamCue9=password
+  ParamSigType9=String
+  ParamCue10=sendfrom
+  ParamSigType10=String
+  ParamCue11=port
+  ParamSigType11=Constant
+  MinVariableInputs=1
+  MaxVariableInputs=1
+  MinVariableInputsList2=4
+  MaxVariableInputsList2=4
+  MinVariableOutputs=0
+  MaxVariableOutputs=0
+  MinVariableOutputsList2=1
+  MaxVariableOutputsList2=1
+  MinVariableParams=10
+  MaxVariableParams=10
+  Expand=expand_separately
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=32
+  Hint=
+  PdfHelp=
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  Pp7=7
+  Pp8=8
+  Pp9=9
+  Pp10=10
+  Pp11=11
+  MPp=11
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_SendMailPlus
+  SymJam=NonExclusive
+  FileName=SendMailPlus.ush
+  SIMPLPlusModuleEncoding=0
+  clz1=RADDisplay
+  clz2=RADSystemManager
+  clz3=QsysControlV4_2
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=7
+  Tp=1
+  HD=True
+  DV=smtp.gmx.com
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=8
+  Tp=1
+  HD=True
+  DV=username
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=9
+  Tp=1
+  HD=True
+  DV=password
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=10
+  Tp=1
+  HD=True
+  DV=user@domain.com
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=11
+  Tp=1
+  HD=True
+  DV=25d
+  Sgn=0
+  Lng=False
+  NF=1
+  NoS=True
+  DNF=1
+  VVS=0
+[END]

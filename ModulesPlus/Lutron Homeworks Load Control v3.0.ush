@@ -1,0 +1,295 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.01.01
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=See PDF File "Lutron Homeworks Modules for Crestron User Guide.pdf"
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,
+  Exclusions_CDS=5
+  Inclusions_CDS=6
+  Name=Lutron Homeworks Load Control v3.0
+  SmplCName=Lutron Homeworks Load Control v3.0.usp
+  Code=1
+  SysRev5=4.000
+  SMWRev=2.02.05
+  InputCue1=[~UNUSED~]
+  InputSigType1=Digital
+  InputCue2=[~UNUSED~]
+  InputSigType2=Digital
+  InputCue3=[~UNUSED~]
+  InputSigType3=Digital
+  InputCue4=[~UNUSED~]
+  InputSigType4=Digital
+  InputCue5=[~UNUSED~]
+  InputSigType5=Digital
+  InputCue6=[~UNUSED~]
+  InputSigType6=Digital
+  InputCue7=[~UNUSED~]
+  InputSigType7=Digital
+  InputCue8=[~UNUSED~]
+  InputSigType8=Digital
+  InputCue9=[~UNUSED~]
+  InputSigType9=Digital
+  InputCue10=[~UNUSED~]
+  InputSigType10=Digital
+  InputCue11=RaiseDim
+  InputSigType11=Digital
+  InputCue12=LowerDim
+  InputSigType12=Digital
+  InputCue13=Flash
+  InputSigType13=Digital
+  InputCue14=FullOn
+  InputSigType14=Digital
+  InputCue15=FullOff
+  InputSigType15=Digital
+  InputCue16=Preset[#]
+  InputSigType16=Digital
+  OutputCue1=[~UNUSED~]
+  OutputSigType1=Digital
+  OutputCue2=[~UNUSED~]
+  OutputSigType2=Digital
+  OutputCue3=[~UNUSED~]
+  OutputSigType3=Digital
+  OutputCue4=[~UNUSED~]
+  OutputSigType4=Digital
+  OutputCue5=[~UNUSED~]
+  OutputSigType5=Digital
+  OutputCue6=[~UNUSED~]
+  OutputSigType6=Digital
+  OutputCue7=[~UNUSED~]
+  OutputSigType7=Digital
+  OutputCue8=[~UNUSED~]
+  OutputSigType8=Digital
+  OutputCue9=[~UNUSED~]
+  OutputSigType9=Digital
+  OutputCue10=[~UNUSED~]
+  OutputSigType10=Digital
+  OutputCue11=LoadOnFB
+  OutputSigType11=Digital
+  OutputCue12=[~UNUSED~]
+  OutputSigType12=Digital
+  OutputCue13=FlashFB
+  OutputSigType13=Digital
+  OutputCue14=FullOnFB
+  OutputSigType14=Digital
+  OutputCue15=FullOffFB
+  OutputSigType15=Digital
+  OutputCue16=PresetFB[#]
+  OutputSigType16=Digital
+  InputList2Cue1=FadeDim
+  InputList2SigType1=Analog
+  InputList2Cue2=[~UNUSED~]
+  InputList2SigType2=Serial
+  InputList2Cue3=ToLoadControl$
+  InputList2SigType3=Serial
+  OutputList2Cue1=LevelFB
+  OutputList2SigType1=Analog
+  OutputList2Cue2=[~UNUSED~]
+  OutputList2SigType2=Serial
+  OutputList2Cue3=FromModules$
+  OutputList2SigType3=Serial
+  ParamCue1=[Reference Name]
+  ParamCue2=DimmerAddress
+  ParamSigType2=String
+  ParamCue3=FadeTime
+  ParamSigType3=String
+  ParamCue4=DelayTime
+  ParamSigType4=String
+  ParamCue5=RL_FadeTime
+  ParamSigType5=String
+  ParamCue6=FlashTime
+  ParamSigType6=String
+  ParamCue7=FlashLevel
+  ParamSigType7=Percent
+  ParamCue8=PresetLevel[1]
+  ParamSigType8=Percent
+  ParamCue9=PresetLevel[2]
+  ParamSigType9=Percent
+  ParamCue10=PresetLevel[3]
+  ParamSigType10=Percent
+  ParamCue11=PresetLevel[4]
+  ParamSigType11=Percent
+  MinVariableInputs=16
+  MaxVariableInputs=19
+  MinVariableInputsList2=3
+  MaxVariableInputsList2=3
+  MinVariableOutputs=16
+  MaxVariableOutputs=19
+  MinVariableOutputsList2=3
+  MaxVariableOutputsList2=3
+  MinVariableParams=7
+  MaxVariableParams=10
+  Expand=expand_All_with_Any
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=6
+  Hint=Lutron Homeworks Load Control
+  PdfHelp=Lutron Homeworks Modules for Crestron User Guide.pdf
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  Pp2=2
+  Pp3=3
+  Pp4=4
+  Pp5=5
+  Pp6=6
+  Pp7=7
+  Pp8=8
+  Pp9=9
+  Pp10=10
+  Pp11=11
+  MPp=11
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_Lutron_Homeworks_Load_Control_v3_0
+  SymJam=NonExclusive
+  FileName=Lutron Homeworks Load Control v3.0.ush
+  SIMPLPlusModuleEncoding=0
+  Usl1=LutronHWI_Lib v3.0.usl
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=2
+  Tp=1
+  SD=Address of Dimmer (Do not include brackets)
+  HD=True
+  DV=01:06:01
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=3
+  Tp=1
+  SD=Fade time in HH:MM:SS format
+  HD=True
+  DV=00:00:02
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=4
+  Tp=1
+  SD=Delay time in HH:MM:SS format
+  HD=True
+  DV=00:00:00
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=5
+  Tp=1
+  SD=Fade time in HH:MM:SS format for raise/lower operations
+  HD=True
+  DV=00:00:04
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=6
+  Tp=1
+  SD=Flash On/Off time in HH:MM:SS format
+  HD=True
+  DV=00:00:00
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=7
+  Tp=1
+  SD=Flash level as a percentage
+  HD=True
+  DV=90%
+  Sgn=0
+  Lng=False
+  NF=4
+  NoS=True
+  DNF=4
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=8
+  Tp=1
+  SD=Preset level as a percentage
+  HD=True
+  DV=75%
+  Sgn=0
+  Lng=False
+  NF=4
+  NoS=True
+  DNF=4
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=9
+  Tp=1
+  SD=Preset level as a percentage
+  HD=True
+  DV=75%
+  Sgn=0
+  Lng=False
+  NF=4
+  NoS=True
+  DNF=4
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=10
+  Tp=1
+  SD=Preset level as a percentage
+  HD=True
+  DV=75%
+  Sgn=0
+  Lng=False
+  NF=4
+  NoS=True
+  DNF=4
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=11
+  Tp=1
+  SD=Preset level as a percentage
+  HD=True
+  DV=75%
+  Sgn=0
+  Lng=False
+  NF=4
+  NoS=True
+  DNF=4
+  VVS=0
+[END]

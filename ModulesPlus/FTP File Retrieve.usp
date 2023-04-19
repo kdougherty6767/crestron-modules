@@ -1,0 +1,304 @@
+#CATEGORY "46" "Chip Moody" // Custom
+#DEFAULT_VOLATILE
+
+#DEFINE_CONSTANT crlf "\x0D\x0A"
+     
+#HELP_BEGIN
+You can use this module to get files smaller than 65k transferred from an FTP
+server down to your processor.  Useful for text/XML files that you might want
+your SIMPL program to have access to, or perhaps SMALL icon graphics.
+
+If you need files larger than 65k transferred...  Well, have fun with that.
+I'm not feeling brave/motivated enough to try.  :)
+
+I have tested this module on all of two servers - both responded differently
+to FTP commands sent to them, so I have no doubt that other servers can/will
+react in ways I have not anticipated in this code.  If you're having 
+difficulty getting this working, please drop me a line at chipmoody@aol.com
+either with a copy of your program or at LEAST a debugger output that
+includes all the "__Status" and "__Msg$" outputs from the module.
+
+Here's some info on the signals going in/out of this module:
+
+Inputs:
+
+"Go" - Trigger this when you want to get a file off a remote FTP server.
+       Make sure you don't hit it BEFORE you have loaded the serial inputs!!!
+
+"Reset" - You may never need this.  Pulse it to force both control and data
+          connections closed.        
+
+"FTPAddress$" - Send the server address here.  www.xxx.yyy.zzz format works,
+                and as long as your processor is set for DNS correctly,
+                "ftp.someserver.com" works as well.
+                
+"Username$"
+"Password$" - If I need to explain these, you probably shouldn't be attempting
+              to use this module.
+              
+"FTPDirectory$" - If the file you're trying to get lives in the root directory
+                  of the FTP server, send "" to this input to clear it.
+                  Otherwise, put the directory path here.  DO NOT put slashes
+                  at the start or end of the string you send.  "/dir" is BAD,
+                  "dir/" is BAD, "dir" or "dir/subdir" is GOOD!              
+
+"LocalDirectory$" - The directory on your 2-series processor to stick the file
+                    you're trying to get off the FTP server.  Currently valid
+                    locations are NVRAM if you've turned on the NVRAMDISK, and
+                    CF0 if you have a compact flash card in your processor. Like
+                    FTPDirectory, no slashes in front or back of this string!!!
+                    "NVRAM" - good.  "/NVRAM" and "NVRAM/" - bad!  You can use
+                    subdirectories (on CF0 only!!!) like HTML no problem, so
+                    "CF0/HTML" is good.
+                  
+"Filename$" - The name of the file - with NO path info - that you want to grab off
+              an FTP server.  The same filename will be used to store the local copy
+              of the file on your processor. 
+            
+Outputs:
+
+"FTPConnectionError" - This output will pulse if the FTP connection/login/file request
+                       process takes longer than 30 seconds.
+                       
+"LocalFileError" - This output will pulse if there is a problem writing a file to
+                   the NVRAM directory or CF card in your processor.
+                   
+"Success" - If the file transfers from the FTP server correctly and is saved on your
+            processor without issue, this output will pulse to let you know that
+            all is right with the world.
+            
+"CtlStatus"
+"DataStatus"
+"FTPServerMsg$"
+"StatusMsg$" - You may do just fine leaving these signals commented out.  You might
+               also find that they're fun to watch in debugger.  If you want to keep
+               logs of FTP activity, you could also tie them to ...hmmmm... something
+               like the "Color Web Log" module.  If for any reason you see either of the
+               "Error" digital outputs pulse, you definately want to define these and
+               watch them in debugger when you make FTP attempts.
+               
+               If you're not already aware, an FTP session uses two connections.  The
+               control connection transfers commands to the FTP server and returns
+               responses to those commands, while the actual transfer of file contents
+               takes place over the data connection.  For this reason, you will find
+               both "CtlStatus" and "DataStatus" analog outputs - they reflect the current
+               state of the connection.  If you watch these, they will change to "2"
+               while active, and typically go to "4" when idle.  There is a list of
+               state values and what they mean further down in the code.
+                   
+               "FTPServerMsg$" will report the responses sent from the FTP server on the
+               control connection, while "StatusMsg$" provides (potentially) helpful info
+               on what the module is doing with the FTP server and files it stores on
+               your processor.                                                     
+#HELP_END
+     
+DIGITAL_INPUT Go, Reset;
+STRING_INPUT  FTPAddress$[255], Username$[40], Password$[40], FTPDirectory$[80], LocalDirectory$[80], Filename$[80];
+   
+DIGITAL_OUTPUT FTPConnectionError, LocalFileError, Success;   
+ANALOG_OUTPUT  CtlStatus, DataStatus;
+STRING_OUTPUT  FTPServerMsg$, StatusMsg$;
+     
+TCP_CLIENT CtlCon[1024], DataCon[65534];
+         
+SIGNED_INTEGER result, FileHandle, NumWritten;
+INTEGER CtlFTPStat, DataPort;
+STRING FTPCmd$[100], CtlParse$[255], a1$[40], a2$[5], a3$[5], a4$[5], ph$[5], DataAddr$[16], Trash$[255], DirAndName$[161];
+ 
+ 
+FUNCTION WriteToDisk ()
+{
+  STARTFILEOPERATIONS ();
+  DirAndName$ = LocalDirectory$ + "/" + Filename$; 
+  FileHandle = FILEOPEN (DirAndName$, _O_WRONLY | _O_TRUNC | _O_CREAT);
+  IF (FileHandle >= 0) 
+  {
+    NumWritten = FileWrite(FileHandle, DataCon.SocketRxBuf, LEN(DataCon.SocketRxBuf));
+    IF (NumWritten < 0)
+    {
+      StatusMsg$ = "Write error = " + ITOA(NumWritten);
+      PULSE (10,LocalFileError);
+    }
+    ELSE
+    {
+      StatusMsg$ = "File written - all done";
+      PULSE (10,Success);
+    }
+    FILECLOSE(FileHandle);
+  }
+  ELSE
+  {
+    StatusMsg$ = "File open error = " + ITOA(FileHandle);
+    PULSE (10,LocalFileError);
+  }
+  ENDFILEOPERATIONS ();  
+} 
+ 
+PUSH Reset
+{
+  result = SOCKETDISCONNECTCLIENT (CtlCon);
+  StatusMsg$ = "CtlCon SocketDisconnect result =" + ITOA(result);
+  result = SOCKETDISCONNECTCLIENT (DataCon);
+  StatusMsg$ = "DataCon SocketDisconnect result =" + ITOA(result);
+}
+     
+PUSH Go
+{
+  IF ((CtlStatus = 2) || (DataStatus = 2))
+  {
+    StatusMsg$ = "Control or data connection currently open - cannot start";      
+  }
+  ELSE
+  {
+	  WAIT (3000,ConnectWait)
+	  {
+      StatusMsg$ = "FTP sequence timed out";
+	    result = SOCKETDISCONNECTCLIENT (CtlCon);
+	    StatusMsg$ = "CtlCon SocketDisconnect result = " + ITOA(result);
+	    PULSE (10,FTPConnectionError);
+	  }
+	  StatusMsg$ = "Opening control connection";
+	  CtlCon.SocketRxBuf = "";
+	  result = SOCKETCONNECTCLIENT (CtlCon,FTPAddress$,21,0);
+	  SWITCH (1)
+	  {
+	    CASE (result = 0)  : StatusMsg$ = "Ctl SocketConnect success";
+	    CASE (result = -2) : StatusMsg$ = "Ctl SocketConnect create connnection task fail";
+	    DEFAULT            : StatusMsg$ = "Ctl SocketConnect error = " + ITOA(result);
+	  }
+  }
+}
+
+SOCKETSTATUS CtlCon
+{
+	/*
+	0 Not Connected
+	1 Waiting for Connection
+	2 Connected
+	3 Connection Failed
+	4 Connection Broken Remotely
+	5 Connection Broken Locally
+	6 Performing DNS Lookup
+	7 DNS Lookup Failed
+	8 DNS Name Resolved
+	*/
+  CtlStatus = SOCKETGETSTATUS ();
+}
+
+FUNCTION SendUsername ()
+{
+  WAIT (50,UNWait)
+  {
+    StatusMsg$ = "Sending username '" + Username$ + "'";
+    FTPCmd$ = "USER " + Username$ + "\n";
+    SOCKETSEND (CtlCon,FTPCmd$);  
+  }
+}
+
+SOCKETRECEIVE CtlCon
+{
+  WHILE (FIND(crlf,CtlCon.SocketRxBuf) > 0)
+  {
+    CtlParse$ = REMOVE(crlf,CtlCon.SocketRXBuf);
+    FTPServerMsg$ = CtlParse$;
+    CtlFTPStat = ATOI(CtlParse$);
+    SWITCH (CtlFTPStat)
+    {
+      CASE (220) :  // Got welcome message from server - send username
+      {
+        CANCELWAIT (UNWait);  // Some servers send multiple 220 messages after initial connection - we wait .5 sec after last one to send
+        SendUsername ();
+      }
+      CASE (331) :  // Got username - send password
+      {
+        StatusMsg$ = "Sending password";
+        FTPCmd$ = "PASS " + Password$ + "\n";
+        SOCKETSEND (CtlCon,FTPCmd$);
+      }
+      CASE (230) :  // Got login confirm - set directory or set type
+      {
+        IF (LEN(FTPDirectory$) > 0)
+        {
+          StatusMsg$ = "Setting directory '" + FTPDirectory$ + "'";
+          FTPCmd$ = "CWD " + FTPDirectory$ + "\n";
+          SOCKETSEND (CtlCon,FTPCmd$);
+        }
+        ELSE
+        {
+          StatusMsg$ = "Setting type";
+          SOCKETSEND (CtlCon,"TYPE I\n");
+        }
+      }
+      CASE (250) :  // Got directory set confirm - set type
+      {
+        StatusMsg$ = "Setting type";
+        SOCKETSEND (CtlCon,"TYPE I\n");
+      }
+      CASE (200) :  // Got type confirm - set passive mode
+      {
+        StatusMsg$ = "Setting passive mode";
+        SOCKETSEND (CtlCon,"PASV\n");
+      }
+      CASE (227) :  // Got passive mode response - parse, request file & open data connection
+      {
+        Trash$ = REMOVE("227",CtlParse$);
+        a1$ = REMOVE(",",CtlParse$);
+        a2$ = REMOVE(",",CtlParse$);
+        a3$ = REMOVE(",",CtlParse$);
+        a4$ = REMOVE(",",CtlParse$);
+        ph$ = REMOVE(",",CtlParse$);
+        DataPort = ATOI(CtlParse$) + (256 * ATOI(ph$));
+        DataAddr$ = ITOA(ATOI(a1$)) + "." + ITOA(ATOI(a2$)) + "." + ITOA(ATOI(a3$)) + "." + ITOA(ATOI(a4$));
+        StatusMsg$ = "Data connection address = " + DataAddr$ + ", port = " + ITOA(DataPort);
+        StatusMsg$ = "Requesting file & opening data connection";
+        FTPCmd$ = "RETR " + Filename$ + "\n";
+        SOCKETSEND (CtlCon,FTPCmd$);
+			  DataCon.SocketRxBuf = "";
+			  result = SOCKETCONNECTCLIENT (DataCon,DataAddr$,DataPort,0);
+			  SWITCH (1)
+			  {
+			    CASE (result = 0)  : StatusMsg$ = "Data SocketConnect success";
+			    CASE (result = -2) : StatusMsg$ = "Data SocketConnect create connnection task fail";
+			    DEFAULT            : StatusMsg$ = "Data SocketConnect error = " + ITOA(result);
+			  }
+      }
+      CASE (125) :  // Got transfer starting confirm
+      {
+        StatusMsg$ = "File transferring";
+        CancelWait (ConnectWait);
+      }
+      CASE (150) :  // Got transfer starting confirm
+      {
+        StatusMsg$ = "File transferring";
+        CancelWait (ConnectWait);
+      }
+      CASE (226) :  // Got transfer complete message - logout, close connections if needed + write file
+      {
+        StatusMsg$ = "Transfer complete - disconnecting";
+        SOCKETSEND (CtlCon,"QUIT\n");
+        WriteToDisk ();
+        WAIT (200)
+        {
+          IF (CtlStatus = 2)
+          {
+            result = SOCKETDISCONNECTCLIENT (CtlCon);
+            StatusMsg$ = "CtlCon SocketDisconnect result =" + ITOA(result);
+          }
+          IF (DataStatus = 2)
+					{
+					  result = SOCKETDISCONNECTCLIENT (DataCon);
+					  StatusMsg$ = "DataCon SocketDisconnect result =" + ITOA(result);
+          }
+        }
+      }
+    }
+  }
+}
+
+SOCKETSTATUS DataCon
+{
+  DataStatus = SOCKETGETSTATUS ();
+}
+
+                                                              
+                                                        

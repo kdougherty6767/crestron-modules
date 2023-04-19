@@ -1,0 +1,996 @@
+[
+Version=1
+]
+[
+ObjTp=FSgntr
+Sgntr=UserMacro
+RelVrs=2.12.39
+IntStrVrs=2
+MinSMWVrs=2.07.04
+MinTIOVrs=0
+SavedBy=SMW2.12.39
+]
+[
+ObjTp=Hd
+S0Nd=1
+S1Nd=2
+SLNd=3
+PrNm=Stewart Filmscreen BRIC v1.0.umc
+DbVr=21.04.015.00
+DvcDbVr=27.01.004.00
+PgmNm=PAC
+DlrNm=Crestron Electronics, Inc.
+CltNm=Stewart Filmscreen BRIC v1.0
+Incl=362,378,380,405,407,408,409,478,522,537,554,586,590,611,624,767,830,883,1032,1062,1079,1134,1157,1199,1220,1222,1299,1348,1439,1472,1473,1499,1746,1803,1975,2229,
+McNm=Stewart Filmscreen BRIC v1.0
+SmVr=663
+DvVr=663
+TpN1=1
+TpN2=2
+TpN3=3
+TpN4=4
+TpN5=5
+PdfHelp=Stewart Filmscreen BRIC v1.0 Help.pdf
+DT=Screen
+DST=Screen
+Mfg=Stewart Filmscreen
+NumMdl=1
+Mdl1=BRIC
+Tmpl=Stewart Filmscreen BRIC v1.0
+APg=1
+StdCmd=0
+FltTmp=1
+FpCS=0
+]
+[
+ObjTp=Bk
+Nm1=\
+Sx1=0
+Sy1=0
+Mx1=0
+]
+[
+ObjTp=Symbol
+Name=Stewart Filmscreen BRIC v1.0
+Code=1
+SmplCName=Stewart Filmscreen BRIC v1.0.umc
+Smpl-C=3
+CompilerTimePrecision=Single_Or_Double_Precision
+Hint=Stewart Filmscreen BRIC v1.0
+SMWRev=2.07.04
+TIORev=0
+HelpID=1055
+PdfHelp=Stewart Filmscreen BRIC v1.0 Help.pdf
+DT=Screen
+DST=Screen
+Mfg=Stewart Filmscreen
+NumMdl=1
+Mdl1=BRIC
+Tmpl=Stewart Filmscreen BRIC v1.0
+APg=1
+StdCmd=0
+FltTmp=1
+FpCS=0
+NumFixedInputs=36
+NumFixedOutputs=1
+NumFixedParams=1
+MinVariableInputs=0
+MinVariableInputsList2=0
+MinVariableInputsList3=0
+MinVariableOutputs=0
+MinVariableOutputsList2=0
+MinVariableOutputsList3=0
+MinVariableParams=0
+SymbolTree=44
+InputSigType1=Digital
+InputSigType2=Digital
+InputSigType3=Digital
+InputSigType4=Digital|Analog|Serial|String
+InputSigType5=Digital
+InputSigType6=Digital
+InputSigType7=Digital
+InputSigType8=Digital|Analog|Serial|String
+InputSigType9=Digital
+InputSigType10=Digital
+InputSigType11=Digital
+InputSigType12=Digital|Analog|Serial|String
+InputSigType13=Digital
+InputSigType14=Digital
+InputSigType15=Digital
+InputSigType16=Digital|Analog|Serial|String
+InputSigType17=Digital
+InputSigType18=Digital
+InputSigType19=Digital
+InputSigType20=Digital
+InputSigType21=Digital
+InputSigType22=Digital
+InputSigType23=Digital
+InputSigType24=Digital
+InputSigType25=Digital
+InputSigType26=Digital
+InputSigType27=Digital|Analog|Serial|String
+InputSigType28=Digital
+OutputSigType1=Serial
+ParamSigType1=String
+InputCue1=Motor_A_Up
+InputCue2=Motor_A_Down
+InputCue3=Motor_A_Stop
+InputCue4=[~UNUSED~]
+InputCue5=Motor_B_Up
+InputCue6=Motor_B_Down
+InputCue7=Motor_B_Stop
+InputCue8=[~UNUSED~]
+InputCue9=Motor_C_Up
+InputCue10=Motor_C_Down
+InputCue11=Motor_C_Stop
+InputCue12=[~UNUSED~]
+InputCue13=Motor_D_Up
+InputCue14=Motor_D_Down
+InputCue15=Motor_D_Stop
+InputCue16=[~UNUSED~]
+InputCue17=Home
+InputCue18=Recall_Preset_1_(16x9)
+InputCue19=Recall_Preset_2_(4x3)
+InputCue20=Recall_Preset_3_(1.85)
+InputCue21=Recall_Preset_4_(2.35)
+InputCue22=Recall_Preset_5_(User_1)
+InputCue23=Recall_Preset_6_(User_2)
+InputCue24=Recall_Preset_7_(User_3)
+InputCue25=Recall_Preset_8_(User_4)
+InputCue26=Recall_Preset_9_(User_5)
+InputCue27=[~UNUSED~]
+InputCue28=Store_Preset_1
+InputCue29=Store_Preset_2
+InputCue30=Store_Preset_3
+InputCue31=Store_Preset_4
+InputCue32=Store_Preset_5
+InputCue33=Store_Preset_6
+InputCue34=Store_Preset_7
+InputCue35=Store_Preset_8
+InputCue36=Store_Preset_9
+OutputCue1=To_Device
+ParamCue1=Device ID
+MPi=36
+Pi1=1
+Pi2=2
+Pi3=3
+Pi5=4
+Pi6=5
+Pi7=6
+Pi9=7
+Pi10=8
+Pi11=9
+Pi13=10
+Pi14=11
+Pi15=12
+Pi17=13
+Pi18=14
+Pi19=15
+Pi20=16
+Pi21=17
+Pi22=18
+Pi23=19
+Pi24=20
+Pi25=21
+Pi26=22
+Pi28=23
+Pi29=24
+Pi30=25
+Pi31=26
+Pi32=27
+Pi33=28
+Pi34=29
+Pi35=30
+Pi36=31
+MPo=1
+Po1=32
+MPp=1
+Pp1=33
+CnxLogic1=S SER/Model:134
+CnxLogic2=C O 0001 I Q:tx$
+CnxLogic3=S SER/Baud:19200
+CnxLogic4=S SER/Parity:N
+CnxLogic5=S SER/Databits:8
+CnxLogic6=S SER/Stopbits:1
+CnxLogic7=S SER/SWHandshaking:(None)
+CnxLogic8=S SER/HWHandshaking:(None)
+CnxLogic9=S SER/Protocol:(RS232)
+FileName=Stewart Filmscreen BRIC v1.0.umc
+]
+[
+ObjTp=Sm
+H=1
+SmC=157
+Nm=Central Control Modules
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=2
+SmC=157
+Nm=Network Modules
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=3
+SmC=157
+Nm=Ethernet
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=4
+SmC=156
+Nm=Logic
+ObjVer=1
+CF=2
+mC=3
+C1=7
+C2=8
+C3=9
+]
+[
+ObjTp=Sm
+H=5
+SmC=157
+Nm=DefineArguments
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mC=1
+C1=6
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=6
+SmC=55
+ObjVer=1
+PrH=5
+CF=2
+n1I=36
+n1O=1
+mI=36
+I1=4
+I2=5
+I3=6
+I4=39
+I5=8
+I6=9
+I7=10
+I8=39
+I9=11
+I10=12
+I11=13
+I12=39
+I13=14
+I14=15
+I15=16
+I16=39
+I17=17
+I18=19
+I19=18
+I20=20
+I21=22
+I22=21
+I23=23
+I24=24
+I25=25
+I26=26
+I27=39
+I28=27
+I29=28
+I30=29
+I31=30
+I32=31
+I33=32
+I34=33
+I35=34
+I36=35
+mO=1
+tO=1
+O1=36
+mP=1
+P1=Device ID
+MPi=36
+Pi1=1
+Pi2=2
+Pi3=3
+Pi5=4
+Pi6=5
+Pi7=6
+Pi9=7
+Pi10=8
+Pi11=9
+Pi13=10
+Pi14=11
+Pi15=12
+Pi17=13
+Pi18=14
+Pi19=15
+Pi20=16
+Pi21=17
+Pi22=18
+Pi23=19
+Pi24=20
+Pi25=21
+Pi26=22
+Pi28=23
+Pi29=24
+Pi30=25
+Pi31=26
+Pi32=27
+Pi33=28
+Pi34=29
+Pi35=30
+Pi36=31
+MPo=1
+Po1=32
+MPp=1
+Pp1=33
+]
+[
+ObjTp=Sm
+H=7
+SmC=101
+ObjVer=1
+PrH=4
+CF=2
+n1I=38
+n1O=2
+mI=38
+I3=4
+I4=5
+I5=6
+I7=8
+I8=9
+I9=10
+I11=11
+I12=12
+I13=13
+I15=14
+I16=15
+I17=16
+I19=17
+I20=19
+I21=18
+I22=20
+I23=22
+I24=21
+I25=23
+I26=24
+I27=25
+I28=26
+I30=27
+I31=28
+I32=29
+I33=30
+I34=31
+I35=32
+I36=33
+I37=34
+I38=35
+mO=2
+tO=2
+O1=37
+mP=38
+P1=\x0D
+P2=\x0D\[#Device ID\]UA
+P3=\x0D\[#Device ID\]DA
+P4=\x0D\[#Device ID\]SA
+P5=
+P6=\x0D\[#Device ID\]UB
+P7=\x0D\[#Device ID\]UA
+P8=\x0D\[#Device ID\]SB
+P9=
+P10=\x0D\[#Device ID\]UC
+P11=\x0D\[#Device ID\]DC
+P12=\x0D\[#Device ID\]SC
+P13=
+P14=\x0D\[#Device ID\]UD
+P15=\x0D\[#Device ID\]DD
+P16=\x0D\[#Device ID\]SD
+P17=
+P18=\x0D\[#Device ID\]M0
+P19=\x0D\[#Device ID\]M1
+P20=\x0D\[#Device ID\]M2
+P21=\x0D\[#Device ID\]M3
+P22=\x0D\[#Device ID\]M4
+P23=\x0D\[#Device ID\]M5
+P24=\x0D\[#Device ID\]M6
+P25=\x0D\[#Device ID\]M7
+P26=\x0D\[#Device ID\]M8
+P27=\x0D\[#Device ID\]M9
+P28=
+P29=\x0D\[#Device ID\]P1
+P30=\x0D\[#Device ID\]P2
+P31=\x0D\[#Device ID\]P3
+P32=\x0D\[#Device ID\]P4
+P33=\x0D\[#Device ID\]P5
+P34=\x0D\[#Device ID\]P6
+P35=\x0D\[#Device ID\]P7
+P36=\x0D\[#Device ID\]P8
+P37=\x0D\[#Device ID\]P9
+P38=
+]
+[
+ObjTp=Sm
+H=8
+SmC=73
+ObjVer=1
+PrH=4
+CF=2
+n1I=1
+n1O=1
+mI=1
+I1=37
+mO=1
+tO=1
+O1=36
+mP=2
+P1=0d
+P2=5t
+]
+[
+ObjTp=Sm
+H=9
+SmC=285
+ObjVer=1
+PrH=4
+CF=2
+n1I=4
+n1O=2
+mI=4
+I1=36
+mO=2
+tO=2
+O1=38
+mP=8
+P1=
+P2=19200
+P3=N
+P4=8
+P5=1
+P6=(None)
+P7=(None)
+P8=(RS232)
+]
+[
+ObjTp=Sg
+H=4
+Nm=Motor_A_Up
+]
+[
+ObjTp=Sg
+H=5
+Nm=Motor_A_Down
+]
+[
+ObjTp=Sg
+H=6
+Nm=Motor_A_Stop
+]
+[
+ObjTp=Sg
+H=8
+Nm=Motor_B_Up
+]
+[
+ObjTp=Sg
+H=9
+Nm=Motor_B_Down
+]
+[
+ObjTp=Sg
+H=10
+Nm=Motor_B_Stop
+]
+[
+ObjTp=Sg
+H=11
+Nm=Motor_C_Up
+]
+[
+ObjTp=Sg
+H=12
+Nm=Motor_C_Down
+]
+[
+ObjTp=Sg
+H=13
+Nm=Motor_C_Stop
+]
+[
+ObjTp=Sg
+H=14
+Nm=Motor_D_Up
+]
+[
+ObjTp=Sg
+H=15
+Nm=Motor_D_Down
+]
+[
+ObjTp=Sg
+H=16
+Nm=Motor_D_Stop
+]
+[
+ObjTp=Sg
+H=17
+Nm=Home
+]
+[
+ObjTp=Sg
+H=18
+Nm=Recall_Preset_2_(4x3)
+]
+[
+ObjTp=Sg
+H=19
+Nm=Recall_Preset_1_(16x9)
+]
+[
+ObjTp=Sg
+H=20
+Nm=Recall_Preset_3_(1.85)
+]
+[
+ObjTp=Sg
+H=21
+Nm=Recall_Preset_5_(User_1)
+]
+[
+ObjTp=Sg
+H=22
+Nm=Recall_Preset_4_(2.35)
+]
+[
+ObjTp=Sg
+H=23
+Nm=Recall_Preset_6_(User_2)
+]
+[
+ObjTp=Sg
+H=24
+Nm=Recall_Preset_7_(User_3)
+]
+[
+ObjTp=Sg
+H=25
+Nm=Recall_Preset_8_(User_4)
+]
+[
+ObjTp=Sg
+H=26
+Nm=Recall_Preset_9_(User_5)
+]
+[
+ObjTp=Sg
+H=27
+Nm=Store_Preset_1
+]
+[
+ObjTp=Sg
+H=28
+Nm=Store_Preset_2
+]
+[
+ObjTp=Sg
+H=29
+Nm=Store_Preset_3
+]
+[
+ObjTp=Sg
+H=30
+Nm=Store_Preset_4
+]
+[
+ObjTp=Sg
+H=31
+Nm=Store_Preset_5
+]
+[
+ObjTp=Sg
+H=32
+Nm=Store_Preset_6
+]
+[
+ObjTp=Sg
+H=33
+Nm=Store_Preset_7
+]
+[
+ObjTp=Sg
+H=34
+Nm=Store_Preset_8
+]
+[
+ObjTp=Sg
+H=35
+Nm=Store_Preset_9
+]
+[
+ObjTp=Sg
+H=36
+Nm=To_Device
+SgTp=4
+]
+[
+ObjTp=Sg
+H=37
+Nm=to_pacer
+SgTp=4
+]
+[
+ObjTp=Sg
+H=38
+Nm=//__serial_reserved__
+SgTp=4
+]
+[
+ObjTp=Sg
+H=39
+Nm=[~UNUSED~]
+SgTp=31
+]
+[
+ObjTp=Dp
+H=1
+Tp=2
+DT=1
+FD1=Pulse to start moving motor A up. Depending on the screen, motor||1
+FD2=A is either the screen or the top mask.
+SD=Motor A Up
+Trg=1
+Cmd=42
+]
+[
+ObjTp=Dp
+H=2
+Tp=2
+DT=1
+FD1=Pulse to start moving motor A down. Depending on the screen, motor||1
+FD2=A is either the screen or the top mask.
+SD=Motor A Down
+Trg=1
+Cmd=43
+]
+[
+ObjTp=Dp
+H=3
+Tp=2
+DT=1
+FD1=Pulse to stop moving motor A. Depending on the screen, motor A is||1
+FD2=either the screen or the top mask.
+SD=Motor A Stop
+Trg=1
+Cmd=44
+]
+[
+ObjTp=Dp
+H=4
+Tp=2
+DT=1
+FD1=Pulse to start moving motor B up. Depending on the screen, motor||1
+FD2=B is either the horizontal mask, vertical mask or bottom mask.
+SD=Motor B Up
+Trg=1
+Cmd=50
+]
+[
+ObjTp=Dp
+H=5
+Tp=2
+DT=1
+FD1=Pulse to start moving motor B down. Depending on the screen, motor||1
+FD2=B is either the horizontal mask, vertical mask or bottom mask.
+SD=Motor B Down
+Trg=1
+Cmd=51
+]
+[
+ObjTp=Dp
+H=6
+Tp=2
+DT=1
+FD1=Pulse to stop moving motor B. Depending on the screen, motor B is||1
+FD2=either the horizontal mask, vertical mask or bottom mask.
+SD=Motor B Stop
+Trg=1
+Cmd=52
+]
+[
+ObjTp=Dp
+H=7
+Tp=2
+DT=1
+FD1=Pulse to start moving motor C up. Depending on the screen, motor||1
+FD2=C is either the door, side mask or left mask. In some screens, motor||1
+FD3=C does not exist.
+SD=Motor C Up
+Trg=1
+Cmd=54
+]
+[
+ObjTp=Dp
+H=8
+Tp=2
+DT=1
+FD1=Pulse to start moving motor C down. Depending on the screen, motor||1
+FD2=C is either the door, side mask or left mask. In some screens, motor||1
+FD3=C does not exist.
+SD=Motor C Down
+Trg=1
+Cmd=55
+]
+[
+ObjTp=Dp
+H=9
+Tp=2
+DT=1
+FD1=Pulse to stop moving motor C. Depending on the screen, motor C is||1
+FD2=either the door, side mask or left mask. In some screens, motor||1
+FD3=C does not exist.
+SD=Motor C Stop
+Trg=1
+Cmd=56
+]
+[
+ObjTp=Dp
+H=10
+Tp=2
+DT=1
+FD1=Pulse to start moving motor D up. Depending on the screen, motor||1
+FD2=D is either the right mask. In most screens, motor D does not exist.
+SD=Motor D Up
+Trg=1
+Cmd=58
+]
+[
+ObjTp=Dp
+H=11
+Tp=2
+DT=1
+FD1=Pulse to start moving motor D down. Depending on the screen, motor||1
+FD2=D is either the right mask. In most screens, motor D does not exist.
+SD=Motor D Down
+Trg=1
+Cmd=58
+]
+[
+ObjTp=Dp
+H=12
+Tp=2
+DT=1
+FD1=Pulse to stop moving motor D. Depending on the screen, motor D is||1
+FD2=either the right mask. In most screens, motor D does not exist.
+SD=Motor D Stop
+Trg=1
+Cmd=60
+]
+[
+ObjTp=Dp
+H=13
+Tp=2
+DT=1
+FD1=Pulse to cause the motors to go to their home position.
+SD=Home
+Trg=1
+]
+[
+ObjTp=Dp
+H=14
+Tp=2
+DT=1
+FD1=Pulse to recall preset 1. The default settings for preset 1 are||1
+FD2=for 16x9.
+SD=Recall Preset 1 (16x9)
+Trg=1
+]
+[
+ObjTp=Dp
+H=15
+Tp=2
+DT=1
+FD1=Pulse to recall preset 2. The default settings for preset 2 are||1
+FD2=for 4x3.
+SD=Recall Preset 2 (4x3)
+Trg=1
+]
+[
+ObjTp=Dp
+H=16
+Tp=2
+DT=1
+FD1=Pulse to recall preset 3. The default settings for preset 3 are||1
+FD2=for  1.85:1.
+SD=Recall Preset 3 (1.85)
+Trg=1
+]
+[
+ObjTp=Dp
+H=17
+Tp=2
+DT=1
+FD1=Pulse to recall preset 4. The default settings for preset 4 are||1
+FD2=for  2.35:1.
+SD=Recall Preset 4 (2.35)
+Trg=1
+]
+[
+ObjTp=Dp
+H=18
+Tp=2
+DT=1
+FD1=Pulse to recall preset 5 (User 1).
+SD=Recall Preset 5 (User 1)
+Trg=1
+]
+[
+ObjTp=Dp
+H=19
+Tp=2
+DT=1
+FD1=Pulse to recall preset 6 (User 2).
+SD=Recall Preset 6 (User 2)
+Trg=1
+]
+[
+ObjTp=Dp
+H=20
+Tp=2
+DT=1
+FD1=Pulse to recall preset 7 (User 3).
+SD=Recall Preset 7 (User 3)
+Trg=1
+]
+[
+ObjTp=Dp
+H=21
+Tp=2
+DT=1
+FD1=Pulse to recall preset 8 (User 4).
+SD=Recall Preset 8 (User 4)
+Trg=1
+]
+[
+ObjTp=Dp
+H=22
+Tp=2
+DT=1
+FD1=Pulse to recall preset 9 (User 5).
+SD=Recall Preset 9 (User 5)
+Trg=1
+]
+[
+ObjTp=Dp
+H=23
+Tp=2
+DT=1
+FD1=Pulse to store the current motor positions as preset 1.
+SD=Store Preset 1
+Trg=1
+]
+[
+ObjTp=Dp
+H=24
+Tp=2
+DT=1
+FD1=Pulse to store the current motor positions as preset 2.
+SD=Store Preset 2
+Trg=1
+]
+[
+ObjTp=Dp
+H=25
+Tp=2
+DT=1
+FD1=Pulse to store the current motor positions as preset 3.
+SD=Store Preset 3
+Trg=1
+]
+[
+ObjTp=Dp
+H=26
+Tp=2
+DT=1
+FD1=Pulse to store the current motor positions as preset 4.
+SD=Store Preset 4
+Trg=1
+]
+[
+ObjTp=Dp
+H=27
+Tp=2
+DT=1
+FD1=Pulse to store the current motor positions as preset 5.
+SD=Store Preset 5
+Trg=1
+]
+[
+ObjTp=Dp
+H=28
+Tp=2
+DT=1
+FD1=Pulse to store the current motor positions as preset 6.
+SD=Store Preset 6
+Trg=1
+]
+[
+ObjTp=Dp
+H=29
+Tp=2
+DT=1
+FD1=Pulse to store the current motor positions as preset 7.
+SD=Store Preset 7
+Trg=1
+]
+[
+ObjTp=Dp
+H=30
+Tp=2
+DT=1
+FD1=Pulse to store the current motor positions as preset 8.
+SD=Store Preset 8
+Trg=1
+]
+[
+ObjTp=Dp
+H=31
+Tp=2
+DT=1
+FD1=Pulse to store the current motor positions as preset 9.
+SD=Store Preset 9
+Trg=1
+]
+[
+ObjTp=Dp
+H=32
+Tp=7
+DT=4
+FD1=Serial signal to be routed to the tx$ input on a serial com port.
+SD=To Device
+Nt1=#HIDDEN
+]
+[
+ObjTp=Dp
+H=33
+Tp=1
+FD1=Enter the value of the device ID.
+SD=Device ID
+HD=TRUE
+DV=01
+NoS=FALSE
+Sgn=0
+]

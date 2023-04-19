@@ -1,0 +1,295 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:Aatel
+System Name:
+System Number:
+Programmer: Kelseyd
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+   #SYMBOL_NAME "Standalone Beyer Fb Processor"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+   #DEFAULT_VOLATILE
+   #ENABLE_STACK_CHECKING
+   #ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+   DIGITAL_INPUT speakerListBusy, resetRTS, stopConference, startConference[10];
+// ANALOG_INPUT
+   BUFFER_INPUT fromDCU$[3000];
+   STRING_INPUT Time$[100], conferenceName$[10][100]; 
+
+// BUFFER_INPUT 
+
+   DIGITAL_OUTPUT conferenceRunning; 
+// ANALOG_OUTPUT 
+   STRING_OUTPUT runningConference$, toDCU$, toStation$[30];
+				 
+
+/*******************************************************************************************
+  SOCKETS
+  (Uncomment and define socket definitions as needed)
+*******************************************************************************************/
+// TCP_CLIENT
+// TCP_SERVER
+// UDP_SOCKET
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+// INTEGER_PARAMETER
+// SIGNED_INTEGER_PARAMETER
+// LONG_INTEGER_PARAMETER
+// SIGNED_LONG_INTEGER_PARAMETER
+
+
+/*******************************************************************************************
+  Parameter Properties
+  (Uncomment and declare parameter properties as needed)
+*******************************************************************************************/
+/*
+#BEGIN_PARAMETER_PROPERTIES parameter_variable, parameter_variable, ...
+   // propValidUnits = // unitString or unitDecimal|unitHex|unitPercent|unitCharacter|unitTime|unitTicks;
+   // propDefaultUnit = // unitString, unitDecimal, unitHex, unitPercent, unitCharacter, unitTime or unitTicks;
+   // propBounds = lower_bound , upper_bound;
+   // propDefaultValue = ;  // or, propDefaultValue = "";
+   // propList = // { "value" , "label" } , { "value" , "label" } , ... ;
+   // propShortDescription = "status_bar_hint_text";
+   // #BEGIN_PROP_FULL_DESCRIPTION  line_1...  line_2...  line_n  #END_PROP_FULL_DESCRIPTION
+   // #BEGIN_PROP_NOTES line_1...  line_2...  line_n  #END_PROP_NOTES
+#END_PARAMETER_PROPERTIES
+*/
+
+/*******************************************************************************************
+  Structure Definitions
+  (Uncomment and define structure definitions as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: struct.myString = "";
+*******************************************************************************************/
+/*
+STRUCTURE MyStruct1
+{
+};
+
+MyStruct1 struct;
+*/
+
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+// LONG_INTEGER
+// SIGNED_INTEGER
+// SIGNED_LONG_INTEGER
+INTEGER x,y,z,idx,ctr;
+STRING temp$[500], confRunning$[100];
+NONVOLATILE STRING confNames$[11][100];
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+/*
+PUSH input
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+RELEASE input
+{
+    // TODO:  Add code here
+}
+*/
+
+          
+THREADSAFE CHANGE fromDCU$
+{
+	y=0;
+	
+	While(len(fromDCU$)>0&&y<100)
+	{
+		
+		temp$ = removebylength(byte(fromDCU$, 1)+1, fromDCU$);
+				
+		switch(byte(temp$, 2))
+		{
+		
+			case(0x6A):
+			{
+				x = byte(temp$, 5);
+				if(speakerListBusy = Off)
+				{
+					makestring(toStation$[x], "%s", temp$);
+				}
+				else makestring(toStation$[x], "\x04\x44"); 
+			}
+			
+			default:
+				clearbuffer(temp$);
+		}
+		
+		y=y+1;
+	}			
+}
+  
+// toStation$ made up cmds\x44. 01 = new conference name 02 = running conference 03 = stationEdits
+
+CHANGE conferenceName$
+{
+ 	idx = getlastmodifiedarrayindex();
+	confNames$[idx] = conferenceName$[idx];
+	for(ctr = 1 to 30)
+	{
+		makestring(toStation$[ctr], "\x01\x44%u%s", idx, confNames$[idx]);
+	}
+}
+
+PUSH startConference
+{
+	integer hrs, mins, secs;
+	string tempTime$[100];
+	string trash$[100];
+ 	idx = getlastmodifiedarrayindex();
+	confRunning$ = confNames$[idx];
+	runningConference$ = confRunning$;
+	conferenceRunning = on; 
+	
+	for(ctr = 1 to 30)
+	{
+		makestring(toStation$[ctr], "\x02\x44%s%s", chr(idx), confRunning$);
+	}
+     
+	//Set the time of the DCU to match processor time. 
+	tempTime$ = Time$;
+	print("Temp Time = %s", tempTime$);
+	trash$ = removebylength(8, tempTime$);
+	print("Temp Time shortened = %s", tempTime$);
+	tempTime$ = mid(tempTime$, 1, 6);
+	print("Temp Time shortened again = %s", tempTime$);
+	hrs = atoi(removebylength(2, tempTime$));
+	mins = atoi(removebylength(2, tempTime$));
+	secs = atoi(tempTime$);
+	print( "hrs = %u  mins = %u", hrs, mins);
+
+	makestring(toDCU$, "\x05\x19%C%C%C\x00", hrs, mins, secs);
+}
+
+PUSH stopConference
+{
+ 	conferenceRunning = off;
+	delay(100);
+	for(ctr = 1 to 30)
+	{
+     	makestring(toDCU$, "\x06\x0A%s\x00\x02\x00\x01", chr(ctr));
+		delay(3);
+	}
+}
+
+PUSH resetRTS
+{
+ 	makestring(toDCU$, "\x06\x0A\x00\x00\x00\x00\x01");
+	for(ctr = 1 to 30)
+	{
+     	makestring(toStation$[ctr], "\x03\x44");
+	}
+}
+/*
+EVENT
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+SOCKETCONNECT
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+SOCKETDISCONNECT
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+SOCKETRECEIVE
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+SOCKETSTATUS
+{
+    // TODO:  Add code here
+}
+*/
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+Function Main()
+{
+    // TODO:  Add code here
+    // Initialize declared global and local variables/arrays as needed.
+
+	WaitForInitializationComplete();
+    // If you are reading any Input or Output variables, uncomment
+    //   the WaitForInitializationComplete statement above and read
+    //   them afterwards.  Input/Output variables will not have
+    //   their correct values set until after the logic processor
+    //   runs and propagates the values to them.
+}
+
+
+           

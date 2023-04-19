@@ -1,0 +1,303 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:Beyer Vote Module
+System Number:
+Programmer:
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+// #SYMBOL_NAME ""
+// #HINT ""
+#DEFINE_CONSTANT listSize 16
+#DEFINE_CONSTANT numMics 25  // only include exclude mic codes for 28
+// #CATEGORY "" 
+// #DEFAULT_VOLATILE
+#PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_NONVOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+DIGITAL_INPUT Enabled, ResetList, MicStateOn[numMics], MicStateRTS[numMics], MicStateOff[numMics], ToggleButton[numMics], ToggleLine[listSize], micButton[numMics];
+
+STRING_INPUT MicName[numMics][100];
+// BUFFER_INPUT 
+
+DIGITAL_OUTPUT TurnOnMic[numMics], TurnOffMic[numMics], MicInList[numMics], MicNotInList[numMics];
+ANALOG_OUTPUT State[listSize];
+STRING_OUTPUT ListOut[listSize];
+
+
+//INTEGER VoteState, IncludedInVote[numMics];
+// LONG_INTEGER
+// SIGNED_INTEGER
+// SIGNED_LONG_INTEGER
+STRING List[listSize][50];
+
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+Function UpdateList()
+{
+ 	integer i, ii;
+ 	for (i = 1 to listSize)
+ 	{
+ 		ListOut[i] = List[i];
+ 	}		
+}
+Function UpdateStatus()
+{
+    integer i, ii;
+    for (i = 1 to listSize)
+    {
+    	for (ii = 1 to numMics)
+    	{
+    		if (List[i] = MicName[ii])
+    		{
+    			if (MicStateOn[ii]) 
+    			{
+    				State[i] = 3;
+    				//if (MicStateOut[ii] != 3) MicStateOut[ii] = 3;
+    			}
+    			else 
+    			{
+    				State[i] = 2;
+    				//if (MicStateOut[ii] != 2) MicStateOut[ii] = 2;
+    			}
+    			break;
+    		}   		
+    	}
+    }
+}
+
+Function RemoveFromList(integer position)
+{
+	integer i;
+    for (i = position to listSize - 1)
+    {
+    	List[i] = List[i+1];	
+    }
+    List[listSize] = "";
+    UpdateList();
+}
+
+Integer_Function AddToList (string nameToAdd)
+{
+	integer i;
+    for (i = 1 to listSize)
+    {
+    	if(List[i] = "")
+    	{
+    		List[i] = nameToAdd;
+    		UpdateList();
+    		Return (1);
+    	}
+    }
+    Return (0);
+}
+PUSH ResetList
+{
+	integer i;
+	while(list[1] != "")
+	{
+		for (i = 1 to numMics)
+		{
+			if (list[1] = micName[i])
+			{
+				RemoveFromList(1);
+				if (MicStateOn[i]) Pulse(1,TurnOffMic[i]);
+    			Pulse(1,MicNotInList[i]);
+    			break;
+			}
+			if (i = numMics) RemoveFromList(1);
+		}
+		delay(10);
+	}
+}
+PUSH micButton
+{
+	if (enabled)
+	{
+		if (MicStateOn[getlastmodifiedarrayindex()] = 1)
+		{
+			Pulse(1,TurnOffMic[getlastmodifiedarrayindex()]);	
+		}
+	}
+}
+PUSH ToggleButton
+{
+	integer i, ii;
+	for (i = 1 to listSize)
+    {
+    	if (List[i] = MicName[getlastmodifiedarrayindex()])
+    	{   
+    		Pulse(1,TurnOffMic[getlastmodifiedarrayindex()]);
+    		Pulse(1,MicNotInList[getlastmodifiedarrayindex()]);
+    		RemoveFromList(i);
+    		break;
+    	}
+    	if (i = ListSize)
+    	{
+    		if (AddtoList(MicName[getlastmodifiedarrayindex()]))
+    		{
+    			Pulse(1,MicInList[getlastmodifiedarrayindex()]);
+    			break;
+    		}
+       	}
+ 	}
+ 	UpdateStatus();
+}
+
+   	/*
+ 	for (i = 1 to NumMics)
+ 	{
+ 		for (ii = 1 to listSize)
+ 		{
+ 			if (List[ii] = MicName[i])
+ 			{
+ 				Pulse(1,MicInList[i]);
+ 				break;			
+ 			}
+ 			if (ii = listSize) Pulse(1,MicNotInList[i]);
+ 			
+ 		}
+ 	}
+ 	*/		
+
+
+
+PUSH ToggleLine
+{	
+	integer i;
+	if (Enabled)
+	{
+ 		for (i = 1 to numMics)
+ 		{
+ 			if (List[getlastmodifiedarrayindex()] = micName[i])
+ 			{
+ 				if (MicStateOn[i])
+ 				{
+ 					RemoveFromList(getlastmodifiedarrayindex());
+ 					Pulse(1,TurnOffMic[i]);
+ 					Pulse(1,MicNotInList[i]);
+ 				}
+ 				else
+ 				{
+ 					Pulse(1,TurnOnMic[i]);
+ 				}
+ 				Break;	
+ 			}
+ 		}
+ 	}
+}
+
+
+PUSH MicStateOn, MicStateRTS, MicStateOff
+{
+	If (Enabled) UpdateStatus();
+	PRINT ("Pushed micstateon mic state rts, mics state off");
+}
+
+Push Enabled
+{
+ 	UpdateStatus();
+}
+/*
+PUSH MicStateOff
+{
+	integer i;
+	if (enabled)
+	{
+		for (i = 1 to ListSize)
+		{
+			if (List[i] = MicName[getlastmodifiedarrayindex()])
+			{
+				RemoveFromList(i);
+				Break;
+			}
+		}
+		
+	}
+} 
+*/ 
+
+/*
+RELEASE input
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+CHANGE input
+{
+    // TODO:  Add code here
+}
+*/
+
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+
+Function Main()
+{
+	integer i;
+   	WaitForInitializationComplete();
+   	for (i = 1 to listSize)//restore ram settings
+	{
+ 		List[i] = "";
+ 		State[i] = 2;
+	}
+	UpdateList();
+	for (i = 1 to numMics)
+	{
+		Pulse(1, MicNotInList[i]);
+		Delay(10);
+	}
+	//lookup table for include exlude mics	 
+    // If you are reading any Input or Output variables, uncomment
+    //   the WaitForInitializationComplete statement above and read
+    //   them afterwards.  Input/Output variables will not have
+    //   their correct values set until after the logic processor
+    //   runs and propagates the values to them.
+}
+
+

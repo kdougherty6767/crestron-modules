@@ -1,0 +1,605 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name: Beyer CNS/DMC
+System Number:
+Programmer: Richard Hamilton
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#DEFAULT_NONVOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+
+#DEFINE_CONSTANT	MAXSTATIONS 128
+#DEFINE_CONSTANT	MAXBUF	8196
+#DEFINE_CONSTANT	MAXPKT	256
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+*******************************************************************************************/
+DIGITAL_INPUT ModeRequest, ModeFree, ModeAUTO, ModeFIFO;
+DIGITAL_INPUT VolumeSet,_SKIP_;
+ANALOG_INPUT Volume64, RequRTT, RequFree, RequAUTO, RequFIFO,_SKIP_;
+BUFFER_INPUT fromICNS$[MAXBUF];
+BUFFER_INPUT fromDCU$[MAXBUF];
+STRING_INPUT fromStations$[MAXBUF];
+STRING_INPUT FakeConference$[64];
+STRING_INPUT FakeStationName$[MAXSTATIONS][32];
+
+//*****************************************
+
+#ANALOG_SERIAL_EXPAND Separately
+
+DIGITAL_OUTPUT Busy;
+DIGITAL_OUTPUT InSession,_SKIP_,_SKIP_,_SKIP_,_SKIP_;
+ANALOG_OUTPUT VolumeDCU;
+ANALOG_OUTPUT sessionNumber;
+ANALOG_OUTPUT Mode;
+ANALOG_OUTPUT TotalSpeakers, _SKIP_, _SKIP_;
+STRING_OUTPUT toICNS$;
+STRING_OUTPUT toDCU$;
+STRING_OUTPUT Conference$;
+STRING_OUTPUT ID$;
+STRING_OUTPUT Station$[MAXSTATIONS];
+
+/*******************************************************************************************
+  Global Variables
+*******************************************************************************************/
+integer sessionIDis, giSessionMode; 
+integer MaxRequestIS; 
+integer MaxFreeIS;
+integer AutoFreeIS;
+integer AutoRequestIS;
+integer VoiceIS;
+integer FIFOIS;
+integer groupIDis;
+integer iCNSFound;
+integer GatheringSpeakers;
+integer iCNSLength;
+integer dcuLength;
+integer InvalidID;
+integer InvalidSession;
+integer DCUNotFound;
+integer icnsBusy;
+integer dcuBusy;
+integer IDbyte1;
+integer IDbyte2;
+integer IDbyte3;
+integer IDbyte4;
+
+string session$[64];
+string IncomingICNSBuffer[MAXBUF];
+string IncomingDCUBuffer[MAXBUF];
+string iCNSpacket[MAXPKT];
+string DCUpacket[MAXPKT];
+
+/*******************************************************************************************
+  Functions
+*******************************************************************************************/
+        
+function ClearStations()
+{
+	integer iStation;
+	for(iStation = 1 to MAXSTATIONS)
+	{
+		if(IsSignalDefined(Station$[iStation]))
+		{
+			makestring(Station$[iStation],"%c%c%s",1,iStation,"");
+		}
+	}
+	TotalSpeakers = 0;
+}
+
+function EvaluateSpeakerList(integer nextChar,string packet)
+{
+	switch(nextChar)
+	{
+		case (0): // starting speaker list
+		{
+			GatheringSpeakers = 1;
+			ClearStations();
+		}
+		case (1): // next speaker in list
+		{
+			TotalSpeakers = TotalSpeakers + 1;
+			nextChar = getc(packet); // skip
+			nextChar = getc(packet); // skip
+			nextChar = getc(packet); // skip
+			nextChar = getc(packet); // skip
+
+			//SpeakerNumber = getc(IncomingBuffer);
+			//nextChar = getc(IncomingBuffer); // skip
+			//SpeakerRank = getc(IncomingBuffer) + 1;
+			//SpeakerState = getc(IncomingBuffer);
+			//nextChar = getc(IncomingBuffer); // string length
+			//makestring(Speaker$,"%s",left(IncomingBuffer,nextChar));
+			if(IsSignalDefined(Station$[TotalSpeakers]))
+			{
+				makestring(Station$[TotalSpeakers],"%c%c%s",1,TotalSpeakers,packet);
+			}
+		}
+		
+		case (2): // speaker list complete
+		{
+			GatheringSpeakers = 0;
+			if(!TotalSpeakers)
+			{
+				//SpeakerNumber = 0;
+				//SpeakerRank = 0;
+				//SpeakerState = 0;
+				//Speaker$ = "";
+			}
+		}
+		
+	}
+}
+
+function ProcessICNSPacket(string packet)
+{ // length byte removed earlier
+	string testError[8];
+	integer Length;
+	integer nextChar;
+
+	Length = len(packet);
+
+	nextChar = getc(packet); // get command
+
+	if(Length=8) // potentially an error
+	{
+		testError = mid(packet,2,1);
+		if(byte(testError,1)=0xff)
+		{
+			iCNSFound = 1;
+			testError = mid(packet,3,1);
+			switch(byte(testError,1))
+			{
+				case(1):
+				{
+					InvalidID = 1;
+				}
+				case(3):
+				{
+					DCUNotFound = 1;
+				}
+				case(4):
+				{
+					InvalidSession = 1;
+				}
+			}
+			nextChar = 0; // disable next stage of test
+		}
+	}
+
+	switch(nextChar)
+	{ // next command
+		case (0x55):
+		{ // init command, ignore the data (8 byte packet)
+			iCNSFound = 1;
+			if(Length=8)
+			{
+				makestring(toICNS$,"%c%c%c%c%c%c%c%c%c",0x08,0x55,0x01,0x01,0x01,0x01,0x01,0x01,0xFF); // trigger start
+			}
+		}
+		case (0x0A):
+		{ // conference state
+			iCNSFound = 1;
+			nextChar = getc(packet); // length of conf ID
+			if(nextChar)
+			{
+				Conference$ = left(packet,nextChar);
+				InSession = 1;
+			}
+		}
+		case (0x02):
+		{ // mode state
+			iCNSFound = 1;
+			nextChar = getc(packet); // skip dcu id1
+			nextChar = getc(packet); // skip dcu id2
+			// this data can come from the DCU, might as well ignore it here
+			
+			sessionIDis = getc(packet); // skip session id
+			Mode = getc(packet);
+			MaxRequestIS = getc(packet);
+			MaxFreeIS = getc(packet);
+			AutoFreeIS = getc(packet);
+			AutoRequestIS = getc(packet);
+			VoiceIS = getc(packet);
+			FIFOIS = getc(packet);
+		}
+		case (0x01):
+		{ // speaker list
+			iCNSFound = 1;
+			nextChar = getc(packet); // mode of speaker list
+			EvaluateSpeakerList(nextChar,packet);
+		}
+	}
+}
+
+function ProcessICNSBuffer()
+{
+	icnsBusy = 1;
+	Busy = 1;
+
+	InvalidID = 0;
+	InvalidSession = 0;
+	DCUNotFound = 0;
+
+	while(len(IncomingICNSBuffer))
+	{
+		if(!iCNSLength)
+			iCNSLength = getc(IncomingICNSBuffer);
+		else
+		{
+			while(iCNSLength && len(IncomingICNSBuffer))
+			{
+				makestring(iCNSpacket,"%s%c",iCNSpacket,getc(IncomingICNSBuffer));
+				iCNSLength = iCNSLength - 1;
+            }
+			if(!iCNSLength)
+			{
+				// fresh packet ready here
+				ProcessICNSPacket(iCNSpacket);
+				clearbuffer(iCNSpacket);
+			}
+		}
+		processlogic();
+	}
+
+	icnsBusy = 0;
+	if(!dcuBusy) Busy = 0;
+}
+
+function CheckFakeSession()
+{
+	if(!iCNSFound && len(FakeConference$))
+		makestring(Conference$,"%s",FakeConference$);
+}
+
+function ChangeSessionInfo()
+{
+	makestring(toDCU$,"%c%c%c%c%c%c%c%c%c%c",0x09
+											,0x0C
+											,giSessionMode
+											,MaxRequestIS
+											,MaxFreeIS
+											,AutoFreeIS
+											,AutoRequestIS
+											,VoiceIS
+											,FIFOIS
+											,sessionIDis);
+}
+
+function ProcessDCUPacket(string packet)
+{// length byte removed earlier
+	integer Length;
+	integer nextChar;
+	integer id;
+	integer position;
+	integer state;
+	string StationName$[128];
+
+	Length = len(packet);
+
+	nextChar = getc(packet); // get command
+	switch(Length)
+	{
+		case(0x2d): // start session
+		{
+			if(nextChar=0x36)
+			{
+				nextChar = getc(packet); // get variable
+				if(nextChar=0x02)
+				{
+					InSession = 1;
+					CheckFakeSession();
+				}
+			}
+		}
+		case(0x2c): // exit session
+		{
+			if(nextChar=0x0F)
+			{
+				nextChar = getc(packet);
+				if(nextChar=0x01)
+				{
+					nextChar = byte(packet,len(packet));
+					if(nextChar<=0x20 || nextChar>0x30)
+					{
+						InSession = 0;
+						ClearStations();
+					}
+					else
+					{
+						InSession = 1;
+						CheckFakeSession();
+					}
+				}
+			}
+		}
+		case(0x09): // might be session mode
+		{
+			if(nextChar=0x0C)
+			{
+				InSession = 1;
+				sessionIDis = getc(packet);
+				Mode = getc(packet);
+				MaxRequestIS = getc(packet);
+				MaxFreeIS = getc(packet);
+				
+				AutoFreeIS = getc(packet);
+				AutoRequestIS = getc(packet);
+				VoiceIS = getc(packet);
+				FIFOIS = getc(packet);
+				
+				CheckFakeSession();
+			}
+		}
+		default:
+		{
+			
+			// might be volume
+			if(Length=3 && nextChar=0x0D)
+			{ // is volume
+				sessionNumber = getc(packet); // session ID
+				VolumeDCU = 64-getc(packet); // volume
+				//Volume64 = VolumeDCU;
+			}
+			else
+			if(nextChar=0x0B)
+			{ // speaker list update
+				InSession = 1;
+				if(!iCNSFound) // use DCU for station data
+				{
+					sessionIDis = getc(packet); // session id
+					nextChar = getc(packet); // loop flag
+					switch(nextChar)
+					{
+						case(0x00): // start of list
+						{
+							GatheringSpeakers = 1;
+							ClearStations();
+						}
+						case(0x02): // end of list
+						{
+							GatheringSpeakers = 0;
+						}
+						default:
+						{
+							id = getc(packet); // rank lo
+							nextChar = getc(packet); // rank hi
+							position = getc(packet); // position
+							state = getc(packet); // state
+							if(Length=8)
+							{ // group id at the end
+								groupIDis = getc(packet);
+							}
+							if(id)
+							{
+								TotalSpeakers = TotalSpeakers + 1;
+								if(IsSignalDefined(Station$[TotalSpeakers]))
+								{ // create a packet that emulates the iCNS database report
+									if(IsSignalDefined(FakeStationName$[id]))
+										makestring(StationName$,"%s",FakeStationName$[id]);
+									else
+										makestring(StationName$,"Station-%d",id);
+									makestring(Station$[TotalSpeakers],"%c%c%c%c%c%c%c%s",1,TotalSpeakers,id,position,id,state,len(StationName$),StationName$);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+function ProcessDCUBuffer()
+{
+	dcuBusy = 1;
+	Busy = 1;
+
+	while(len(IncomingDCUBuffer))
+	{
+		if(!dcuLength)
+			dcuLength = getc(IncomingDCUBuffer);
+		else
+		{
+			while(dcuLength && len(IncomingDCUBuffer))
+			{
+				makestring(DCUpacket,"%s%c",DCUpacket,getc(IncomingDCUBuffer));
+				dcuLength = dcuLength - 1;
+            }
+			if(!dcuLength)
+			{
+				// fresh packet ready here
+				ProcessDCUPacket(DCUpacket);
+				clearbuffer(DCUpacket);
+			}
+		}
+		processlogic();
+	}
+
+	dcuBusy = 0;
+	if(!icnsBusy) Busy = 0;
+}
+
+/*******************************************************************************************
+  Event Handlers
+*******************************************************************************************/
+
+THREADSAFE change fromICNS$
+{
+	/* 
+		this connection is optional. the program should still work without it, 
+		except for the speakerlist (names from database on PC)
+	*/
+	
+	IncomingICNSBuffer = IncomingICNSBuffer + fromICNS$;
+
+	if(!icnsBusy) ProcessICNSBuffer();
+}
+
+THREADSAFE change fromDCU$
+{
+	IncomingDCUBuffer = IncomingDCUBuffer + fromDCU$;
+	if(!dcuBusy) ProcessDCUBuffer();
+
+}
+
+THREADSAFE change fromStations$
+{
+	
+	integer nextChar;
+	integer state;
+	if(!Busy && !GatheringSpeakers)
+	{
+		nextChar = getc(fromStations$);
+		if(nextChar='M')
+		{ // might be mic toggle
+			nextChar = getc(fromStations$); // station number
+			state = getc(fromStations$) - '0'; // mic state to set
+			//if(state)
+			makestring(toDCU$,"%c%c%c%c%c%c%c",0x06,0x0A,nextChar,0x00,state,0x00,sessionIDis);//groupID);
+		}
+	}
+	clearbuffer(fromStations$);
+}
+
+PUSH ModeRequest
+{
+	giSessionMode = 0;
+	ChangeSessionInfo();
+}
+
+PUSH ModeFree
+{
+	giSessionMode = 1;
+	ChangeSessionInfo();
+}
+
+PUSH ModeAUTO
+{
+	giSessionMode = 2;
+	ChangeSessionInfo();
+}
+
+PUSH ModeFIFO
+{
+	giSessionMode = 4;
+	ChangeSessionInfo();
+}
+
+CHANGE	RequRTT
+{
+	MaxRequestIs = RequRTT;
+	ChangeSessionInfo();
+}
+
+CHANGE	RequFree
+{
+	MaxFreeIs = RequFree;
+	ChangeSessionInfo();
+}
+
+CHANGE	RequAUTO
+{
+	AutoFreeIs = RequAUTO;
+	ChangeSessionInfo();
+}
+
+CHANGE	RequFIFO
+{
+	FIFOIs = RequFIFO;
+	ChangeSessionInfo();
+}
+
+PUSH VolumeSet
+{
+	if(Volume64>=0 && Volume64<=64)
+		makestring(toDCU$,"%c%c%c%c",0x03,0x0d,(64-Volume64),sessionIDis);
+}
+
+/*******************************************************************************************
+  Main()
+*******************************************************************************************/
+
+Function Main()
+{
+	TotalSpeakers = 0;
+	icnsBusy = 0;
+	dcuBusy = 0;
+	GatheringSpeakers = 0;
+
+	iCNSLength = 0;
+	dcuLength = 0;
+	groupIDis = 1;
+	iCNSFound = 0;
+
+	clearbuffer(IncomingICNSBuffer);
+	clearbuffer(IncomingDCUBuffer);
+
+	clearbuffer(iCNSpacket);
+	clearbuffer(DCUpacket);
+
+    WaitForInitializationComplete();
+}
+
+/*
+Function MakeID()
+{
+	string buffer[32];
+
+	clearbuffer(buffer);
+
+	makestring(ID$,"%04d%02d%02d",dcuID,sessionIDis,groupID);
+
+	makestring(buffer,"%04d%02d%02d",dcuID,sessionIDis,groupID);
+	makestring(buffer,"%08X",atol(buffer));
+
+	IDbyte4 = hextoi(mid(buffer,1,2));
+	IDbyte3 = hextoi(mid(buffer,3,2));
+	IDbyte2 = hextoi(mid(buffer,5,2));
+	IDbyte1 = hextoi(mid(buffer,7,2));
+
+
+	//makestring(toDMS$,"%02x%02x%02x%02x",IDbyte1,IDbyte2,IDbyte3,IDbyte4);
+//	sessionNumber = long;
+}
+
+Function MakeShortID()
+{
+	string buffer[32];
+
+	clearbuffer(buffer);
+
+	makestring(buffer,"%04d%02d",dcuID,sessionIDis);
+	makestring(buffer,"%06X",atol(buffer));
+
+	IDbyte3 = hextoi(mid(buffer,1,2));
+	IDbyte2 = hextoi(mid(buffer,3,2));
+	IDbyte1 = hextoi(mid(buffer,5,2));
+}
+
+Function MakeGroupID()
+{
+	string buffer[32];
+
+	clearbuffer(buffer);
+
+	makestring(buffer,"%04d%02d",dcuID,groupID);
+	makestring(buffer,"%06X",atol(buffer));
+
+	IDbyte3 = hextoi(mid(buffer,1,2));
+	IDbyte2 = hextoi(mid(buffer,3,2));
+	IDbyte1 = hextoi(mid(buffer,5,2));
+}
+*/
+

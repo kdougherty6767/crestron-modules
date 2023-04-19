@@ -1,0 +1,433 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:Durham One Audio Video & Networking
+System Name:
+System Number:
+Programmer: Jameel Mohamed
+Comments: AW-UE70
+Email:jameelm@gmail.com
+*/
+
+
+#HELP_BEGIN
+   This is a simple Panasonic AW-UE70 module. Just fill in your IP Address, username and password
+   and you will have basic controls. I have also put six presets controls. Everything is based on push 
+   and hold except the presets so when you relese it will send the stop command. 
+   Also for your camera please set the Authentication to "Basic". This does not work with the "Digest" format.
+   You can use this without Authentication as well just set Authentication to "Off".
+#HELP_END
+
+
+
+#Symbol_Name "Panasonic AW-UE70_v2"
+#CATEGORY "19" // Camera
+#Enable_Trace
+#Default_Volatile
+#ENCODING_ASCII
+
+
+// Constants
+
+#Define_Constant ciStop 50
+#Define_Constant ciSetPreset1 "M00"
+#Define_Constant ciSetPreset2 "M01"
+#Define_Constant ciSetPreset3 "M02"
+#Define_Constant ciSetPreset4 "M03"
+#Define_Constant ciSetPreset5 "M04"
+#Define_Constant ciSetPreset6 "M05"
+
+#Define_Constant ciPreset1 "R00"
+#Define_Constant ciPreset2 "R01"
+#Define_Constant ciPreset3 "R02"
+#Define_Constant ciPreset4 "R03"
+#Define_Constant ciPreset5 "R04"
+#Define_Constant ciPreset6 "R05"
+
+
+#DEFINE_CONSTANT CHARS  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+     
+
+//Input and Outputs
+
+Digital_Input _skip_,_skip_,_skip_,_skip_,_SKIP_,_SKIP_,_SKIP_,Power_On, Power_Off,_SKIP_, Pan_Up, Pan_Down, Pan_Left, Pan_Right, Pan_UpRight, Pan_UpLeft, Pan_DnRight, Pan_DnLeft,_SKIP_,Zoom_In,Zoom_Out;
+Digital_Input _SKIP_,Recall_Preset_1, Recall_Preset_2, Recall_Preset_3, Recall_Preset_4, Recall_Preset_5, Recall_Preset_6, Save_Preset_1, Save_Preset_2, Save_Preset_3, Save_Preset_4, Save_Preset_5, Save_Preset_6;
+
+//Parameters
+
+String_Parameter IP_Address[18];
+String_Parameter Username[256],Password[256];
+integer_Parameter Left_Right_Speed, Up_Down_Speed,Zoom_Speed,Authentication;
+ 
+/*******************************************************************************************
+  Parameter Properties
+  (Uncomment and declare parameter properties as needed)
+*******************************************************************************************/
+
+#BEGIN_PARAMETER_PROPERTIES Left_Right_Speed
+   propValidUnits = unitDecimal;
+   propDefaultUnit = unitDecimal;
+   propBounds = 01d , 49d;
+   propDefaultValue = 35d;  // or, propDefaultValue = "";
+   //propList = { "01d" , "l" } , { "02d" , "2" } , ... ;
+   propShortDescription = "pan and tilt speed";
+   #BEGIN_PROP_FULL_DESCRIPTION  Enter a value between 1(fastest) and 49(slowest). #END_PROP_FULL_DESCRIPTION
+   // #BEGIN_PROP_NOTES line_1...  line_2...  line_n  #END_PROP_NOTES
+#END_PARAMETER_PROPERTIES
+
+#BEGIN_PARAMETER_PROPERTIES Up_Down_Speed
+   propValidUnits = unitDecimal;
+   propDefaultUnit = unitDecimal;
+   propBounds = 01d , 49d;
+   propDefaultValue = 35d;  // or, propDefaultValue = "";
+   //propList = { "01d" , "l" } , { "02d" , "2" } , ... ;
+   propShortDescription = "pan and tilt speed";
+   #BEGIN_PROP_FULL_DESCRIPTION  Enter a value between 1(fastest) and 49(slowest). #END_PROP_FULL_DESCRIPTION
+   // #BEGIN_PROP_NOTES line_1...  line_2...  line_n  #END_PROP_NOTES
+#END_PARAMETER_PROPERTIES
+
+#BEGIN_PARAMETER_PROPERTIES Zoom_Speed
+   propValidUnits = unitDecimal;
+   propDefaultUnit = unitDecimal;
+   propBounds = 01d , 49d;
+   propDefaultValue = 35d;  // or, propDefaultValue = "";
+   //propList = { "01d" , "l" } , { "02d" , "2" } , ... ;
+   propShortDescription = "pan and tilt speed";
+   #BEGIN_PROP_FULL_DESCRIPTION  Enter a value between 1(fastest) and 49(slowest). #END_PROP_FULL_DESCRIPTION
+   // #BEGIN_PROP_NOTES line_1...  line_2...  line_n  #END_PROP_NOTES
+#END_PARAMETER_PROPERTIES
+
+#BEGIN_PARAMETER_PROPERTIES Authentication   
+   propValidUnits = unitDecimal;
+   propDefaultUnit = unitDecimal;
+   //propBounds = 01d , 49d;
+   propDefaultValue = 1d;  
+   propList = { 1d , "Off" } , { 2d , "On" };
+   propShortDescription = "Basic Authentication";
+   //#BEGIN_PROP_FULL_DESCRIPTION  Enter a value between 1(fastest) and 49(slowest). #END_PROP_FULL_DESCRIPTION
+   // #BEGIN_PROP_NOTES line_1...  line_2...  line_n  #END_PROP_NOTES
+#END_PARAMETER_PROPERTIES
+
+
+
+
+//Global Variables
+INTEGER CODES[255],iUp,iDn,iLeft,iRight,iZoom;
+String gsQueue[256], gsData[100],giCommand[40];
+
+
+//Sockets
+         
+TCP_CLIENT Camera[100]; //requires an array size allocate to the string buffer
+
+// Base64 Encoding - Credit to Alex
+/*
+Dealer Name: RBSystems
+Programmer:  Alex M. aka Ale4ko
+Email:       alex@rbsystems.co.il
+Tel:         0545807065
+Version:     1.1
+*/
+
+STRING_FUNCTION getChar(SIGNED_INTEGER int)
+{
+    if (int >= 0)
+    {
+        return(mid(CHARS, int + 1, 1));
+    }
+    else
+    {
+        return("");
+    }
+}
+
+STRING_FUNCTION base64_encode(String input)
+{
+    SIGNED_INTEGER enc1,enc2,enc3,enc4;
+    SIGNED_INTEGER chr1,chr2,chr3;
+    STRING         result[255];
+    INTEGER        n;
+    result = "";
+    for (n = 1 to len(input) step 3)
+    {
+        chr1 = byte(input, n);
+        chr2 = byte(input, n+1);
+        chr3 = byte(input, n+2);
+        if(chr2=-1){chr2=0;}
+        if(chr3=-1){chr3=0;}
+
+        enc1 =   chr1 >> 2;
+        enc2 = ((chr1 &  3) << 4) | (chr2 >> 4);
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+        enc4 =   chr3 & 63;
+        if(chr2=0){ enc3 = 64; enc4 = 64;}
+        else if(chr3=0){ enc4 = 64; }
+
+        result = result + getChar(enc1) + getChar(enc2) + getChar(enc3) + getChar(enc4);
+    }
+    return(result);
+}
+
+
+                                                                         
+
+//Functions to send commands
+
+Function SendCommand(string command)
+{
+Signed_Integer error;
+gsQueue = command;
+
+//need this because Socket Connect client is a signed integer
+error = SocketConnectClient(Camera, IP_Address, 80, 0);
+Trace("Connecting TCP Client: %d", error);  //%d will allow to show string
+Trace("%s", gsQueue);
+}  
+
+Function sendKey()
+{
+	string auth[1024],Basic[1024]; // Get input from Username and Pass
+ 	string data[256],p[2]; //256 characters
+    p = chr(37); // % sign for string
+	//User = Username +
+	Basic = Username + ":" + Password ;
+	auth = base64_encode(Basic) ;
+	
+	if (Authentication = 2)
+	{
+
+	makestring(data, "GET /cgi-bin/aw_ptz?cmd=%s23%s&res=1 HTTP/1.1\nHost: %s\nAuthorization: Basic %s\n\n ",p,giCommand,IP_Address,auth );
+	
+ 	sendCommand(data);
+	}
+	
+    if (Authentication = 1)
+	{
+	
+	makestring(data, "GET /cgi-bin/aw_ptz?cmd=%s23%s&res=1 HTTP/1.1\nHost: %s\n\n",p ,giCommand, IP_Address);
+
+    
+	sendCommand(data);
+
+	}
+}
+
+//Events
+Push Power_On
+{	
+	giCommand = "O1";
+		sendkey();
+}
+
+Push Power_Off
+{
+	giCommand = "O0" ;
+		sendkey();
+}
+     
+
+Push Pan_Up
+{	
+	giCommand = "T" + itoA(iUp);
+		sendkey();
+}
+
+Push Pan_Down
+{
+	giCommand = "T"+ itoA(iDn) ;
+		sendkey();
+}
+
+Push Pan_Left
+{
+	giCommand = "P" + itoA(iLeft);
+		sendkey();
+}
+
+Push Pan_Right
+{
+	giCommand = "P" + itoA(iRight);
+		sendkey();
+}
+
+Push Pan_DnRight
+{
+	giCommand = "PTS" + itoA(iRight)+ itoA(iDn) ;
+		sendkey();
+}
+
+Push Pan_UpLeft
+{
+	giCommand = "PTS" + itoA(iLeft)+ itoA(iUp);
+		sendkey();
+}
+
+Push Pan_UpRight
+{
+	giCommand = "PTS"+ itoA(iRight)+ itoA(iUp);
+    	sendkey();
+}
+
+Push Pan_DnLeft
+{
+	giCommand = "PTS" + itoA(iLeft)+ itoA(iDn);
+		sendkey();
+}
+    
+
+
+Push Recall_Preset_1
+{
+	giCommand = ciPreset1;
+		sendkey();
+}
+
+Push Recall_Preset_2
+{
+	giCommand = ciPreset2;
+		sendkey();
+}
+Push Recall_Preset_3
+{
+	giCommand = ciPreset3;
+		sendkey();
+}
+
+Push Recall_Preset_4
+{
+	giCommand = ciPreset4;
+		sendkey();
+}
+Push Recall_Preset_5
+{
+	giCommand = ciPreset5;
+		sendkey();
+}
+
+Push Recall_Preset_6
+{
+	giCommand = ciPreset6;
+		sendkey();
+}
+
+
+
+Push Save_Preset_1
+{
+	giCommand = ciSetPreset1;
+		sendkey();
+}
+
+Push Save_Preset_2
+{
+	giCommand = ciSetPreset2;
+		sendkey();
+}
+Push Save_Preset_3
+{
+	giCommand = ciSetPreset3;
+		sendkey();
+}
+
+Push Save_Preset_4
+{
+	giCommand = ciSetPreset4;
+		sendkey();
+}
+Push Save_Preset_5
+{
+	giCommand = ciSetPreset5;
+		sendkey();
+}
+
+Push Save_Preset_6
+{
+	giCommand = ciSetPreset6;
+		sendkey();
+}
+
+Push Zoom_Out
+{
+	giCommand = "Z" + iToA(Zoom_Speed);
+		sendkey();
+}
+
+Push Zoom_In
+{
+	
+	giCommand = "Z" + iToA(iZoom);
+		sendkey();
+}
+
+
+Push Save_Preset_6
+{
+	giCommand = ciSetPreset6;
+		sendkey();
+}
+
+
+
+
+Release Pan_Left, Pan_Right
+{
+ 
+	giCommand = "P"+ itoA(ciStop);
+		sendkey();
+}
+
+Release Pan_Up, Pan_Down
+{
+ 
+	giCommand = "T"+ itoA(ciStop);
+		sendkey();
+}
+    
+Release Pan_UpRight, Pan_DnRight, Pan_UpLeft, Pan_DnLeft
+{
+ 
+	giCommand = "PTS5050";
+		sendkey();
+}
+
+
+Release Zoom_In, Zoom_Out
+{
+ 
+	giCommand = "Z50";
+		sendkey();
+}
+
+
+ 
+
+SocketConnect Camera //This will execute whenever the socket becomes connected this is equivalent of 2 in SIMPL
+{
+Signed_Integer error; 
+error = Socketsend(Camera, gsQueue);
+Trace("Sent to TCP Client: %d", error);
+}
+
+SocketReceive Camera 
+{
+ signed_integer error;
+
+ gsData = Camera.SocketRxBuf; // transfer to the global string
+ Clearbuffer(Camera.SocketRxBuf); //empty the buffer
+ SocketDisconnectClient(Camera); //Close the connection
+ Trace("Recieved From TCP Client: %s", gsData);
+}
+
+
+Function Main() {
+    INTEGER i;
+    SetArray( CODES, 255 );
+    for( i=1 to Len(CHARS) ) CODES[ Byte(CHARS,i) ] = i-1;
+	iUp = 100 - Up_Down_Speed ;
+	iDn = Up_Down_Speed ;
+ 	iLeft = Left_Right_Speed;
+	iRight = 100 - Left_Right_Speed;
+	iZoom = 100-Zoom_Speed;
+}

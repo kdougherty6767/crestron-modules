@@ -1,0 +1,388 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:Aatel
+System Name:
+System Number:
+Programmer: Kelseyd
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+   #SYMBOL_NAME "Beyer ICNS Feedback Processor KGD"
+// #HINT ""
+// #DEFINE_CONSTANT
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+   #DEFAULT_VOLATILE
+   #ENABLE_STACK_CHECKING
+   #ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+// DIGITAL_INPUT 
+// ANALOG_INPUT 
+   BUFFER_INPUT fromICNS$[3000];
+// BUFFER_INPUT 
+
+// DIGITAL_OUTPUT 
+   ANALOG_OUTPUT voteOC,
+				 voteState,
+				 conferenceState;
+   STRING_OUTPUT toICNS$,
+				 conferenceName$,
+				 conferenceID$,
+				 Header$,
+				 End$,
+				 DelegatesInfo$[29];
+				 
+
+/*******************************************************************************************
+  SOCKETS
+  (Uncomment and define socket definitions as needed)
+*******************************************************************************************/
+// TCP_CLIENT
+// TCP_SERVER
+// UDP_SOCKET
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+// INTEGER_PARAMETER
+// SIGNED_INTEGER_PARAMETER
+// LONG_INTEGER_PARAMETER
+// SIGNED_LONG_INTEGER_PARAMETER
+
+
+/*******************************************************************************************
+  Parameter Properties
+  (Uncomment and declare parameter properties as needed)
+*******************************************************************************************/
+/*
+#BEGIN_PARAMETER_PROPERTIES parameter_variable, parameter_variable, ...
+   // propValidUnits = // unitString or unitDecimal|unitHex|unitPercent|unitCharacter|unitTime|unitTicks;
+   // propDefaultUnit = // unitString, unitDecimal, unitHex, unitPercent, unitCharacter, unitTime or unitTicks;
+   // propBounds = lower_bound , upper_bound;
+   // propDefaultValue = ;  // or, propDefaultValue = "";
+   // propList = // { "value" , "label" } , { "value" , "label" } , ... ;
+   // propShortDescription = "status_bar_hint_text";
+   // #BEGIN_PROP_FULL_DESCRIPTION  line_1...  line_2...  line_n  #END_PROP_FULL_DESCRIPTION
+   // #BEGIN_PROP_NOTES line_1...  line_2...  line_n  #END_PROP_NOTES
+#END_PARAMETER_PROPERTIES
+*/
+
+/*******************************************************************************************
+  Structure Definitions
+  (Uncomment and define structure definitions as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: struct.myString = "";
+*******************************************************************************************/
+/*
+STRUCTURE MyStruct1
+{
+};
+
+MyStruct1 struct;
+*/
+
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+   INTEGER x;
+   INTEGER y;
+   INTEGER z;
+   INTEGER w;
+   INTEGER cardNum;
+// LONG_INTEGER
+// SIGNED_INTEGER
+// SIGNED_LONG_INTEGER
+   STRING temp$[5000];
+   STRING subTemp1$[1500];
+   STRING subTemp2$[1500];
+   STRING subTemp3$[1500];
+   STRING tempDelegates$[30][100];
+   STRING cardDelegates$[100][100];
+   STRING trash$[30];
+   STRING cardNumbers$[100][100];
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+/*
+Function MyFunction1()
+{
+    // TODO:  Add local variable declarations here
+
+    // TODO:  Add code here
+}
+*/
+
+/*
+Integer_Function MyIntFunction1()
+{
+    // TODO:  Add local variable declarations here
+
+    // TODO:  Add code here
+
+    Return (0);
+}
+*/
+
+/*
+String_Function MyStrFunction1()
+{
+    // TODO:  Add local variable declarations here
+
+    // TODO:  Add code here
+
+    Return ("");
+}
+*/
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+/*
+PUSH input
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+RELEASE input
+{
+    // TODO:  Add code here
+}
+*/
+
+          
+THREADSAFE CHANGE fromICNS$
+{
+	y=0;
+
+   	While(len(fromICNS$)>0&&y<100)
+	{
+		temp$ = removebylength(byte(fromICNS$, 1)+1, fromICNS$);	
+        
+		switch(byte(temp$, 2))
+		{
+		
+			case(0x01):
+			{
+				if(byte(temp$, 3)=0x00)
+				{
+					makestring(Header$, "%s", temp$);
+					setarray(tempDelegates$, "N");
+				}
+				else if(byte(temp$, 3)=0x01)
+				{
+         	    	makestring(tempDelegates$[byte(temp$, 8)], "%s", temp$);
+				}
+				else if(byte(temp$, 3)=0x02)
+				{
+           	  		x=0;
+					while(x<29)
+					{
+                		x=x+1;
+						DelegatesInfo$[x] = tempDelegates$[x]; 	
+					}
+					makestring(End$, "%s", temp$);
+				}
+			}
+
+			case(0x03):
+			{
+				if(byte(temp$, 9)=0x00)
+				{
+					makestring(DelegatesInfo$[byte(temp$, 7)], "C");
+				}
+				else
+				{
+					w=byte(temp$, 7);
+					trash$=removebylength(8, temp$);
+					subTemp1$=itoHEX(Byte(temp$, 1));
+					print("This is hex byte 1 - %s\n", subTemp1$);
+					subTemp2$=itoHEX(Byte(temp$, 2));
+					print("This is hex byte 2 - %s\n", subTemp2$);
+					z=0;
+					x=1;
+					makestring(subTemp3$, "%s%s", subTemp2$, subTemp1$);
+					print("This is hex card being compared - %s\n", subTemp3$);
+					cardNum=hextoI(subTemp3$);
+					subTemp2$=itoA(cardNum);
+					print("card number being compared is - %s\n", subTemp2$);
+					while(z<>1&&x<100)
+					{
+                 		if(cardNumbers$[x]=subTemp2$)
+						{
+                         	z=1;
+						}
+						else 
+						{
+							print("no Match %u\n", x);
+							x=x+1;
+						}
+					}
+					makestring(DelegatesInfo$[w], "%s", cardDelegates$[x]);
+				}				
+			}
+
+			case(0x05):
+			{
+				voteOC=byte(temp$, 3);
+			}
+
+			case(0x06):
+			{
+				voteState=byte(temp$, 3);
+			}
+
+			case(0x09):
+			{
+				if(byte(temp$, 3)=0x04)
+				{
+					temp$=gather("\x03\x09\x04\x00", fromICNS$);
+					x=1;
+					While(x<100&&len(temp$)>0)
+					{
+						subTemp1$=removebylength(byte(temp$, 1)+1, temp$);
+             	    	makestring(cardDelegates$[x], "%s", subTemp1$);
+						x=x+1;
+					}
+					x=1;
+					While(x<30)
+					{
+              		   	DelegatesInfo$[x] = cardDelegates$[x];
+						x=x+1;
+					}
+				} 
+				if(byte(temp$, 3)=0x03)
+				{
+					temp$=gather("\x03\x09\x03\x00", fromICNS$);
+					x=1;
+					While(x<100&&len(temp$)>0)
+					{
+						subTemp1$=removebylength(byte(temp$, 1)+1, temp$);
+						trash$ = removebylength(4, subTemp1$);
+             	    	makestring(cardNumbers$[x], "%s", subTemp1$);
+						print("This is card number %u - %s\n", x, cardNumbers$[x]);
+						x=x+1;
+					}
+					setarray(tempDelegates$, "C");
+					x=0;
+					while(x<29)
+					{
+                		x=x+1;
+						DelegatesInfo$[x] = tempDelegates$[x]; 	
+					}
+				}
+			}
+			case(0x0A):
+			{
+             	x=byte(temp$, 3)+4;
+				conferenceState=byte(temp$, x);
+			}
+
+			case(0x55):
+			{
+             	makestring(toICNS$, "\x08\x55\x01\x01\x01\x01\x01\x01\xFF");
+			}
+
+			default:
+				clearbuffer(temp$);				
+		}
+    
+		y=y+1;	
+	}
+	
+}
+/*
+EVENT
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+SOCKETCONNECT
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+SOCKETDISCONNECT
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+SOCKETRECEIVE
+{
+    // TODO:  Add code here
+}
+*/
+
+/*
+SOCKETSTATUS
+{
+    // TODO:  Add code here
+}
+*/
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+Function Main()
+{
+    // TODO:  Add code here
+    // Initialize declared global and local variables/arrays as needed.
+
+	WaitForInitializationComplete();
+    // If you are reading any Input or Output variables, uncomment
+    //   the WaitForInitializationComplete statement above and read
+    //   them afterwards.  Input/Output variables will not have
+    //   their correct values set until after the logic processor
+    //   runs and propagates the values to them.
+}
+
+

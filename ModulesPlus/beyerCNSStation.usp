@@ -1,0 +1,172 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name: 	Beyer CNS/DMC Station
+System Number:
+Programmer: 	Richard Hamilton 2009
+				PRM March 2015
+Comments:		03/03/2015 Fixed Richards ugly code PRM
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+*******************************************************************************************/
+#DEFAULT_NONVOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+
+#DEFINE_CONSTANT	MAXBUF	1024
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+*******************************************************************************************/
+digital_input MicOn, MicOff, MicToggle, MicRemove,_SKIP_;
+STRING_INPUT fromModule$[MAXBUF];
+
+digital_output	Mic_Request, Mic_Active, _SKIP_,_SKIP_,_SKIP_;
+STRING_OUTPUT toModule$;
+STRING_OUTPUT SpeakerState$;
+STRING_OUTPUT Speaker$,_SKIP_;
+ANALOG_OUTPUT SpeakerNumber;
+ANALOG_OUTPUT SpeakerRank;
+ANALOG_OUTPUT SpeakerState;
+Analog_Output	MicState;
+
+/*******************************************************************************************
+  Global Variables
+*******************************************************************************************/
+string IncomingBuffer[MAXBUF];
+
+/*******************************************************************************************
+  Functions
+*******************************************************************************************/
+function ProcessBuffer()
+{
+	integer nextChar, tmpSpeakerNumber;
+	string testError[8];
+
+	while(len(IncomingBuffer))
+	{
+		nextChar = getc(IncomingBuffer);
+		if(1=1)
+		{ // first byte is command
+			switch(nextChar)
+			{
+				case (0x01):
+				{ // speaker list
+
+					nextChar = getc(IncomingBuffer); // speaker index
+
+					tmpSpeakerNumber = getc(IncomingBuffer);
+					if(tmpSpeakerNumber<0 || tmpSpeakerNumber>32000) tmpSpeakerNumber = 0;
+
+					if (tmpSpeakerNumber = 0)
+					{
+						Mic_Request = 0; Mic_Active = 0; MicState = 0;
+						SpeakerState$ = "Off"; SpeakerState$ = "";
+						Speaker$ = "";
+					}
+                    SpeakerNumber = tmpSpeakerNumber;
+					
+					nextChar = getc(IncomingBuffer); // skip
+
+					SpeakerRank = getc(IncomingBuffer) + 1;
+					if(SpeakerRank<0 || SpeakerRank>32000) SpeakerRank = 0;
+
+					SpeakerState = getc(IncomingBuffer);
+
+					nextChar = getc(IncomingBuffer); // string length
+					if(SpeakerState)
+					{
+						makestring(Speaker$,"%s",left(IncomingBuffer,nextChar));
+					}
+
+					switch(SpeakerState)
+					{
+						case (1):
+						{
+							Mic_Request = 0; Mic_Active = 1; MicState = 1;
+							makestring(SpeakerState$,"Active");
+						}
+						case (2):
+						{
+							Mic_Active = 0; Mic_Request = 1; MicState = 2;
+							makestring(SpeakerState$,"Request");
+						}
+						default:
+						{
+							Mic_Request = 0; Mic_Active = 0; MicState = 0;
+							SpeakerState$ = "Off"; SpeakerState$ = "";
+							Speaker$ = "";
+							// clearbuffer(IncomingBuffer);
+						}
+					}
+				}
+			}
+		}
+	}
+	// clearbuffer(IncomingBuffer);
+}
+
+/*******************************************************************************************
+  Event Handlers
+*******************************************************************************************/
+
+THREADSAFE change fromModule$
+{
+	integer nextChar;
+               
+	if(len(fromModule$))
+	{
+		makestring(IncomingBuffer,"%s",fromModule$);
+		ProcessBuffer();
+	}
+	clearbuffer(fromModule$);
+}
+
+change MicOn
+{
+	if(SpeakerRank)
+		makestring(toModule$,"M%c1",SpeakerNumber);
+}
+
+change MicOff
+{
+	if(SpeakerRank)
+		makestring(toModule$,"M%c3",SpeakerNumber);
+}
+
+change MicToggle
+{
+	if(SpeakerRank)
+		if(SpeakerState=1)
+			makestring(toModule$,"M%c3",SpeakerNumber);
+		else
+			makestring(toModule$,"M%c1",SpeakerNumber);
+}
+
+PUSH MicRemove
+{
+	if(SpeakerRank)
+	{
+		Mic_Request = 0; Mic_Active = 0; MicState = 0;
+		SpeakerState$ = "Off"; SpeakerState$ = "";
+		Speaker$ = "";
+		makestring(toModule$,"M%c2",SpeakerNumber);
+	}
+}
+
+/*******************************************************************************************
+  Main()
+*******************************************************************************************/
+Function Main()
+{
+
+	clearbuffer(IncomingBuffer);
+
+    WaitForInitializationComplete();
+
+	Mic_Request = 0; Mic_Active = 0; MicState = 0;
+}
+

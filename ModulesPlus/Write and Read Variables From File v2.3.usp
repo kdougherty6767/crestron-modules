@@ -1,0 +1,680 @@
+/*
+Programmer:  Joe P
+Dealer Name: Studio AV, Inc. 
+Website: www.studioav.net
+*/
+
+#SYMBOL_NAME "Write and Read Variables From File v2.3"
+#CATEGORY "9" // Memory
+#HINT "Memory"
+#DIGITAL_EXPAND InputsWithOutputs
+#ANALOG_SERIAL_EXPAND InputsWithOutputs
+#ENABLE_TRACE
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+
+#HELP_BEGIN 
+	Write and Read Variables From File v1.6
+	
+    Initialize must be pulsed for module to funtion or the Initialize on Startup parameter could be set to on.  This will also recall all enabled data
+
+	Values are stored only when on auto or on the respective Store input rising edge.
+		
+	The Recalled outputs are momentarily high right after the outputs have been recalled from file.
+	These would typically be used as enables on buffers To restore the states that were last saved.  Loop back.
+		
+	Parameters -    Enable - enable the any on the 3 types of data store, disable items not in use to reduce processor load
+						
+					Auto stores states - Automatically stores the states when they change.  not reccomended. It is processor intensive, 
+					especially with analog values if not properly done. If needed use analog sampling to limit the amount of writes to the file. 
+	              
+					Allow pass through - Enables or disable the pass through of values from the input to the output.
+
+					Initialize on Startup - Auto initalizes at start up(ON setting not reccomended as it processing and it can be too much at startup)					
+
+	              	File Name Prefix - prefix for the 3 saved files, needed when using multiple instances in a program.
+	              	Use "" to use none.
+	              
+	Max String Length is 254 charaters
+	NVRAM needs to be enabled
+
+	V1.7 fixed error where it cleared the digital file on initiliation
+
+	V1.8 Changed read fuctions to work with new crestron functions
+
+	V2.0 Switched from writing Arrays to formated text do to inconsistancies in the WriteStringArray function.
+
+	V2.1 Added Location Parameter use \\NVRAM\\ for interanl RAM. \\CF0\\ for memory card. \\RM\\ for USB
+
+	V2.2 Changed file writing methods
+
+#HELP_END
+
+//Inputs & Outputs	____________________________________________________________________________   
+
+Digital_Input _SKip_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, Initialize, _SKIP_;
+Digital_Input Store_Digital;
+Digital_Input Store_Analog;
+Digital_Input Store_String;
+Digital_Input Store_All; 
+Digital_Input Recall_Digital;
+Digital_Input Recall_Analog;
+Digital_Input Recall_String;
+Digital_Input Recall_All, _SKIP_; 
+Digital_Input Clear_All_Stored_Values, _SKIP_;
+
+Digital_Output _Skip_, _SKIP_,_SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_,_SKIP_, _SKIP_, Store_Digital_fb;
+Digital_Output Store_Analog_fb;
+Digital_Output Store_String_fb, _SKIP_;
+Digital_Output Digital_Recalled;
+Digital_Output Analog_Recalled;
+Digital_Output String_Recalled, _SKIP_;
+Digital_Output _SKIP_, _SKIP_, _SKIP_; 
+
+Digital_Input Digital_in[100], _SKIP_;
+Analog_Input Analog_in[100], _SKIP_;
+String_Input String_in$[100,100][254];
+
+Digital_Output Digital_out[100], _SKIP_;
+Analog_Output Analog_out[100], _SKIP_;
+String_Output String_out$[100,100];
+
+//Sockets	____________________________________________________________________________________
+
+//Parameters	________________________________________________________________________________
+
+Integer_Parameter Digital_Enable, Analog_Enable, String_Enable, Auto_Store_Digital, Auto_Store_Analog, Auto_Store_String, Value_Pass_Through, Initialize_on_Startup;
+String_Parameter File_Location[50], File_Name_Prefix[20];
+
+//Parameter Properties	________________________________________________________________________
+
+#BEGIN_PARAMETER_PROPERTIES Digital_Enable, Analog_Enable, String_Enable, Auto_Store_Digital, Auto_Store_Analog, Auto_Store_String, Value_Pass_Through, Initialize_on_Startup 
+	propDefaultValue = 0d;
+	propList = {0d , "Off"} , {1d , "On"};
+#END_PARAMETER_PROPERTIES
+
+#BEGIN_PARAMETER_PROPERTIES File_Location
+	propValidUnits= unitString;
+	propDefaultValue = "\\NVRAM\\";
+#END_PARAMETER_PROPERTIES
+
+#BEGIN_PARAMETER_PROPERTIES File_Name_Prefix
+	propValidUnits= unitString;
+	propDefaultValue = "";
+#END_PARAMETER_PROPERTIES
+
+// Structures __________________________________________________________________________________ 
+
+//Global Variables	____________________________________________________________________________
+
+Integer D_ins;
+Integer A_ins;
+Integer S_ins; 
+Integer D_outs;
+Integer A_outs;
+Integer S_outs; 
+
+Integer D_Array[100];
+Integer A_Array[100];
+String S_Array[100][254];
+String D_File[50];
+String A_File[50];
+String S_File[50];
+
+Integer Initializing_Files;
+Integer Initialized;
+
+//Functions  	________________________________________________________________________________ 
+
+Function Write_Digital_Array()
+{
+   	Integer i;
+	Signed_Integer iFileHandle, iErrorCode;
+	String sData[10000];
+
+	If(Digital_Enable)
+    {	   	
+	   	sData = "Digital Values:\n";//string header
+
+		For(i = 0 to 100)											
+        {
+	   		sData = sData + "[" + ItoA(i) + "] " + ItoA(D_Array[i]) + "\n";//convert array
+        }
+        sData = sData + "[101] <end>";//add footer
+
+	   	StartFileOperations();
+	   	iFileHandle = FileOpen(D_File, _O_WRONLY | _O_Creat | _O_TEXT);
+	   	If(iFileHandle >= 0)
+	   	{
+	   		iErrorCode = filewrite(iFileHandle, sData, len(sData));
+	   		Pulse(1, Store_Digital_fb);
+	   	}
+
+	   	FileClose(iFileHandle);
+	   	EndFileOperations();
+    }
+}
+
+Function Write_Analog_Array()
+{    
+   	Integer i;
+	Signed_Integer iFileHandle, iErrorCode;
+	String sData[10000];
+
+	If(Analog_Enable)
+    {	   	
+	   	sData = "Analog Values:\n";//string header
+
+		For(i = 0 to 100)											
+        {
+	   		sData = sData + "[" + ItoA(i) + "] " + ItoA(A_Array[i]) + "\n";//convert array
+        }
+        sData = sData + "[101] <end>";//add footer
+
+	   	StartFileOperations();
+	   	iFileHandle = FileOpen(A_File, _O_WRONLY | _O_Creat | _O_TEXT);
+	   	If(iFileHandle >= 0)
+	   	{
+	   		iErrorCode = filewrite(iFileHandle, sData, len(sData));
+	   		Pulse(1, Store_Analog_fb);
+	   	}
+
+	   	FileClose(iFileHandle);
+	   	EndFileOperations();
+	}
+}
+
+Function Write_String_Array()
+{
+   	Integer i;
+	Signed_Integer iFileHandle, iErrorCode;
+	String sData[30000];
+
+	If(Analog_Enable)
+    {	   	
+	   	sData = "String Values:\n";//string header
+
+		For(i = 0 to 100)											
+        {
+	   		sData = sData + "[" + ItoA(i) + "] " + S_Array[i] + "\n";//convert array
+        }
+        sData = sData + "[101] <end>";//add footer
+
+	   	StartFileOperations();
+	   	iFileHandle = FileOpen(S_File, _O_WRONLY | _O_Creat | _O_TEXT);
+	   	If(iFileHandle >= 0)
+	   	{
+	   		iErrorCode = filewrite(iFileHandle, sData, len(sData));
+	   		Pulse(1, Store_String_fb);
+	   	}
+
+	   	FileClose(iFileHandle);
+	   	EndFileOperations();
+	} 
+}
+
+Function Write_All_Arrays()
+{
+	Write_Digital_Array();
+	Write_Analog_Array();
+	Write_String_Array();
+}   
+
+Function Clear_Digital_Array()
+{
+   	Integer i;	
+
+	If(Digital_Enable)
+    {   	
+	   	D_array[0] = 12345;
+
+	   	For(i = 1 to 100)
+            D_Array[i] = 0;
+	
+	   	For(i = 1 to D_outs)
+	   		Digital_out[i] = 0;
+		Write_Digital_Array();
+	}
+}
+
+Function Clear_Analog_Array()
+{
+   	Integer i;  	 	
+
+	If(Analog_Enable)
+    {  	
+		A_Array[0] = 12345;
+	   	
+	   	For(i = 1 to 100)
+            A_Array[i] = 0;
+       	
+	   	For(i = 1 to A_outs)
+	   		Analog_out[i] = 0;
+
+		Write_Analog_Array(); 
+	}
+}
+
+Function Clear_String_Array()
+{
+   	Integer i;
+   	   	
+	If(String_Enable)
+    {
+	   	S_Array[0] = "12345";
+	   	
+	   	For(i = 1 to 100)
+	   		S_Array[i] = "";
+	   	       	
+	   	For(i = 1 to S_outs)
+	   		String_out$[i] = "";
+
+        Write_String_Array();	   		   	
+	}
+}
+
+Function Clear_All_Arrays()
+{
+	If(Initialized)
+	{
+		Clear_Digital_Array();
+		Clear_Analog_Array();
+		Clear_String_Array();
+	}
+}
+
+Function Read_Digital_Array()
+{
+	Integer i;
+   	Signed_Integer iFileHandle, iErrorCode;
+   	String sData[10000], sTemp[100], sIndex[8];  
+    
+	If(Digital_Enable)
+    {
+		Initializing_Files = 1;
+	   	
+		StartFileOperations();   	
+		iFileHandle = FileOpen(D_File, _O_RDONLY | _O_TEXT);
+		If(iFileHandle >= 0)
+		{
+			FileSeek(iFileHandle,0,SEEK_SET);		
+            iErrorCode = fileread(iFileHandle, sData, 10000);
+			FileClose(iFileHandle);
+		}
+		Else
+		{
+			Trace("Error Opening File Digital_Store = %d", iFileHandle);
+		}
+		EndFileOperations();
+
+		if(iErrorCode >= 0)
+		{ 
+			If(Find("[0] 12345", sData) && ReverseFind("[100] ", sData) )//string has been formated
+			{
+				sTemp = Remove("[0] ",sData);				For(i = 0 to 100)
+				{
+					sIndex = "\n[" + ItoA(i + 1) + "] ";
+					sTemp = Remove(sIndex, sData);//remove indexed data
+                	sTemp = Left(sTemp, ReverseFind(sIndex, sTemp) - 1); //remove padding and index number                 
+					D_Array[i] = AtoI(sTemp);
+				}
+
+				For(i = 1 to D_outs)
+					Digital_out[i] = D_Array[i];
+				
+				Pulse(1, Digital_Recalled);
+			}
+		} 
+		else
+		{ 
+			Clear_Digital_Array();
+		}
+
+		Initializing_Files = 0;
+	}		
+}
+
+Function Read_Analog_Array()
+{
+	Integer i;
+   	Signed_Integer iFileHandle, iErrorCode;
+   	String sData[10000], sTemp[100], sIndex[8]; 
+
+	If(Analog_Enable)
+    {
+		Initializing_Files = 1;
+	   	
+		StartFileOperations();
+		iFileHandle = FileOpen(A_File, _O_RDONLY | _O_TEXT);
+		If(iFileHandle >= 0)
+		{
+			FileSeek(iFileHandle,0,SEEK_SET);
+			iErrorCode = fileread(iFileHandle, sData, 10000);
+			FileClose(iFileHandle);
+		}
+		Else
+		{
+			Trace("Error Opening File Analog_Store = %d", iFileHandle);
+		}
+		EndFileOperations();
+
+		if (iErrorCode >= 0)
+		{ 
+			If(Find("[0] 12345", sData) )//&& ReverseFind("[100] ", sData) )//string has been formated
+			{
+				sTemp = Remove("[0] ",sData);
+
+				For(i = 0 to 100)
+				{
+					sIndex = "\n[" + ItoA(i + 1) + "] ";
+					sTemp = Remove(sIndex, sData);//remove indexed data
+                	sTemp = Left(sTemp, ReverseFind(sIndex, sTemp) - 1); //remove padding and index number                 
+					A_Array[i] = AtoI(sTemp);
+				}
+
+				For(i = 1 to A_outs)
+					Analog_out[i] = A_Array[i];
+				
+				Pulse(1, Analog_Recalled);
+			}
+		} 
+		else
+		{ 
+			Clear_Analog_Array();
+		}
+	
+		Initializing_Files = 0;
+	}			
+}
+
+Function Read_String_Array()
+{
+	Integer i;
+   	Signed_Integer iFileHandle, iErrorCode;
+   	String sData[30000], sTemp[300], sIndex[8];  
+             
+	If(String_Enable)
+    {
+		Initializing_Files = 1;
+	   	
+		StartFileOperations();
+		iFileHandle = FileOpen(S_File, _O_RDONLY | _O_TEXT);
+		If(iFileHandle >= 0)
+		{
+			FileSeek(iFileHandle,0,SEEK_SET);
+			iErrorCode = fileread(iFileHandle, sData, 30000);
+			FileClose(iFileHandle);
+		}
+		Else
+		{
+			Trace("Error Opening File String_Store = %d", iFileHandle);
+		}	
+		EndFileOperations();	
+	
+		if (iErrorCode >= 0)
+		{ 
+ 			If(Find("[0] 12345", sData) && ReverseFind("[100] ", sData) )//string has been formated
+			{
+				sTemp = Remove("[0] ",sData);
+
+				For(i = 0 to 100)
+				{
+					sIndex = "\n[" + ItoA(i + 1) + "] ";
+					sTemp = Remove(sIndex, sData);//remove indexed data
+                	sTemp = Left(sTemp, ReverseFind(sIndex, sTemp) - 1); //remove padding and index number                 
+					S_Array[i] = sTemp;
+				}
+
+				For(i = 1 to S_outs)
+					String_out$[i] = S_Array[i];
+				
+				Pulse(1, String_Recalled);
+			}
+		} 
+		else
+		{ 
+ 			Clear_String_Array();
+		}
+		
+		Initializing_Files = 0;
+	}		
+}
+
+Function Initialize_module()
+{
+    Integer i;
+
+	Initializing_Files = 1;
+
+	If(len(File_Name_Prefix))
+	{
+		D_File = File_Location + File_Name_Prefix + "_Digital_Store.txt";
+		A_File = File_Location + File_Name_Prefix + "_Analog_Store.txt";
+		S_File = File_Location + File_Name_Prefix + "_String_Store.txt";
+	}	
+	Else
+	{
+		Trace("file name prefix failed   %s", File_Name_Prefix);
+		D_File = File_Location + "Digital_Store.txt";
+		A_File = File_Location + "Analog_Store.txt";
+		S_File = File_Location + "String_Store.txt";
+    }
+
+	If(Digital_Enable)
+    {   
+		//Check inputs and outputs
+		FOR(D_ins = 100 to 1 Step -1)
+			IF(IsSignalDefined(Digital_in[D_ins]))
+				Break; 
+
+		FOR(D_outs = 100 to 1 Step -1)
+			IF(IsSignalDefined(Digital_out[D_outs]))
+				Break;
+     
+		Read_Digital_Array();
+ 
+		If(D_Array[0] <> 12345)
+			Clear_Digital_Array();
+	}
+    
+	If(Analog_Enable)
+    { 
+		FOR(A_ins = 100 to 1 Step -1)
+			IF(IsSignalDefined(Analog_in[A_ins]))
+				Break;
+
+		FOR(A_outs = 100 to 1 Step -1)
+			IF(IsSignalDefined(Analog_out[A_outs]))
+				Break;
+
+	    Read_Analog_Array();
+
+		If(A_Array[0] <> 12345)
+		{	
+			Clear_Analog_Array();
+		}
+
+	}
+
+	If(String_Enable)
+    { 
+		FOR(S_ins = 100 to 1 Step -1)
+			IF(IsSignalDefined(String_in$[S_ins]))
+				Break;
+	
+		FOR(S_Outs = 100 to 1 Step -1)
+			IF(IsSignalDefined(String_out$[S_outs]))
+				Break;	
+	
+	    Read_String_Array();
+			
+		If(S_Array[0] <> "12345")
+			Clear_String_Array();
+	}
+		
+	Initializing_Files = 0;
+	
+	Initialized = 1;
+}
+
+
+
+
+//Events	____________________________________________________________________________________ 
+
+Push Initialize
+{
+	Initialize_module();
+}
+
+Push Store_Digital
+{
+	If(Initializing_Files = 0 && Initialized)
+    	Write_Digital_Array();
+}
+
+Push Store_Analog
+{
+	If(Initializing_Files = 0 && Initialized)
+    	Write_Analog_Array();
+}
+
+Push Store_String
+{
+	If(Initializing_Files = 0 && Initialized)
+    	Write_String_Array();
+}
+
+Push Store_All
+{
+	If(Initializing_Files = 0 && Initialized)
+	{
+    	Write_Digital_Array();
+    	Write_Analog_Array();
+    	Write_String_Array();
+    }	
+}
+
+Push Clear_All_Stored_Values
+{
+	If(Initializing_Files = 0 && Initialized)
+	{	
+		Clear_Digital_Array();
+		Clear_Analog_Array();
+		Clear_String_Array();
+	}
+} 
+
+Push Recall_Digital
+{   
+	If(Initializing_Files = 0 && Initialized)
+		Read_Digital_Array();
+}
+
+Push Recall_Analog
+{   
+	If(Initializing_Files = 0 && Initialized)
+		Read_Analog_Array();
+}
+
+Push Recall_String
+{   
+	If(Initializing_Files = 0 && Initialized)
+		Read_String_Array();
+}
+
+Push Recall_All
+{
+	If(Initializing_Files = 0 && Initialized)
+	{
+		Read_Digital_Array();
+		Read_Analog_Array();
+		Read_String_Array();
+	}
+}
+
+Change Digital_in
+{
+	Integer i;
+
+	If(Initialized && Digital_Enable)
+    {
+		While(Initializing_Files)
+		{
+		}
+			
+		i = GetLastModifiedArrayIndex();
+	    
+	  	If(D_Array[i] <> Digital_in[i])
+	  	{
+	  		D_Array[i] = Digital_in[i];
+	    
+			If(i <= D_outs && Value_Pass_Through)
+	    		Digital_out[i] = D_Array[i];
+	         
+	   		If(Auto_Store_Digital)
+				Write_Digital_Array();
+	    }
+	}		
+}
+
+Change Analog_in
+{
+	Integer i;
+
+	If(Initialized && Analog_Enable)
+    {
+		While(Initializing_Files)
+		{
+		}	
+		
+		i = GetLastModifiedArrayIndex();
+	    
+	    If(A_Array[i] <> Analog_in[i])
+	    {	
+	    	A_Array[i] = Analog_in[i];
+	    
+			If(i <= A_outs && Value_Pass_Through)
+	    		Analog_out[i] = A_Array[i];
+	    
+	    	If(Auto_Store_Analog)
+	    		Write_Analog_Array();	
+	    }			
+    }
+} 
+
+Change String_in$
+{
+	Integer i;
+
+	If(Initialized && String_Enable)
+    {
+		While(Initializing_Files)
+		{
+		}
+		
+		i = GetLastModifiedArrayIndex();
+	    
+	    If(S_Array[i] <> String_in$[i])
+	    {
+	    	S_Array[i] = String_in$[i];
+	    
+			If(i <= S_outs && Value_Pass_Through)
+	    		String_out$[i] = S_Array[i];
+	    
+	    	If(Auto_Store_String)
+	    		Write_String_Array();
+	    }		
+	}
+}
+
+
+//Main - startup _______________________________________________________________________________
+
+Function Main()
+{   
+	WaitForInitializationComplete();
+                           
+	If(Initialize_on_Startup)
+		Initialize_module();											
+}

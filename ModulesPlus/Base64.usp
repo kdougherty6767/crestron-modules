@@ -1,0 +1,204 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name: Dynamark Media Inc.
+System Name: N/A
+System Number: N/A
+Programmer: Troy Garner
+Comments: Base64 encoding helper for encoding and decoding.
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+
+#SYMBOL_NAME "Base64"
+#HINT "Base64 encoding helper"
+#CATEGORY "46" "Encoding" // custom category
+
+#ENABLE_TRACE
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENCODING_ASCII
+
+#HELP_BEGIN
+/*
+ * encode : encodes in$ and sets the result to out$ on the rising edge of this signal.
+ * decode : decodes in$ and sets the result to out$ on the rising edge of this signal.
+ *    in$ : input plaintext or base64 depending on whether the data is to be encoded or decoded.
+ *   out$ : the result of the encode/decode process.
+*/
+#HELP_END
+
+#DEFINE_CONSTANT TRUE  1
+#DEFINE_CONSTANT FALSE 0
+
+#DEFINE_CONSTANT MAX_PLAINTEXT_LENGTH 1024 // maximum plaintext buffer size
+#DEFINE_CONSTANT MAX_BASE64_LENGTH    2048 // maximum base64 buffer size
+                                           // note: must be 1/3rd larger than the plaintext maximum length
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+
+DIGITAL_INPUT encode, decode;
+STRING_INPUT in$[MAX_PLAINTEXT_LENGTH];
+STRING_OUTPUT out$;
+
+/*******************************************************************************************
+  GLOBAL VARIABLES
+  (Uncomment and declare variables as needed)
+*******************************************************************************************/
+
+#IF_SERIES2
+    INTEGER __lock__;
+#ENDIF
+
+STRING lookup$[65]; // 64 characters + '='
+
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+
+#IF_SERIES2
+    INTEGER_FUNCTION LockEnter()
+    {
+        if (__lock__) { return (FALSE); }
+        __lock__ = TRUE;
+        return (TRUE);
+    }
+
+    FUNCTION LockExit()
+    {
+        __lock__ = FALSE;
+    }
+#ENDIF
+
+STRING_FUNCTION Base64Encode(STRING input$)
+{
+    STRING chunk$[3];
+    STRING output$[MAX_BASE64_LENGTH];
+    INTEGER i, j, k, v[4];
+
+    k = Len(input$);
+    if (k = 0) return ("");
+
+    // padding to avoid worrying about buffer overrun with Byte() function.
+    // but to set the end bits to 0's...
+    input$ = input$ + "\x00\x00";
+
+    i = 1;
+    do
+    {
+        // separate 24-bits into 32-bit sequence to generate
+        // 4 bytes for each 3 byte chunk
+        v[1] = (((Byte(input$, i + 0) >> 2) & 0x3f)) + 2;
+        v[2] = (((Byte(input$, i + 0) << 4) & 0x30) | ((Byte(input$, i + 1) >> 4) & 0x0f)) + 2;
+
+        v[3] = 1; v[4] = 1;
+        if (i + 1 <= k) v[3] = (((Byte(input$, i + 1) << 2) & 0x3c) | ((Byte(input$, i + 2) >> 6) & 0x03)) + 2;
+        if (i + 2 <= k) v[4] =   (Byte(input$, i + 2) & 0x3f) + 2;
+
+        for (j = 1 to 4)
+        {
+            output$ = output$ + Chr(Byte(lookup$, v[j]));
+        }
+
+        i = i + 3;
+    } until (i > k);
+
+    return (output$);
+}
+
+STRING_FUNCTION Base64Decode(STRING input$)
+{
+    STRING chunk$[4];
+    STRING output$[MAX_PLAINTEXT_LENGTH];
+    INTEGER bytes[4];
+    INTEGER i, j, k, v[3];
+
+    k = Len(input$);
+    if (k = 0 || k % 4 <> 0) return ("");
+
+    i = 1;
+    do
+    {
+        chunk$ = Mid(input$, i, 4); // grab 4-byte chunk from base64 input
+        
+        for (j = 1 to 4)
+        {
+            if (Byte(chunk$, j) <> '=')
+                bytes[j] = Find(Chr(Byte(chunk$, j)), lookup$) - 2;
+            else
+                bytes[j] = 0; // set padding bytes to 0
+        }
+        
+        // compact least significant 6-bits of each input
+        // base64 byte into 24-bits (3 bytes)
+        v[1] = ((bytes[1] << 2) & 0xfc) | ((bytes[2] >> 4) & 0x03);
+        v[2] = ((bytes[2] << 4) & 0xf0) | ((bytes[3] >> 2) & 0x0f);
+        v[3] = ((bytes[3] << 6) & 0xc0) |  (bytes[4] & 0x3f);
+        
+        // concatenate result to output ignoring padding
+        for (j = 1 to 3)
+        {
+            if (Byte(chunk$, j + 1) <> '=')
+                output$ = output$ + Chr(v[j]);
+        }
+        
+        i = i + 4;
+    } until (i > k);
+    
+    return (output$);
+}
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+
+#IF_SERIES3
+    THREADSAFE PUSH encode
+    {
+        out$ = Base64Encode(in$);
+    }
+
+    THREADSAFE PUSH decode
+    {
+        out$ = Base64Decode(in$);
+    }
+#ELSE
+    PUSH encode
+    {
+        if (LockEnter())
+        {
+            out$ = Base64Encode(in$);
+            LockExit();
+        }
+    }
+
+    PUSH decode
+    {
+        if (LockEnter())
+        {
+            out$ = Base64Decode(in$);
+            LockExit();
+        }
+    }
+#ENDIF
+
+FUNCTION Main()
+{
+    #IF_SERIES2
+        __lock__ = FALSE;
+    #ENDIF
+    
+    lookup$ = "=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+}

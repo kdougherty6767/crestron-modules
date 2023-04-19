@@ -1,0 +1,72 @@
+/*
+Dealer Name:		Crestron Electronics
+Programmer:			MET
+Comments:
+*/
+
+//*****     COMPILER     *****
+#DEFINE_CONSTANT	ciMAXFROMCHARS		242
+#DEFINE_CONSTANT	ciMAXUSERCHARS		254
+#DEFINE_CONSTANT	ciMAXSERVERCHARS	40
+#DEFINE_CONSTANT	ciMAXCHARS			255
+#DEFAULT_VOLATILE
+
+#HELP_BEGIN
+   This module utilizes the CrestronMailFunctions features with Crestron's SIMPL+ framework. 
+   GMX Webmail SMTP servers have been verified.
+#HELP_END
+
+//*****       IOs        *****
+DIGITAL_INPUT	send;		//sends the message if required(*) fields are not null
+
+STRING_INPUT	sendTo[50], subject[200], body[1000], cc[10000];	//Text in from a keyboard
+
+ANALOG_OUTPUT Error_msg;
+
+string_parameter _skip_, _skip_, _skip_, _skip_, _skip_, server[100], user[100], password[100], sendfrom[100];
+
+integer_parameter port;
+
+#begin_parameter_properties port
+	propvalidunits = unitdecimal;
+	propdefaultunit = unitdecimal;
+	propdefaultvalue = 25d;
+#end_parameter_properties
+
+#begin_parameter_properties server
+	propvalidunits = unitstring;
+	propdefaultunit = unitstring;
+	propdefaultvalue = "smtp.gmx.com";	
+#end_parameter_properties
+
+#begin_parameter_properties user
+	propvalidunits = unitstring;
+	propdefaultunit = unitstring;
+	propdefaultvalue = "username";	
+#end_parameter_properties
+
+#begin_parameter_properties password
+	propvalidunits = unitstring;
+	propdefaultunit = unitstring;
+	propdefaultvalue = "password";	
+#end_parameter_properties
+
+#begin_parameter_properties sendfrom
+	propvalidunits = unitstring;
+	propdefaultunit = unitstring;
+	propdefaultvalue = "user@domain.com";	
+#end_parameter_properties
+
+
+//*****     EVENTS       *****
+
+//sends the email message if the server, from and to fields are populated
+PUSH send
+{
+	Error_msg = sendmailadvance(Server,port,user,password,sendFrom,sendTo,cc,subject,body,0,"");
+}
+
+Function Main()
+{
+	WaitForInitializationComplete();
+}

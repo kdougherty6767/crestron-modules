@@ -1,0 +1,761 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name: Crestron Electronics, Inc.
+System Name: Digital Projection Titan
+System Number: 
+Programmer: LP
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "Digital Projection Titan v2.0 Processor"
+// #HINT ""
+
+
+#DEFINE_CONSTANT ciYes			1
+#DEFINE_CONSTANT ciNo		 	0
+
+#DEFINE_CONSTANT ciActive		1
+#DEFINE_CONSTANT ciInactive 	0
+
+#DEFINE_CONSTANT ciClear 		9999
+#DEFINE_CONSTANT ciMaxAttempts  2
+
+#DEFINE_CONSTANT ciStaticCommands 	17	// commands that require an ack 	(index 1 - 17)
+#DEFINE_CONSTANT ciBrightnessIndex  18	// brightness ramping command		(index 18)
+#DEFINE_CONSTANT ciContrastIndex 	19	// contrast ramping command 		(index 19)
+#DEFINE_CONSTANT ciPIPHPosIndex	  	20	// PIP position h ramping command	(index 20)
+#DEFINE_CONSTANT ciPIPVPosIndex 	21	// PIP position h ramping command	(index 21)
+
+#DEFINE_CONSTANT ciAllCommands  	21	// total commands that provide feedback
+
+                                                                  
+
+// #CATEGORY "" 
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+// #ENCODING_ASCII
+// #ENCODING_UTF16
+// #ENCODING_INHERIT_FROM_PARENT
+// #ENCODING_INHERIT_FROM_PROGRAM
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+DIGITAL_INPUT Response_Received;
+DIGITAL_INPUT Lens_Center;
+DIGITAL_INPUT Debug;
+DIGITAL_INPUT Brightness[2];
+DIGITAL_INPUT Contrast[2];
+DIGITAL_INPUT PIP_H_Position[2];
+DIGITAL_INPUT PIP_V_Position[2];
+BUFFER_INPUT From_Device[200];
+ANALOG_INPUT _SKIP_;
+ANALOG_INPUT Command_Request[ciStaticCommands];
+ANALOG_INPUT _SKIP_;
+ANALOG_INPUT Current_Status[ciStaticCommands]; 
+DIGITAL_INPUT Lens[8];
+DIGITAL_INPUT Lens_Presets[10];
+
+// STRING_INPUT 
+// BUFFER_INPUT 
+
+
+STRING_OUTPUT To_Device;
+ANALOG_OUTPUT Brightness_Gauge;
+STRING_OUTPUT Brightness_Text;
+ANALOG_OUTPUT Contrast_Gauge;
+STRING_OUTPUT Contrast_Text;
+ANALOG_OUTPUT PIP_H_Position_Gauge;
+STRING_OUTPUT PIP_H_Position_Text;
+ANALOG_OUTPUT PIP_V_Position_Gauge;
+STRING_OUTPUT PIP_V_Position_Text;
+STRING_OUTPUT Lamp_1_Hours_Text;
+STRING_OUTPUT Lamp_2_Hours_Text;
+STRING_OUTPUT Lamp_3_Hours_Text;
+STRING_OUTPUT Lamp_4_Hours_Text;
+STRING_OUTPUT Lamp_1_Strikes_Text;
+STRING_OUTPUT Lamp_2_Strikes_Text;
+STRING_OUTPUT Lamp_3_Strikes_Text;
+STRING_OUTPUT Lamp_4_Strikes_Text;
+DIGITAL_OUTPUT All_Clear;
+DIGITAL_OUTPUT Please_Wait;
+DIGITAL_OUTPUT Lens_Preset_Is_Selected[10];
+ANALOG_OUTPUT _SKIP_;
+ANALOG_OUTPUT Send_Request[ciStaticCommands]; 
+
+/*******************************************************************************************
+  SOCKETS
+  (Uncomment and define socket definitions as needed)
+*******************************************************************************************/
+// TCP_CLIENT
+// TCP_SERVER
+// UDP_SOCKET
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+// INTEGER_PARAMETER
+// SIGNED_INTEGER_PARAMETER
+// LONG_INTEGER_PARAMETER
+// SIGNED_LONG_INTEGER_PARAMETER
+// STRING_PARAMETER
+
+/*******************************************************************************************
+  Parameter Properties
+  (Uncomment and declare parameter properties as needed)
+*******************************************************************************************/
+/*
+#BEGIN_PARAMETER_PROPERTIES parameter_variable, parameter_variable, ...
+   // propValidUnits = // unitString or unitDecimal|unitHex|unitPercent|unitCharacter|unitTime|unitTicks;
+   // propDefaultUnit = // unitString, unitDecimal, unitHex, unitPercent, unitCharacter, unitTime or unitTicks;
+   // propBounds = lower_bound , upper_bound;
+   // propDefaultValue = ;  // or, propDefaultValue = "";
+   // propList = // { "value" , "label" } , { "value" , "label" } , ... ;
+   // propShortDescription = "status_bar_hint_text";
+   // #BEGIN_PROP_FULL_DESCRIPTION  line_1...  line_2...  line_n  #END_PROP_FULL_DESCRIPTION
+   // #BEGIN_PROP_NOTES line_1...  line_2...  line_n  #END_PROP_NOTES
+#END_PARAMETER_PROPERTIES
+*/
+
+/*******************************************************************************************
+  Structure Definitions
+  (Uncomment and define structure definitions as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: struct.myString = "";
+*******************************************************************************************/
+/*
+STRUCTURE MyStruct1
+{
+};
+
+MyStruct1 struct;
+*/
+
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+
+INTEGER iRequest[ciAllCommands];
+INTEGER iSendCommand;
+INTEGER iAttempts[ciAllCommands];
+INTEGER iBrightnessValue;
+INTEGER iContrastValue;
+INTEGER iPIPHPosValue;
+INTEGER iPIPVPosValue;
+INTEGER iLensDirection;
+INTEGER iLensSave;
+INTEGER iLensPreset;
+INTEGER iSendQuery;
+STRING sDebugText[100];
+
+
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+
+FUNCTION SendCommands()
+{
+	INTEGER a;
+    INTEGER iAllClear;
+	
+	if(Debug)
+	{
+		sDebugText = "Send Commands Triggered\n";
+		trace("%s", sDebugText);
+	}
+	iAllClear = ciYes;
+	iSendCommand = ciActive;
+	for(a = 1 to ciAllCommands)
+	{
+		if(iRequest[a] <> ciClear)			// if a request for this command index exists
+		{
+			iAllClear = ciNo;
+			All_Clear = iAllClear;
+			if(iAttempts[a] < ciMaxAttempts)			// and its not the second attempt for this index
+			{
+				iAttempts[a] = iAttempts[a] + 1;
+				cswitch(a)
+				{
+					case(ciBrightnessIndex):
+					{
+						makestring(To_Device, "*brightness = %ld\x0D", iRequest[a] - 50);	// range -50 to 50
+						Please_Wait = 1;
+						break;
+					}
+					case(ciContrastIndex):
+					{
+						makestring(To_Device, "*contrast = %ld\x0D", iRequest[a] - 50);		// range -50 to 50
+						Please_Wait = 1;
+						break;
+					}
+					case(ciPIPHPosIndex):
+					{
+						makestring(To_Device, "*pip.hpos = %ld\x0D", iRequest[a]);			// range 0 to 100
+						Please_Wait = 1;
+						break;
+					}
+					case(ciPIPVPosIndex):
+					{
+						makestring(To_Device, "*pip.vpos = %ld\x0D", iRequest[a]);			// range 0 to 100
+						Please_Wait = 1;
+						break;
+					}
+					default:
+					{
+		   				Send_Request[a] = 0;			// clear command requested for this index to refresh
+		   				Send_Request[a] = iRequest[a];	// send command requested for this index
+						break;
+					}
+				}
+				if(Debug)
+				{
+					sDebugText = "iAttempts[" + itoa(a) + "]:" + itoa(iAttempts[a]) + "\n";
+					trace("%s", sDebugText);
+				}
+				wait(1500, CommandTimeout)		// check for next request if no response for 15s
+				{
+					if(Debug)
+					{
+						sDebugText = "CommandTimeout Triggered\n";
+						trace("%s", sDebugText);
+					}
+					SendCommands();				
+				}
+				break;
+			}
+			else							// and its the second attempt
+			{
+				iRequest[a] = ciClear;		// clear request for that command index
+				if(Debug)
+				{
+					sDebugText = "iRequest[" + itoa(a) + "] = " + itoa(iRequest[a]) + "\n";
+					trace("%s", sDebugText);
+				}
+				SendCommands();				
+				break;
+			}
+		}
+	}
+	if(iAllClear = ciYes)					// if no request for any command index exists
+	{
+		All_Clear = iAllClear;
+		Please_Wait = 0;
+		if(Debug)
+		{
+			sDebugText = "All Clear\n";
+			trace("%s\n", sDebugText);
+		}
+		iSendCommand = ciInactive;
+	}
+}
+
+FUNCTION SendLensCommand(INTEGER Speed)
+{
+	cswitch(iLensDirection)
+	{
+		case(1):	{	makestring(To_Device, "*lens.up = %u\x0D", Speed);	break;	}
+		case(2):	{	makestring(To_Device, "*lens.down = %u\x0D", Speed);	break;	}
+		case(3):	{	makestring(To_Device, "*lens.left = %u\x0D", Speed);	break;	}
+		case(4):	{	makestring(To_Device, "*lens.right = %u\x0D", Speed);	break;	}
+
+		case(5):	{	makestring(To_Device, "*zoom.in\x0D");	break;	}
+		case(6):	{	makestring(To_Device, "*zoom.out\x0D");	break;	}
+		case(7):	{	makestring(To_Device, "*focus.near\x0D");	break;	}
+		case(8):	{	makestring(To_Device, "*focus.far\x0D");	break;	}
+	}
+}
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+
+CHANGE Command_Request
+{
+	if(Command_Request[getlastmodifiedarrayindex()] <> ciClear)
+	{
+		iRequest[getlastmodifiedarrayindex()] = Command_Request[getlastmodifiedarrayindex()];	// set request for command index	
+		iAttempts[getlastmodifiedarrayindex()] = 0;
+		if(iSendCommand = ciInactive)
+		{
+			SendCommands();
+		}
+	}
+}
+
+CHANGE Current_Status
+{
+	if(Current_Status[getlastmodifiedarrayindex()] = iRequest[getlastmodifiedarrayindex()])
+	{
+		iRequest[getlastmodifiedarrayindex()] = ciClear;
+	}
+}
+
+THREADSAFE CHANGE From_Device
+{
+	STRING sResponse[100];
+	INTEGER a;
+	INTEGER iLoc1;
+	INTEGER iLoc2;
+	INTEGER iLampHr;
+	INTEGER iLampMin;
+	INTEGER iLampStrike;
+
+	while(1)
+	{
+		sResponse = gather("\x0D", From_Device);
+		
+		if(find("brightness = ", sResponse))	// brightness range (-50 to 50)
+		{
+			if(find("-", sResponse))			// adjust to range (0 to 49)	
+			{
+				iBrightnessValue = 50 - atoi(sResponse);
+			}
+			else								// adjust to range (50 to 100)
+			{
+				iBrightnessValue = atoi(sResponse) + 50;
+			}
+			if(Debug)
+			{
+				sDebugText = "BrightnessResponse:" + itoa(iBrightnessValue) + ":" + itoa(iRequest[ciBrightnessIndex]) + "\n";
+				trace("%s", sDebugText);
+			}
+			Brightness_Gauge = iBrightnessValue * 65535 / 100;
+			Brightness_Text = ltoa(iBrightnessValue - 50);
+
+			if(iBrightnessValue = iRequest[ciBrightnessIndex])
+			{
+				iRequest[ciBrightnessIndex] = ciClear;
+           	}
+		}
+		else if(find("contrast = ", sResponse))	// contrast range (-50 to 50)
+		{
+			if(find("-", sResponse))			// adjust to range (0 to 49)	
+			{
+				iContrastValue = 50 - atoi(sResponse);
+			}
+			else								// adjust to range (50 to 100)
+			{
+				iContrastValue = atoi(sResponse) + 50;
+			}
+			if(Debug)
+			{
+				sDebugText = "ContrastResponse:" + itoa(iContrastValue) + ":" + itoa(iRequest[ciContrastIndex]) + "\n";
+				trace("%s", sDebugText);
+			}
+			Contrast_Gauge = iContrastValue * 65535 / 100;
+			Contrast_Text = ltoa(iContrastValue - 50);
+
+			if(iContrastValue = iRequest[ciContrastIndex])
+			{
+				iRequest[ciContrastIndex] = ciClear;
+           	}
+		}
+		else if(find("pip.hpos = ", sResponse))	// pip h position range (0 to 100)
+		{
+			iPIPHPosValue = atoi(sResponse);
+			if(Debug)
+			{
+				sDebugText = "PIPHPositionResponse:" + itoa(iPIPHPosValue) + ":" + itoa(iRequest[ciPIPHPosIndex]) + "\n";
+				trace("%s", sDebugText);
+			}
+			PIP_H_Position_Gauge = iPIPHPosValue * 65535 / 100;
+			PIP_H_Position_Text = ltoa(iPIPHPosValue);
+
+			if(iPIPHPosValue = iRequest[ciPIPHPosIndex])
+			{
+				iRequest[ciPIPHPosIndex] = ciClear;
+           	}
+		}
+		else if(find("pip.vpos = ", sResponse))	// pip v position range (0 to 100)
+		{
+			iPIPVPosValue = atoi(sResponse);
+			if(Debug)
+			{
+				sDebugText = "PIPVPositionResponse:" + itoa(iPIPVPosValue) + ":" + itoa(iRequest[ciPIPVPosIndex]) + "\n";
+				trace("%s", sDebugText);
+			}
+			PIP_V_Position_Gauge = iPIPVPosValue * 65535 / 100;
+			PIP_V_Position_Text = ltoa(iPIPVPosValue);
+
+			if(iPIPVPosValue = iRequest[ciPIPVPosIndex])
+			{
+				iRequest[ciPIPVPosIndex] = ciClear;
+           	}
+		}
+		else if(find("lensmemory.recall = ", sResponse) || find("lensmemory.save = ", sResponse))
+		{
+			for(a = 1 to 10)
+			{
+				Lens_Preset_Is_Selected[a] = 0;
+			}
+			Lens_Preset_Is_Selected[atoi(sResponse) + 1] = 1;		// update lens preset feedback
+		}
+		else if(find("lamp1.hours = ", sResponse))	// lamp 1 hours
+		{
+			iLoc1 = find("lamp1.hours = ", sResponse) + 14;
+			iLoc2 = find(":", sResponse, iLoc1 + 1);
+			iLampHr = atoi(mid(sResponse, iLoc1, iLoc2 - iLoc1));
+			iLampMin = atoi(mid(sResponse, iLoc2 + 1, len(sResponse) - iLoc2));
+
+			makestring(Lamp_1_Hours_Text, "%u:%02u", iLampHr, iLampMin);
+		}
+		else if(find("lamp2.hours = ", sResponse))	// lamp 2 hours
+		{
+			iLoc1 = find("lamp2.hours = ", sResponse) + 14;
+			iLoc2 = find(":", sResponse, iLoc1 + 1);
+			iLampHr = atoi(mid(sResponse, iLoc1, iLoc2 - iLoc1));
+			iLampMin = atoi(mid(sResponse, iLoc2 + 1, len(sResponse) - iLoc2));
+
+			makestring(Lamp_2_Hours_Text, "%u:%02u", iLampHr, iLampMin);
+		}
+		else if(find("lamp1.strikes = ", sResponse))	// lamp 1 strikes
+		{
+			iLoc1 = find("lamp1.strikes = ", sResponse) + 16;	
+			iLampStrike = atoi(mid(sResponse, iLoc1, len(sResponse) - iLoc1));
+
+			makestring(Lamp_1_Strikes_Text, "%u", iLampStrike);
+		}
+		else if(find("lamp2.strikes = ", sResponse))	// lamp 1 strikes
+		{
+			iLoc1 = find("lamp2.strikes = ", sResponse) + 16;	
+			iLampStrike = atoi(mid(sResponse, iLoc1, len(sResponse) - iLoc1));
+
+			makestring(Lamp_2_Strikes_Text, "%u", iLampStrike);
+		}
+		else if(find("lamp3.strikes = ", sResponse))	// lamp 1 strikes
+		{
+			if(find("N/A", sResponse))
+			{
+				makestring(Lamp_3_Strikes_Text, "N/A");
+			}
+			else
+			{
+				iLoc1 = find("lamp3.strikes = ", sResponse) + 16;	
+				iLampStrike = atoi(mid(sResponse, iLoc1, len(sResponse) - iLoc1));
+
+				makestring(Lamp_3_Strikes_Text, "%u", iLampStrike);
+			}
+		}
+		else if(find("lamp4.strikes = ", sResponse))	// lamp 1 strikes
+		{
+			if(find("N/A", sResponse))
+			{
+				makestring(Lamp_4_Strikes_Text, "N/A");
+			}
+			else
+			{
+				iLoc1 = find("lamp4.strikes = ", sResponse) + 16;	
+				iLampStrike = atoi(mid(sResponse, iLoc1, len(sResponse) - iLoc1));
+
+				makestring(Lamp_4_Strikes_Text, "%u", iLampStrike);
+			}
+		}
+		if(find("lamp3", sResponse))	// lamp 3 hours
+		{
+			if(find("Error", sResponse) || find("Not Present", sResponse))
+			{
+				makestring(Lamp_3_Hours_Text, "N/A");
+			}
+			else if(find(".hours", sResponse))
+			{
+				iLoc1 = find("lamp3.hours = ", sResponse) + 14;
+				iLoc2 = find(":", sResponse, iLoc1 + 1);
+				iLampHr = atoi(mid(sResponse, iLoc1, iLoc2 - iLoc1));
+				iLampMin = atoi(mid(sResponse, iLoc2 + 1, len(sResponse) - iLoc2));
+           	
+				makestring(Lamp_3_Hours_Text, "%u:%02u", iLampHr, iLampMin);
+			}
+		}
+		if(find("lamp4", sResponse))	// lamp 4 hours
+		{
+			if(find("Error", sResponse) || find("Not Present", sResponse))
+			{
+				makestring(Lamp_4_Hours_Text, "N/A");
+			}
+			else if(find(".hours", sResponse))
+			{
+				iLoc1 = find("lamp4.hours = ", sResponse) + 14;
+				iLoc2 = find(":", sResponse, iLoc1 + 1);
+				iLampHr = atoi(mid(sResponse, iLoc1, iLoc2 - iLoc1));
+				iLampMin = atoi(mid(sResponse, iLoc2 + 1, len(sResponse) - iLoc2));
+	
+				makestring(Lamp_4_Hours_Text, "%u:%02u", iLampHr, iLampMin);
+        	}
+		}
+
+	}
+}
+
+PUSH Response_Received
+{
+	cancelwait(CommandTimeout);
+	SendCommands();
+}
+
+PUSH Brightness
+{
+	while(Brightness[getlastmodifiedarrayindex()] && iSendCommand = ciInactive)
+	{
+		if(getlastmodifiedarrayindex() = 1 && iBrightnessValue < 100)
+			iBrightnessValue = iBrightnessValue + 1;
+		else if(getlastmodifiedarrayindex() = 2 && iBrightnessValue > 0)
+			iBrightnessValue = iBrightnessValue - 1;
+		Brightness_Gauge = iBrightnessValue * 65535 / 100;
+		Brightness_Text = ltoa(iBrightnessValue - 50);
+		delay(15);
+		if(Debug)
+		{
+			trace("iBrightness_Value:%ld\n", iBrightnessValue - 50);
+		}
+	}
+}
+
+RELEASE Brightness
+{
+	if(iSendCommand = ciInactive)
+	{
+		iRequest[ciBrightnessIndex] = iBrightnessValue;
+		iAttempts[ciBrightnessIndex] = 0;
+		if(iSendCommand = ciInactive)
+		{
+			SendCommands();
+		}
+	}
+}
+
+PUSH Contrast
+{
+	while(Contrast[getlastmodifiedarrayindex()] && iSendCommand = ciInactive)
+	{
+		if(getlastmodifiedarrayindex() = 1 && iContrastValue < 100)
+			iContrastValue = iContrastValue + 1;
+		else if(getlastmodifiedarrayindex() = 2 && iContrastValue > 0)
+			iContrastValue = iContrastValue - 1;
+		Contrast_Gauge = iContrastValue * 65535 / 100;
+		Contrast_Text = ltoa(iContrastValue - 50);
+		delay(15);
+		if(Debug)
+		{
+			trace("iContrast_Value:%ld\n", iContrastValue - 50);
+		}
+	}
+}
+
+RELEASE Contrast
+{
+	if(iSendCommand = ciInactive)
+	{
+		iRequest[ciContrastIndex] = iContrastValue;
+		iAttempts[ciContrastIndex] = 0;
+		if(iSendCommand = ciInactive)
+		{
+			SendCommands();
+		}
+	}
+}
+
+PUSH PIP_H_Position
+{
+	while(PIP_H_Position[getlastmodifiedarrayindex()] && iSendCommand = ciInactive)
+	{
+		if(getlastmodifiedarrayindex() = 1 && iPIPHPosValue < 100)
+			iPIPHPosValue = iPIPHPosValue + 1;
+		else if(getlastmodifiedarrayindex() = 2 && iPIPHPosValue > 0)
+			iPIPHPosValue = iPIPHPosValue - 1;
+		PIP_H_Position_Gauge = iPIPHPosValue * 65535 / 100;
+		PIP_H_Position_Text = ltoa(iPIPHPosValue);
+		delay(15);
+		if(Debug)
+		{
+			trace("iPIPHPosition_Value:%ld\n", iPIPHPosValue);
+		}
+	}
+}
+
+RELEASE PIP_H_Position
+{
+	if(iSendCommand = ciInactive)
+	{
+		iRequest[ciPIPHPosIndex] = iPIPHPosValue;
+		iAttempts[ciPIPHPosIndex] = 0;
+		if(iSendCommand = ciInactive)
+		{
+			SendCommands();
+		}
+	}
+}
+
+PUSH PIP_V_Position
+{
+	while(PIP_V_Position[getlastmodifiedarrayindex()] && iSendCommand = ciInactive)
+	{
+		if(getlastmodifiedarrayindex() = 1 && iPIPVPosValue < 100)
+			iPIPVPosValue = iPIPVPosValue + 1;
+		else if(getlastmodifiedarrayindex() = 2 && iPIPVPosValue > 0)
+			iPIPVPosValue = iPIPVPosValue - 1;
+		PIP_V_Position_Gauge = iPIPVPosValue * 65535 / 100;
+		PIP_V_Position_Text = ltoa(iPIPVPosValue);
+		delay(15);
+		if(Debug)
+		{
+			trace("iPIPVPosition_Value:%ld\n", iPIPVPosValue);
+		}
+	}
+}
+
+RELEASE PIP_V_Position
+{
+	if(iSendCommand = ciInactive)
+	{
+		iRequest[ciPIPVPosIndex] = iPIPVPosValue;
+		iAttempts[ciPIPVPosIndex] = 0;
+		if(iSendCommand = ciInactive)
+		{
+			SendCommands();
+		}
+	}
+}
+
+PUSH Lens	// 1-up, 2-down, 3-left, 4-right, 5-zoom in, 6-zoom out, 7-focus near, 8-focus far
+{
+
+	INTEGER a;
+
+	iLensDirection = getlastmodifiedarrayindex();
+
+	for(a = 1 to 10)
+	{
+		Lens_Preset_Is_Selected[a] = 0;
+	}
+
+	if(iSendCommand = ciInactive && iLensDirection < 5)	// pan/tilt
+	{
+		SendLensCommand(0);
+		wait(300, LensSpeed1)
+		{
+			makestring(To_Device, "*lens.stop\x0D");
+			delay(1);
+			SendLensCommand(1);
+		}
+		wait(600, LensSpeed2)
+		{
+			makestring(To_Device, "*lens.stop\x0D");
+			delay(1);
+			SendLensCommand(2);
+		}
+		wait(900, LensSpeed3)
+		{
+			makestring(To_Device, "*lens.stop\x0D");
+			delay(1);
+			SendLensCommand(3);
+		}
+	}		
+	else if(iSendCommand = ciInactive && iLensDirection >= 5)	// focus zoom
+	{
+		SendLensCommand(0);
+	}		
+}
+
+RELEASE Lens
+{
+	cancelwait(LensSpeed1);
+	cancelwait(LensSpeed2);
+	cancelwait(LensSpeed3);
+	makestring(To_Device, "*lens.stop\x0D");
+}
+
+PUSH Lens_Center
+{
+	if(iSendCommand = ciInactive)
+	{
+		makestring(To_Device, "*lens.centre\x0D");
+	}
+}
+
+PUSH Lens_Presets
+{
+	if(iSendCommand = ciInactive)
+	{
+		iLensPreset = getlastmodifiedarrayindex();
+		iLensSave = ciInactive;
+		wait(500, LensSave)
+		{
+			iLensSave = ciActive;
+			makestring(To_Device, "*lensmemory.save = %u\x0D", iLensPreset - 1);
+		}
+	}
+}
+
+RELEASE Lens_Presets
+{
+	if(iSendCommand = ciInactive)
+	{
+		iLensPreset = getlastmodifiedarrayindex();
+		if(iLensSave = ciInactive)
+		{
+			cancelwait(LensSave);
+			makestring(To_Device, "*lensmemory.recall = %u\x0D", iLensPreset - 1);
+		}
+	}
+}
+
+
+
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+
+Function Main()
+{
+	INTEGER a;
+
+	waitforinitializationcomplete();
+
+	iSendCommand = ciInactive;
+	for(a = 1 to ciAllCommands)
+	{
+		iRequest[a] = ciClear;
+	}
+	All_Clear = ciYes;
+	Please_Wait = 0;
+}
+
+

@@ -1,0 +1,223 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name: Lutron
+System Name:
+System Number:
+Programmer: MEK
+Comments:
+*/
+
+#DEFINE_CONSTANT	ciBAUD_9600				0
+#DEFINE_CONSTANT	ciBAUD_19200			1
+#DEFINE_CONSTANT	ciBAUD_38400			2
+#DEFINE_CONSTANT	ciBAUD_57600			3
+#DEFINE_CONSTANT	ciBAUD_115200			4
+#DEFINE_CONSTANT	ciCOMM_IP				0
+#DEFINE_CONSTANT	ciCOMM_RS232			1
+#DEFINE_CONSTANT	csINTER_START			"\xFD"
+#DEFINE_CONSTANT	csINTER_END				"\xFE"
+#DEFINE_CONSTANT	ciINTTYPE_KEYPAD		1
+#DEFINE_CONSTANT	ciINTTYPE_DIMMER		2
+#DEFINE_CONSTANT	ciINTTYPE_LOADCTRL		3
+#DEFINE_CONSTANT	ciINTTYPE_CCO			4
+#DEFINE_CONSTANT	ciINTTYPE_GRAFIKEYE		5
+#DEFINE_CONSTANT	ciINTTYPE_SYSTEM		6
+#DEFINE_CONSTANT	ciINTTYPE_KEYPADSAVER	7
+#DEFINE_CONSTANT	ciINTTYPE_KEYPADMON		8
+#DEFINE_CONSTANT	ciINTTYPE_DIMMERMON		9
+#DEFINE_CONSTANT	ciLEDFLASH1_TIME		25		//Flash 1 Time in 1/100ths second
+#DEFINE_CONSTANT	ciLEDFLASH2_TIME		50		//Flash 2 Time in 1/100ths second
+#DEFINE_CONSTANT	csTERMINATOR_IP			"\n"
+#DEFINE_CONSTANT	csTERMINATOR_RS232		"\x0D"
+#DEFINE_CONSTANT	ciTIME_DT				80
+#DEFINE_CONSTANT	ciTIME_HOLD				100		//1sec
+
+String_Function IntTypeToString(integer type)
+{
+	cswitch(type) {
+		case(ciINTTYPE_KEYPAD) 		: { return("Keypad Emul"); break; }
+		case(ciINTTYPE_DIMMER) 		: { return("Dimmer Emul"); break; }
+		case(ciINTTYPE_LOADCTRL)	: { return("Load Control"); break; }
+		case(ciINTTYPE_CCO)			: { return("CCO"); break; }
+		case(ciINTTYPE_GRAFIKEYE)	: { return("GrafikEye"); break; }
+		case(ciINTTYPE_SYSTEM)		: { return("System"); break; }
+		case(ciINTTYPE_KEYPADSAVER)	: { return("Keypad w/ SS"); break; }
+		case(ciINTTYPE_KEYPADMON)	: { return("Keypad Mon"); break; }
+		case(ciINTTYPE_DIMMERMON)	: { return("Dimmer Mon"); break; }
+	}
+}
+
+String_Function StringPADTrailing(string value$,integer trailingDigits, string padString$)
+{
+	string	tmp$[255];
+	tmp$ = value$;
+	while(len(tmp$) < trailingDigits) {
+		tmp$ = tmp$ + padString$;
+	}
+	
+	return(tmp$);
+}
+
+String_Function MakeCommSpec(integer port, integer cspec)
+{
+	integer DefPort;
+	integer DefPace;
+	string	spec$[7];
+	
+	DefPort = port;
+	DefPace = 0;
+	
+	if(DefPort < 'A' || DefPort > 'F')
+	{
+		DefPort = 'A';
+		print("Invalid Port %c specified - assuming Port A.\n", Port);		
+	}
+	
+	if(DefPace > 31)
+	{
+		DefPace = 0;
+		print("Invalid Pacing %d specified - assuming No Pacing.\n", DefPace);		
+	}
+	
+	makestring(spec$, "%c%c%c%c%c%c%c", 0x12, 0x80|(DefPort-'A'), 0x00, LOW(cspec), HIGH(cspec), DefPace, 0x00);
+	return(spec$);
+}
+
+String_Function LutronCOMSpec(integer port, integer baud, integer handshake)
+{
+	integer cspec;
+	cspec = 0;
+
+	cswitch(baud) {
+		case(ciBAUD_9600) : {
+			cspec = cspec | 0x0005;
+			break;
+		} case(ciBAUD_19200) : {
+			cspec = cspec | 0x0006;
+			break;
+		} case(ciBAUD_38400) : {
+			cspec = cspec | 0x0007;
+			break;
+		} case(ciBAUD_57600) : {
+			cspec = cspec | 0x0085;
+			break;
+		} case(ciBAUD_115200) : {
+			cspec = cspec | 0x0086;
+			break;
+		} default: {
+			cspec = cspec | 0x0005;
+		}
+	}
+    
+	//8 Data bits
+	cspec = cspec | 0x0020;
+
+	if(handshake)
+		cspec = cspec | (0x0400 | 0x0200);
+ 	return(MakeCommSpec(port,cspec));
+}
+
+String_Function ComPortToString(integer port)
+{
+	cswitch(port) {
+		case('A') :
+			return("A");
+		case('B') :
+			return("B");
+		case('C') :
+			return("C");
+		case('D') :
+			return("D");
+		case('E') :
+			return("E");
+		case('F') :
+			return("F");
+		default:
+			return("Invalid");
+	}
+}
+
+String_Function BaudRateToString(integer baud)
+{
+	cswitch(baud) {
+		case(ciBAUD_9600) :
+			return("9600baud");
+		case(ciBAUD_19200) :
+			return("19,200baud");
+		case(ciBAUD_38400) :
+			return("38,400baud");
+		case(ciBAUD_57600) :
+			return("57,600baud");
+		case(ciBAUD_115200) :
+			return("115,200baud");
+		default:
+			return("Invalid");
+	}
+}
+
+String_Function HandshakeToString(integer handshake)
+{
+	if(handshake)
+		return("Hardware (RTS/CTS)");
+	else
+		return("None");
+}
+
+String_Function Debug_DynamicError(integer liError, string lsMsg)
+{
+	string rtn$[255];
+	rtn$ = "";
+	if(liError & 0x8001 = 0x8001)
+		makestring(rtn$,"%sDynamic String - Generic Error: %s\n",rtn$,lsMsg);
+	if(liError & 0x8002 = 0x8002)
+		makestring(rtn$,"%sDynamic String - Error: Max Resize Limit Reached: %s\n",rtn$,lsMsg);
+	if(liError & 0x8004 = 0x8004)
+		makestring(rtn$,"%sDynamic String - Error: Element is not dynamic: %s\n",rtn$,lsMsg);
+	if(liError & 0x8008 = 0x8008)
+		makestring(rtn$,"%sDynamic String - Warning: Truncation will occur: %s\n",rtn$,lsMsg);
+    if(liError & 0x8010 = 0x8010 || liError & 0x8020 = 0x8020 || liError & 0x8040 = 0x8040)
+		makestring(rtn$,"%sDynamic String - Error: Out of Memory: %s\n",rtn$,lsMsg);
+	if(liError & 0x807F <> liError)
+		makestring(rtn$,"%sDynamic String - Error(%x): Unknown: %s\n",rtn$,liError,lsMsg);
+	return(rtn$);
+}
+
+String_Function ModuleLogMessage(string Message$)
+{
+	string rtn$[255];
+	makestring(rtn$,"LOG,%s",Message$);
+	return(rtn$);
+}
+
+Integer_Function DecodeDimmerLevel(string lsLevel$)
+{
+	Integer liLevel;
+    
+	lsLevel$	= Right(lsLevel$,len(lsLevel$)-ReverseFind(",",lsLevel$));		//Extract level from DL,[address],level
+	liLevel		= ATOI(lsLevel$);												//Get whole integer level
+	if(find(".",lsLevel$)) {													//Found decimal
+		print("Level: %s,Decimal: %s %u %u\n",lsLevel$,right(lsLevel$,2),ATOI(right(lsLevel$,2)),muldiv(ATOI(right(lsLevel$,2)),65535,10000));
+		liLevel = liLevel + muldiv(ATOI(right(lsLevel$,2)),65535,10000);
+	}
+	return(liLevel);
+}
+ 
+/**
+*	LutronTimeToCentiseconds
+*
+*	Converts HH:MM:SS to hundredths of a second (centisecond)
+**/
+Long_Integer_Function LutronTimeToCentiseconds(string Time$)
+{
+	integer timeCenti;
+
+	timeCenti = ATOI(left(Time$,2))*3600;				//Hours to seconds
+	timeCenti = timeCenti + ATOI(mid(Time$,4,2))*60;	//Minutes to seconds
+	timeCenti = timeCenti + ATOI(right(Time$,2));		//Seconds
+	timeCenti = timeCenti * 100;						//Convert to Centiseconds
+
+	return(TimeCenti);
+}

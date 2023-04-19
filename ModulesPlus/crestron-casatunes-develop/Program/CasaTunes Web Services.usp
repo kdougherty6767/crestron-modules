@@ -1,0 +1,745 @@
+/*
+ * Adelyte Company
+ * www.adelyte.com
+ */
+
+#SYMBOL_NAME "CasaTunes Web Services"
+#CATEGORY "8" // Media Resource
+#DEFAULT_VOLATILE
+#ENABLE_DYNAMIC
+//#ENABLE_TRACE
+
+INTEGER __Initialized__, __Connected__, __Parsing__;
+
+BUFFER_INPUT  Response[65534];
+STRING_OUTPUT Request;
+
+STRING_PARAMETER  Host[255];
+INTEGER_PARAMETER Zone;
+
+/*
+ * Classes
+ */
+
+STRUCTURE STRUCT_APPLICATION_INFO
+{
+    INTEGER AppInitialized;        // 0|1 When CasaTunes has finished initializing this value is set to true. An application must not call other methods until this value is set to true (and CasaTunes has a valid license)
+  //INTEGER iPodDevicesDocked;     // 0|1 If true, there are one or more iPod devices docked on the music server
+    INTEGER LastChangeEventID;     // Specifies the ID of the last event that changed the system state. You can use this ID to check whether the system state has changed since the previous call the GetApplicationInfo().
+    INTEGER TaskCompleted;         // 0|1 If true, there are no active tasks. If false, there is an active task under way. The name of the task and progress is provided by TaskCompleted and TaskPhase, respectively.
+    STRING  TaskName[64];          // A string describing the current phase of the initialization progress
+    INTEGER TaskProgress;          // 0..100 Indicates initializing progress.
+};
+
+STRUCT_APPLICATION_INFO ApplicationInfo;
+
+DIGITAL_OUTPUT iPod_Docked;
+
+
+STRUCTURE STRUCT_SYSTEM_INFO
+{
+    INTEGER NumberOfSources;       // Specifies the number of sources supported by this controller.
+    INTEGER NumberOfZones;         // Specifies the number of zones (rooms) supported by this controller.
+    INTEGER VolumeMinimum;   // Specifies the minimum value for volume for this controller.
+    INTEGER VolumeMaximum;   // Specifies the maximum value for volume for this controller.
+};
+
+STRUCT_SYSTEM_INFO SystemInfo;
+
+
+STRUCTURE STRUCT_ZONE_INFO
+{
+    STRING  Label[64];
+    INTEGER ID;
+
+    INTEGER Power;
+
+    INTEGER Volume;
+    INTEGER MaxVolume;
+    INTEGER Mute;
+
+    INTEGER SourceID;
+    STRING  EnabledSources[16];
+};
+
+STRUCT_ZONE_INFO ZoneInfo;
+
+ANALOG_OUTPUT  Source_ID;
+
+
+STRUCTURE STRUCT_NOW_PLAYING_INFO
+{
+  //INTEGER Duration;
+  //INTEGER Progress;
+
+  //STRING  SongTitle[64];
+  //STRING  SongArtist[64];
+  //STRING  SongAlbum[64];
+  //STRING  SongGenre[64];
+  //STRING  SongReleased[4];
+  //STRING  MediaArtwork[64];
+  //STRING  NextSong[64];
+
+  //INTEGER QueueCount;
+  //INTEGER QueueSongIndex;
+    
+  //INTEGER RepeatMode;
+  //INTEGER ShuffleMode;
+};
+
+//STRUCT_NOW_PLAYING_INFO NowPlayingInfo;
+
+ANALOG_OUTPUT Duration, Progress, Progress_Bar;
+STRING_OUTPUT Song_Title, Song_Artist, Song_Album, Song_Genre, Song_Released, Song_Artwork, Next_Song;
+ANALOG_OUTPUT Queue_Count, Queue_Song_Index;
+STRING_OUTPUT Queue_Count_Text;
+ANALOG_OUTPUT Repeat_Mode, Shuffle_Mode;
+
+
+#DEFINE_CONSTANT MAX_LEVELS 10
+#DEFINE_CONSTANT MAX_LINES  10
+#DEFINE_CONSTANT ID_LEN     48 
+
+STRUCTURE STRUCT_BROWSE_INFO
+{
+    INTEGER Start_Index;
+    INTEGER Total_Items;
+    INTEGER Selected_Line;
+    
+    STRING  Title_ID[ID_LEN];
+};
+
+STRUCT_BROWSE_INFO Browse_Info[MAX_LEVELS];
+
+INTEGER Browse_Level;
+
+STRUCTURE STRUCT_BROWSE_LINE
+{
+    STRING  ID[ID_LEN];
+    INTEGER Flags;
+};
+
+STRUCT_BROWSE_LINE Browse_Line[MAX_LINES];
+
+DIGITAL_OUTPUT Back_Available;
+DIGITAL_OUTPUT Play_Or_Queue_Prompt;
+ANALOG_OUTPUT  Browse_Scroll_Bar;
+STRING_OUTPUT  Browse_Title;
+STRING_OUTPUT  Line_Name[MAX_LINES];
+
+
+/*
+ * Functions
+ */
+
+FUNCTION Initialize()
+{
+    __Initialized__ = 1;
+    __Connected__   = 0;
+}
+
+FUNCTION Post(STRING action, STRING arguments)
+{
+    INTEGER length;
+    
+    length = LEN(arguments);
+    
+    MAKESTRING(Request, "POST /CasaTunes/CasaService.svc/%s HTTP/1.1\nHost: %s\nContent-Type: application/json; charset=utf-8\nContent-Length: %u\n\n", action, Host, length);
+    MAKESTRING(Request, "%s\n\n", arguments);
+}
+
+INTEGER_FUNCTION BTOI(STRING boolean)
+{
+    IF(LOWER(boolean) = "true") RETURN(1);
+    ELSE                        RETURN(0);
+}
+
+/*
+ * Events
+ */
+
+// Application Information Methods
+
+DIGITAL_INPUT GetApplicationInfo;
+PUSH GetApplicationInfo
+{
+    Post("GetApplicationInfo", "{\"d\": null }");
+}
+
+DIGITAL_INPUT GetAppStatus;
+PUSH GetAppStatus
+{
+    STRING arguments[32];
+    MAKESTRING(arguments, "{\"ZoneID\":%u }", Zone);
+    Post("GetAppStatus", arguments);
+}
+
+// System Information Methods
+
+DIGITAL_INPUT GetSystemInfo;
+PUSH GetSystemInfo
+{
+    Post("GetSystemInfo", "{\"d\":null }");
+}
+
+// Transport Controls 
+
+DIGITAL_INPUT Play;
+PUSH Play
+{
+    STRING arguments[32];
+    MAKESTRING(arguments, "{\"ZoneID\":%u }", Zone);
+    Post("PlaySong", arguments);
+}
+
+DIGITAL_INPUT Pause;
+PUSH Pause
+{
+    STRING arguments[32];
+    MAKESTRING(arguments, "{\"ZoneID\":%u }", Zone);
+    Post("PauseSong", arguments);
+}
+
+DIGITAL_INPUT Stop;
+PUSH Stop
+{
+    STRING arguments[32];
+    MAKESTRING(arguments, "{\"ZoneID\":%u }", Zone);
+    Post("StopSong", arguments);
+}
+
+DIGITAL_INPUT Next;
+PUSH Next
+{
+    STRING arguments[32];
+    MAKESTRING(arguments, "{\"ZoneID\":%u }", Zone);
+    Post("NextSong", arguments);
+}
+
+DIGITAL_INPUT Previous;
+PUSH Previous
+{
+    STRING arguments[32];
+    MAKESTRING(arguments, "{\"ZoneID\":%u }", Zone);
+    Post("PreviousSong", arguments);
+}
+
+DIGITAL_INPUT Shuffle;
+PUSH Shuffle
+{
+    STRING arguments[64];
+    MAKESTRING(arguments, "{\"ZoneID\":%u,\"ShuffleMode\":true }", Zone);
+    Post("SetQueueShuffleMode", arguments);
+}
+
+DIGITAL_INPUT Shuffle_Off;
+PUSH Shuffle_Off
+{
+    STRING arguments[64];
+    MAKESTRING(arguments, "{\"ZoneID\":%u,\"ShuffleMode\":false }", Zone);
+    Post("SetQueueShuffleMode", arguments);
+}
+
+DIGITAL_INPUT Repeat_Queue;
+PUSH Repeat_Queue
+{
+    STRING arguments[64];
+    MAKESTRING(arguments, "{\"ZoneID\":%u,\"RepeatMode\":1 }", Zone);
+    Post("SetQueueRepeatMode", arguments);
+}
+
+DIGITAL_INPUT Repeat_Track;
+PUSH Repeat_Track
+{
+    STRING arguments[64];
+    MAKESTRING(arguments, "{\"ZoneID\":%u,\"RepeatMode\":2 }", Zone);
+    Post("SetQueueRepeatMode", arguments);
+}
+
+DIGITAL_INPUT Repeat_Off;
+PUSH Repeat_Off
+{
+    STRING arguments[64];
+    MAKESTRING(arguments, "{\"ZoneID\":%u,\"RepeatMode\":0 }", Zone);
+    Post("SetQueueRepeatMode", arguments);
+}
+
+// Browse
+
+FUNCTION ClearLevel(INTEGER level)
+{
+    Browse_Info[level].Start_Index   =  0;
+    Browse_Info[level].Total_Items   =  0;
+    Browse_Info[level].Selected_Line =  0;
+    Browse_Info[level].Title_ID      = "";
+}
+
+DIGITAL_INPUT Browse_Music;
+PUSH Browse_Music
+{
+    INTEGER i;
+    STRING arguments[32];
+    
+    FOR(i = 0 TO MAX_LEVELS)
+    {
+        ClearLevel(i);
+    }
+    
+    Back_Available = 0;
+    Browse_Level   = 0;
+    Browse_Info[Browse_Level].Start_Index = 0;
+    
+    MAKESTRING(arguments, "{\"ZoneID\":%u }", Zone);
+    Post("GetMusicServicesForZone2", arguments);
+}
+
+DIGITAL_INPUT Play_Now, Add_To_Queue, Play_Now_And_Add_To_Queue;
+FUNCTION PlayOrAddSelected(INTEGER mode)
+{
+    // Modes
+    //
+    // 0 - Play Now
+    // 1 - Add To Queue
+    // 2 - Play Now and Add To Queue
+    
+    STRING arguments[128];
+    
+    MAKESTRING(arguments, "{\"AddToQueue\":%u,\"Filter\":null,\"ItemID\":\"%s\",\"ZoneID\":%u }", mode, Browse_Line[Browse_Info[Browse_Level].Selected_Line].ID, Zone);
+    Post("PlayMediaCollectionOrItem2", arguments);
+}
+
+PUSH Play_Now
+{
+    PlayOrAddSelected(0);
+}
+
+PUSH Add_To_Queue
+{
+    PlayOrAddSelected(1);
+}
+
+PUSH Play_Now_And_Add_To_Queue
+{
+    PlayOrAddSelected(2);
+}
+
+DIGITAL_INPUT Back;
+PUSH Back
+{
+    STRING arguments[128];
+    
+    Browse_Level = Browse_Level - MIN(Browse_Level, 1);
+
+    IF(Browse_Level = 0)
+        Back_Available = 0;
+    ELSE
+        ClearLevel(Browse_Level + 1);
+    
+    MAKESTRING(arguments, "{\"CollectionID\":\"%s\",\"filter\":null,\"MaxItems\":%u,\"StartIndex\":%u }", Browse_Info[Browse_Level].Title_ID, MAX_LINES, Browse_Info[Browse_Level].Start_Index);
+    Post("GetMediaCollection2", arguments);
+}
+
+DIGITAL_INPUT Scroll_Up, Scroll_Down;
+PUSH Scroll_Up
+{
+    STRING  arguments[128];
+    
+    Browse_Info[Browse_Level].Start_Index = Browse_Info[Browse_Level].Start_Index - MIN(Browse_Info[Browse_Level].Start_Index, MAX_LINES);
+    
+    MAKESTRING(arguments, "{\"CollectionID\":\"%s\",\"filter\":null,\"MaxItems\":%u,\"StartIndex\":%u }", Browse_Info[Browse_Level].Title_ID, MAX_LINES, Browse_Info[Browse_Level].Start_Index);
+    Post("GetMediaCollection2", arguments);
+}
+
+PUSH Scroll_Down
+{
+    STRING  arguments[128];
+    
+    IF(Browse_Info[Browse_Level].Total_Items <= MAX_LINES)
+        Browse_Info[Browse_Level].Start_Index = 0;
+    ELSE
+        Browse_Info[Browse_Level].Start_Index = MIN(Browse_Info[Browse_Level].Start_Index + MAX_LINES, Browse_Info[Browse_Level].Total_Items - MAX_LINES);
+    
+    MAKESTRING(arguments, "{\"CollectionID\":\"%s\",\"filter\":null,\"MaxItems\":%u,\"StartIndex\":%u }", Browse_Info[Browse_Level].Title_ID, MAX_LINES, Browse_Info[Browse_Level].Start_Index);
+    Post("GetMediaCollection2", arguments);
+}
+
+DIGITAL_INPUT Line_Select[MAX_LINES];
+PUSH Line_Select
+{
+    STRING  arguments[128];
+    INTEGER line;
+
+    line = GETLASTMODIFIEDARRAYINDEX();
+    
+    IF(Browse_Line[line].Flags = 4097) // Music Track
+    {
+        Browse_Info[Browse_Level].Selected_Line = line;
+        PULSE(1, Play_Or_Queue_Prompt);
+    }
+    //ELSE IF(Browse_Line[line].Flags = 8) // Internet Radio
+    //{
+    //    Browse_Info[Browse_Level].Selected_Line = line;
+    //    PlayOrAddSelected(0);
+    //}
+    ELSE
+    {
+        Browse_Level   = MIN(Browse_Level + 1, MAX_LEVELS);
+        Back_Available = 1;
+        
+        Browse_Info[Browse_Level].Start_Index = 0;
+        MAKESTRING(arguments, "{\"CollectionID\":\"%s\",\"filter\":null,\"MaxItems\":%u,\"StartIndex\":0 }", Browse_Line[line].ID, MAX_LINES);
+        Post("GetMediaCollection2", arguments);
+    }
+}
+
+
+/*
+ * Response Parsing
+ */
+
+// JSON
+
+#DEFINE_CONSTANT JSON_LEN 30000
+
+INTEGER_FUNCTION FindClosingBracket(STRING bracket, STRING source, INTEGER start)
+{
+    INTEGER i, bracket_num, open_bracket_val, close_bracket_val, byte_val;
+    
+    IF(start > LEN(source))
+        GENERATEUSERNOTICE("FindClosingBracket('%s', '%s', %u): starting index %u out of bounds %u", bracket, LEFT(source, MIN(11, LEN(source))), start, start, LEN(source));
+    
+    open_bracket_val  = BYTE(bracket, 1);
+    close_bracket_val = BYTE(bracket, 2);
+    
+    bracket_num = 0;
+    
+    start = MAX(start, 1);
+    
+    FOR(i = start TO LEN(source))
+    {
+        byte_val = BYTE(source, i);
+        
+        IF(byte_val = open_bracket_val)
+            bracket_num = bracket_num + 1;
+        ELSE IF(byte_val = close_bracket_val)
+            bracket_num = bracket_num - 1;
+        
+        IF(bracket_num = 0)
+        {
+            RETURN(i);
+        }
+    }
+    
+    RETURN(0);
+}
+
+STRING_FUNCTION GetArray(STRING key, STRING json)
+{
+    INTEGER start, end, i, val, bracket_num;
+    
+    RESIZESTRING(key, LEN(key) + 3);
+    key = "\"" + key + "\":";
+    
+    start = FIND(key, json);
+    IF(start = 0) RETURN("");
+    
+    start = FIND("[", json, start);
+    end   = FindClosingBracket("[]", json, start);
+    start = start + 1;
+
+    IF(end > start)
+        RETURN(MID(json, start, end - start));
+    ELSE
+        RETURN("");
+}
+
+STRING_FUNCTION GetObject(STRING key, STRING json)
+{
+    INTEGER start, end, i, val, brace_num;
+    
+    IF(LEN(key) > 0) // Return object with key.
+    {
+        RESIZESTRING(key, LEN(key) + 3);
+        key = "\"" + key + "\":";
+    
+        start = FIND(key, json);
+    }
+    ELSE // Return first object.
+        start = FIND("{", json);
+    
+    IF(start = 0) RETURN("");
+    
+    start = FIND("{", json, start);
+    end   = FindClosingBracket("{}", json, start);
+    start = start + 1;
+    
+    IF(end > start)
+        RETURN(MID(json, start, end - start));
+    ELSE
+        RETURN("");
+}
+
+STRING_FUNCTION GetObjectFromArray(STRING key, STRING json, INTEGER index)
+{
+    STRING  array[JSON_LEN], object[JSON_LEN];
+    INTEGER i;
+    
+    array = GetArray(key, json);
+    
+    FOR(i = 0 TO index)
+    {
+        object = GetObject("", array);
+        IF(i = index)
+            RETURN(object);
+        ELSE IF(object = "")
+            RETURN("");
+        ELSE
+            array = RIGHT(array, LEN(array) - LEN(object));
+    } 
+}
+
+STRING_FUNCTION GetValue(STRING key, STRING json)
+{
+    INTEGER searching, key_loc, value_start, value_end, open_brac_loc, close_brac_loc, start_loc;
+    
+    RESIZESTRING(key, LEN(key) + 3);
+    key = "\"" + key + "\":";
+    
+    start_loc = 1;
+    searching = 1;
+    
+    WHILE(searching = 1)
+    {
+        key_loc = FIND(key, json, start_loc);
+        IF(key_loc = 0)
+        {
+            TRACE("GetValue(%s) NOT FOUND", key);
+            searching = 0;
+            RETURN("");
+        }
+        
+        open_brac_loc  = FIND("[", json, start_loc);        
+        IF(open_brac_loc = 0 || open_brac_loc > key_loc)
+        {
+            searching = 0;
+            BREAK;
+        }
+        ELSE
+        {
+            close_brac_loc = FindClosingBracket("[]", json, open_brac_loc);
+            
+            IF(close_brac_loc > 0)
+                start_loc = close_brac_loc;
+            ELSE
+                start_loc = key_loc;
+
+            TRACE("start_loc = %u", start_loc);
+        }
+    }
+    
+    value_start = key_loc + LEN(key);
+    
+    IF(BYTE(json, value_start) = 0x22)
+    {
+        value_start = value_start + 1;
+        value_end = 0;
+        searching = 1;
+
+        WHILE(searching = 1)
+        {
+            value_end = FIND("\"", json, MAX(value_start, value_end + 1));
+
+            IF(BYTE(json, value_end - 1) != 0x5C) // Quote is not escaped.
+                searching = 0;
+        }
+    }
+    ELSE
+        value_end = FIND(",", json, value_start);
+    
+    IF(value_end > value_start)
+    {
+        TRACE("GetValue(%s) %s", key, MID(json, value_start, value_end - value_start));
+        RETURN(MID(json, value_start, value_end - value_start));
+    }
+    ELSE
+        RETURN("");
+}
+
+// XML
+
+STRING_FUNCTION GetXMLValue(STRING key, STRING xml)
+{
+    INTEGER start, end;
+    
+    RESIZESTRING(key, LEN(key) + 4);
+    key = "<" + key + ">";
+    
+    start = FIND(key, xml);
+    IF(start = 0) RETURN("");
+    start = start + LEN(key);
+    
+    key = "<\\/" + RIGHT(key, LEN(key) - 1);
+    end = FIND(key, xml);
+    
+    TRACE("%s%s", key, MID(xml, start, end - start));
+    IF(end > start)
+        RETURN(MID(xml, start, end - start));
+    ELSE
+        RETURN("");
+}
+
+// HTTP Response
+
+STRING_FUNCTION ParseJSON(STRING json)
+{
+    INTEGER i;
+    STRING value[JSON_LEN];
+    
+    value = GetValue("__type", json);
+    value = REMOVE(":", value);
+    
+    IF(value = "AppStatus:")
+    {
+        ParseJSON(GetObject("AppInfo", json));
+        ParseJSON(GetObjectFromArray("Zones", json, Zone));
+        ParseJSON(GetObjectFromArray("NowPlayingInfo", json, ZoneInfo.SourceID));
+    }
+
+    // Application and System Information
+    ELSE IF(value = "ApplicationInfo:")
+    {
+        ApplicationInfo.AppInitialized    = ATOI(GetValue("AppInitialized",    json));
+        ApplicationInfo.LastChangeEventID = ATOI(GetValue("LastChangeEventID", json));
+        ApplicationInfo.TaskCompleted     = BTOI(GetValue("TaskCompleted",     json));
+        ApplicationInfo.TaskName          =      GetValue("TaskName",          json);
+        ApplicationInfo.TaskProgress      = ATOI(GetValue("TaskProgress",      json));
+                        iPod_Docked       = BTOI(GetValue("iPodDevicesDocked", json));
+    }
+    ELSE IF(value = "SystemInfo:")
+    {
+        SystemInfo.NumberOfSources = ATOI(GetValue("NumberOfSources", json));
+        SystemInfo.NumberOfZones   = ATOI(GetValue("NumberOfZones",   json));
+        
+        value = GetObject("VolumeSettings", json);
+        SystemInfo.VolumeMinimum = ATOI(GetValue("Minimum", value));
+        SystemInfo.VolumeMaximum = ATOI(GetValue("Maximum", value));
+    }
+    
+    // Zone Information
+    ELSE IF(value = "ZoneInfo:")
+    {
+        ZoneInfo.Label =      GetValue("Name",   json);
+        ZoneInfo.ID    = ATOI(GetValue("ZoneID", json));
+        
+        ZoneInfo.Power     = BTOI(GetValue("Power",     json));
+        ZoneInfo.Volume    = ATOI(GetValue("Volume",    json));
+        ZoneInfo.MaxVolume = ATOI(GetValue("MaxVolume", json));
+        ZoneInfo.Mute      = BTOI(GetValue("Mute",      json));
+        
+        ZoneInfo.SourceID       = ATOI(GetValue("SourceID",       json));
+        ZoneInfo.EnabledSources =      GetValue("EnabledSources", json);
+        
+        Source_ID = ZoneInfo.SourceID;
+    }
+
+    // Now Playing Information
+    ELSE IF(value = "NowPlayingMediaItem2:")
+    {
+        Duration     = ATOI(GetValue("Duration", json));
+        Progress     = ATOI(GetValue("Progress", json));
+        Progress_Bar = MULDIV(Progress, 100, Duration);
+        
+        value = GetObject("MediaItem", json);
+        value = GetValue("DisplayXML", value);
+        Song_Title    = GetXMLValue("title",    value);
+        Song_Album    = GetXMLValue("album",    value);
+        Song_Artist   = GetXMLValue("artists",  value);
+        Song_Genre    = GetXMLValue("genres",   value);
+        Song_Released = GetXMLValue("released", value);
+        
+        value = GetObjectFromArray("Attributes", json, 0);
+        MAKESTRING(Song_Artwork, "http://%s/casatunes/GetImage.ashx?ID=%s", Host, GetValue("Value", value));
+        
+        Next_Song        =      GetValue("NextSong",       json);
+        Queue_Count      = ATOI(GetValue("QueueCount",     json));
+        Queue_Song_Index = ATOI(GetValue("QueueSongIndex", json)) + 1;
+        MAKESTRING(Queue_Count_Text, "%u of %u", Queue_Song_Index, Queue_Count);
+        
+        Repeat_Mode  = ATOI(GetValue("RepeatMode",  json));
+        Shuffle_Mode = BTOI(GetValue("ShuffleMode", json));
+    }
+    
+    // Browse Information
+    ELSE IF(value = "MediaItem2:")
+    {
+        Browse_Info[Browse_Level].Total_Items = MAX_LINES;
+        
+        i = 0;
+        WHILE(LEN(value) > 0)
+        {
+            value = GetObjectFromArray("Attributes", json, i);
+            IF(FIND("TotalItemsAvailable", value))
+            {
+                Browse_Info[Browse_Level].Total_Items = ATOI(GetValue("Value", value));
+                BREAK;
+            }
+            
+            i = i + 1;
+        }
+        
+        Browse_Scroll_Bar = MULDIV(Browse_Info[Browse_Level].Start_Index + MAX_LINES, 65535, MAX(Browse_Info[Browse_Level].Total_Items, MAX_LINES));
+        
+        Browse_Info[Browse_Level].Title_ID = GetValue("ID", json);
+        Browse_Title                       = GetValue("Name", json);
+        
+        Browse_Info[Browse_Level].Selected_Line = 0;
+        Browse_Line[0].ID                       = Browse_Info[Browse_Level].Title_ID;
+        
+        FOR(i = 1 TO MAX_LINES)
+        {
+            IF((i + Browse_Info[Browse_Level].Start_Index) <= Browse_Info[Browse_Level].Total_Items)
+            {
+                value = GetObjectFromArray("MediaItems", json, i - 1);
+                
+                Browse_Line[i].ID    =      GetValue("ID", value);
+                Browse_Line[i].Flags = ATOI(GetValue("Flags", value));
+                Line_Name[i]         =      GetValue("Name", value);
+            }
+            ELSE IF(Browse_Line[i].ID != "")
+            {
+                Browse_Line[i].ID    = "";
+                Browse_Line[i].Flags = 0;
+                Line_Name[i]         = "";
+            }
+            ELSE
+            {
+                BREAK;
+            }
+        }
+    }
+}
+
+CHANGE Response
+{
+    STRING  http[1024], json[JSON_LEN];
+    
+    json = GATHER("}}",   Response, 75);
+    IF(json = "")
+    {
+        CLEARBUFFER(Response);
+        TERMINATEEVENT;
+    }
+    
+    http = REMOVE("\n\n", json);
+    
+    ParseJSON(json);
+}
+
+/*
+ * Runtime
+ */
+
+FUNCTION Main()
+{
+    Initialize();
+}

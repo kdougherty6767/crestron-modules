@@ -1,0 +1,250 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:Crestron International
+System Name: Beyerdynamic MCS 50
+System Number:  v1.0
+Programmer: BVD
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+// #SYMBOL_NAME ""
+// #HINT ""
+// #DEFINE_CONSTANT
+#CATEGORY "20" // Conferencing
+#DEFAULT_VOLATILE
+// #PRINT_TO_TRACE
+// #DIGITAL_EXPAND 
+// #ANALOG_SERIAL_EXPAND 
+// #OUTPUT_SHIFT 
+// #HELP_PDF_FILE ""
+// #DEFAULT_NONVOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+/*
+#HELP_BEGIN
+   (add additional lines of help lines)
+#HELP_END
+*/
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+// DIGITAL_INPUT 
+// ANALOG_INPUT 
+// STRING_INPUT 
+BUFFER_INPUT RX$[2500]; 
+
+DIGITAL_OUTPUT Chairman$, RTTBlink$, ResetFB$, RequestToTalkListCleared$, NextInListFb$,ClearAllMicsFB$;
+DIGITAL_OUTPUT ChairmanUsingPriority$,ModeIsRTT$, ModeIsAutomatic$, ModeIsOverride$, ModeIsManual$, _SKIP_;
+DIGITAL_OUTPUT MicStat$[64,64]; 
+ANALOG_OUTPUT RTTList$[9,9]; 
+// STRING_OUTPUT 
+
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+INTEGER RXok, waiting;
+// LONG_INTEGER
+// SIGNED_INTEGER
+// SIGNED_LONG_INTEGER
+STRING RXCommand[7];
+
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+
+Function CheckRTTList(INTEGER Number)
+{
+ 	Integer I;
+ 	for (I = 1 to 9)
+ 	{
+ 	 	if (RTTList$[I] = Number)
+ 	 	{
+ 	 	    if (I<9)
+ 	 	    {
+	 	 	    for (I = I to 8)
+	 	 	    {
+	 	 	    	RTTList$[I] = RTTList$[I+1];
+	 	 	    }
+	 	 	}
+ 	 	    RTTList$[9] = 0;
+ 	 	 	break;
+ 	 	} 
+ 	} 	 	
+ 	If (RTTList$[1] = 0) 
+ 	{
+ 		RTTBlink$ = 0;	
+ 	}
+}
+
+Function ClearRTTList()
+{
+	Integer I;
+	for (I = 1 to 9)
+ 	{
+ 	 	RTTList$[I] = 0; 
+ 	 	RTTBlink$ = 0;
+ 	}
+}
+
+Function ProcessCommand(STRING Command)
+{
+	Integer I, Number;
+	
+	IF (left(Command,1) = "P")
+	{	
+		trace("p = %s", Command);
+		if (Command = "P065\x0D") //RESET FB
+		{
+			pulse(100,ResetFB$);
+		}
+		else if (Command = "P066\x0D") //request-to-talk list is cleared
+		{
+			pulse(100,RequestToTalkListCleared$);
+			ClearRTTList();
+		}
+		else if (Command = "P067\x0D") //next in list fb + list is updated
+		{
+			pulse(100,NextInListfb$);
+			//ClearRTTList();
+		}
+		else if (Command = "P068\x0D") //fb clear delegate mics list, chairmen status stays as it is.
+		{
+			pulse(100,ClearAllMicsFB$);
+		}
+		else if (Command = "P069\x0D") //fb clear delegate mics list
+		{
+			pulse(100,ClearAllMicsFB$);
+		}  
+		else if (Command = "P091\x0D") //Priority activate
+		{
+		 	ChairmanUsingPriority$ = 1;
+		}
+		else if (Command = "P092\x0D") //Priority deactivate
+		{
+			ChairmanUsingPriority$ = 0;
+		}
+		else if (Command = "P072\x0D") //Change mode to RTT fb
+		{
+			pulse(100,ModeIsRTT$); 
+		}
+		else if (Command = "P073\x0D") //change mode to Manual fb
+		{
+		 	pulse(100,ModeIsManual$);
+		}
+		else if (Command = "P074\x0D") //Change mode to Override fb
+		{
+		  	pulse(100,ModeIsOverride$);
+		} 
+		else if (Command = "P075\x0D") //Change mode to automatic fb
+		{
+		 	pulse(100,ModeIsAutomatic$);
+		}
+		else if (right(Command,2) = "M\x0D") // normal delegate status is active
+		{
+		 	Number = AtoI(mid(Command,3,2));
+		 	CheckRTTList(Number);
+		 	processlogic(); 
+		 	MicStat$[Number] = 1;
+		}
+		else if (right(Command,2) = "P\x0D") // Chairman status is active
+		{
+		  	MicStat$[AtoI(mid(Command,3,2))] = 1;
+		  	Pulse(100,Chairman$);
+		}
+	}
+	else // "first char = R"
+	{
+	 	trace("r = %s", Command);
+	 	if (right(Command,2) = " \x0D") //mic status not active
+	 	{
+	 	 	Number = AtoI(mid(Command,3,2)); 
+	 	 	MicStat$[Number] = 0; 
+	 	 	
+	 	 	if((RTTList$[2] = 0) && (RTTList$[1] = Number))
+	 	 	{
+	 	 	 	RTTList$[1] = 0;
+	 	 	}
+	 	}
+	 	else if (Byte(Command,5) = 'A') //Request to talk
+	 	{
+	 		RTTList$[AtoI(mid(Command,6,1))] = AtoI(mid(Command,3,2));
+	 		RTTBlink$ = 1;
+	 		if (Byte(Command,6) = '1')
+	 		{
+		 		for (I = 2 to 9)
+			 	{
+			 	 	RTTList$[I] = 0; 
+			 	}
+			 }
+	 	}
+	}
+}
+
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+
+CHANGE RX$
+{
+    if (RXok)
+    {
+     	RXok = 0;
+     	if (!waiting)
+		{       
+			waiting = 1;
+			wait(200, waiter)
+			{
+				waiting = 0;
+				clearbuffer(RX$);
+				trace("Buffer cleared"); 
+			}
+		} 
+     	
+     	while(find("\x0D",RX$))
+		{
+         	cancelwait(waiter);
+		    waiting = 0;
+         	RXCommand = remove("\x0D",RX$);
+			IF((left(RXCommand,1) = "P") || (left(RXCommand,1) = "R"))
+			{
+			   ProcessCommand(RXCommand);
+			}
+			ELSE
+			{
+			 	clearbuffer(RXCommand);	
+			}
+       }
+       Rxok = 1;
+    }
+}
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+
+Function Main()
+{
+    RXok = 1;
+    waiting = 0;
+}
+
+

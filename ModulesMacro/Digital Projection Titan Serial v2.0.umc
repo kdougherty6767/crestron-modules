@@ -1,0 +1,10964 @@
+[
+Version=1
+]
+[
+ObjTp=FSgntr
+Sgntr=UserMacro
+RelVrs=4.02.38
+IntStrVrs=2
+MinSMWVrs=2.07.04
+MinTIOVrs=0
+SavedBy=SMW4.02.38
+]
+[
+ObjTp=Hd
+S0Nd=1
+S1Nd=2
+SLNd=3
+PrNm=Digital Projection Titan Serial v2.0.umc
+DbVr=44.05.005.00
+DvcDbVr=55.00.002.00
+PgmNm=LP
+DlrNm=Crestron Electronics, Inc.
+CltNm=Digital Projection Titan Serial v2.0
+Incl=362,378,380,405,407,408,409,478,522,537,554,586,590,611,624,767,830,883,1032,1062,1079,1134,1157,1199,1220,1222,1299,1348,1439,1472,1473,1499,1746,1803,1975,2229,2354,2514,2523,2532,3708,3902,3912,3918,3925,1766,2574,2651,2817,2886,2938,2947,3181,3197,3233,3710,3735,3736,3816,
+McNm=Digital Projection Titan IP v2.0
+SmVr=889
+DvVr=889
+TpN1=1
+TpN2=2
+TpN3=3
+TpN4=4
+TpN5=5
+PdfHelp=Digital Projection Titan Serial v2.0 Help.pdf
+DT=Video/Data Projector
+DST=DLP Projector
+Mfg=Digital Projection
+NumMdl=1
+Mdl1=Titan
+Tmpl=Video-Data Projector
+APg=1
+StdCmd=0
+FltTmp=1
+FpCS=0
+EnType=0
+ZeroOnIoOk=0
+SGMethod=1
+]
+[
+ObjTp=Bk
+Nm1=\
+Sx1=0
+Sy1=0
+Mx1=0
+]
+[
+ObjTp=Symbol
+Name=Digital Projection Titan Serial v2.0
+Code=1
+SmplCName=Digital Projection Titan Serial v2.0.umc
+Smpl-C=3
+CompilerTimePrecision=Single_Or_Double_Precision
+Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,302,305,
+Hint=Digital Projection Titan Serial v2.0
+SMWRev=2.07.04
+TIORev=0
+S+=1
+HelpID=1055
+PdfHelp=Digital Projection Titan Serial v2.0 Help.pdf
+DT=Video/Data Projector
+DST=DLP Projector
+Mfg=Digital Projection
+NumMdl=1
+Mdl1=Titan
+Tmpl=Video-Data Projector
+APg=1
+StdCmd=0
+FltTmp=1
+FpCS=0
+NumFixedInputs=150
+NumFixedOutputs=150
+MinVariableInputs=0
+MinVariableInputsList2=0
+MinVariableInputsList3=0
+MinVariableOutputs=0
+MinVariableOutputsList2=0
+MinVariableOutputsList3=0
+MinVariableParams=0
+SymbolTree=32
+InputSigType1=Digital
+InputSigType2=Digital
+InputSigType3=Digital
+InputSigType4=Digital|Analog|Serial|String
+InputSigType5=Digital
+InputSigType6=Digital
+InputSigType7=Digital
+InputSigType8=Digital
+InputSigType9=Digital
+InputSigType10=Digital
+InputSigType11=Digital
+InputSigType12=Digital
+InputSigType13=Digital
+InputSigType14=Digital
+InputSigType15=Digital
+InputSigType16=Digital
+InputSigType17=Digital|Analog|Serial|String
+InputSigType18=Digital
+InputSigType19=Digital
+InputSigType20=Digital
+InputSigType21=Digital
+InputSigType22=Digital
+InputSigType23=Digital|Analog|Serial|String
+InputSigType24=Digital
+InputSigType25=Digital
+InputSigType26=Digital
+InputSigType27=Digital
+InputSigType28=Digital|Analog|Serial|String
+InputSigType29=Digital
+InputSigType30=Digital
+InputSigType31=Digital
+InputSigType32=Digital
+InputSigType33=Digital
+InputSigType34=Digital
+InputSigType35=Digital
+InputSigType36=Digital
+InputSigType37=Digital|Analog|Serial|String
+InputSigType38=Digital
+InputSigType39=Digital
+InputSigType40=Digital
+InputSigType41=Digital|Analog|Serial|String
+InputSigType42=Digital
+InputSigType43=Digital
+InputSigType44=Digital
+InputSigType45=Digital
+InputSigType46=Digital
+InputSigType47=Digital|Analog|Serial|String
+InputSigType48=Digital
+InputSigType49=Digital
+InputSigType50=Digital|Analog|Serial|String
+InputSigType51=Digital
+InputSigType52=Digital
+InputSigType53=Digital|Analog|Serial|String
+InputSigType54=Digital
+InputSigType55=Digital
+InputSigType56=Digital|Analog|Serial|String
+InputSigType57=Digital
+InputSigType58=Digital
+InputSigType59=Digital
+InputSigType60=Digital|Analog|Serial|String
+InputSigType61=Digital
+InputSigType62=Digital
+InputSigType63=Digital
+InputSigType64=Digital
+InputSigType65=Digital
+InputSigType66=Digital|Analog|Serial|String
+InputSigType67=Digital
+InputSigType68=Digital
+InputSigType69=Digital
+InputSigType70=Digital
+InputSigType71=Digital|Analog|Serial|String
+InputSigType72=Digital
+InputSigType73=Digital
+InputSigType74=Digital|Analog|Serial|String
+InputSigType75=Digital
+InputSigType76=Digital
+InputSigType77=Digital|Analog|Serial|String
+InputSigType78=Digital
+InputSigType79=Digital
+InputSigType80=Digital|Analog|Serial|String
+InputSigType81=Digital
+InputSigType82=Digital
+InputSigType83=Digital
+InputSigType84=Digital|Analog|Serial|String
+InputSigType85=Digital
+InputSigType86=Digital
+InputSigType87=Digital
+InputSigType88=Digital|Analog|Serial|String
+InputSigType89=Digital
+InputSigType90=Digital
+InputSigType91=Digital
+InputSigType92=Digital
+InputSigType93=Digital|Analog|Serial|String
+InputSigType94=Digital
+InputSigType95=Digital|Analog|Serial|String
+InputSigType96=Digital
+InputSigType97=Digital
+InputSigType98=Digital|Analog|Serial|String
+InputSigType99=Digital
+InputSigType100=Digital
+InputSigType101=Digital|Analog|Serial|String
+InputSigType102=Digital
+InputSigType103=Digital
+InputSigType104=Digital
+InputSigType105=Digital
+InputSigType106=Digital
+InputSigType107=Digital
+InputSigType108=Digital
+InputSigType109=Digital
+InputSigType110=Digital
+InputSigType111=Digital
+InputSigType112=Digital|Analog|Serial|String
+InputSigType113=Digital
+InputSigType114=Digital
+InputSigType115=Digital|Analog|Serial|String
+InputSigType116=Digital
+InputSigType117=Digital
+InputSigType118=Digital|Analog|Serial|String
+InputSigType119=Digital
+InputSigType120=Digital
+InputSigType121=Digital
+InputSigType122=Digital
+InputSigType123=Digital
+InputSigType124=Digital
+InputSigType125=Digital
+InputSigType126=Digital
+InputSigType127=Digital
+InputSigType128=Digital
+InputSigType129=Digital
+InputSigType130=Digital
+InputSigType131=Digital
+InputSigType132=Digital
+InputSigType133=Digital
+InputSigType134=Digital
+InputSigType135=Digital
+InputSigType136=Digital
+InputSigType137=Digital|Analog|Serial|String
+InputSigType138=Digital|Analog|Serial|String
+InputSigType139=Digital|Analog|Serial|String
+InputSigType140=Digital|Analog|Serial|String
+InputSigType141=Digital|Analog|Serial|String
+InputSigType142=Digital|Analog|Serial|String
+InputSigType143=Digital|Analog|Serial|String
+InputSigType144=Digital|Analog|Serial|String
+InputSigType145=Digital|Analog|Serial|String
+InputSigType146=Digital|Analog|Serial|String
+InputSigType147=Digital|Analog|Serial|String
+InputSigType148=Digital|Analog|Serial|String
+InputSigType149=Digital|Analog|Serial|String
+InputSigType150=Serial
+OutputSigType1=Digital
+OutputSigType2=Digital
+OutputSigType3=Digital|Analog|Serial|String
+OutputSigType4=Digital|Analog|Serial|String
+OutputSigType5=Digital
+OutputSigType6=Digital
+OutputSigType7=Digital
+OutputSigType8=Digital
+OutputSigType9=Digital
+OutputSigType10=Digital
+OutputSigType11=Digital
+OutputSigType12=Digital
+OutputSigType13=Digital
+OutputSigType14=Digital
+OutputSigType15=Digital
+OutputSigType16=Digital
+OutputSigType17=Digital|Analog|Serial|String
+OutputSigType18=Digital
+OutputSigType19=Digital
+OutputSigType20=Digital
+OutputSigType21=Digital
+OutputSigType22=Digital
+OutputSigType23=Digital|Analog|Serial|String
+OutputSigType24=Digital
+OutputSigType25=Digital
+OutputSigType26=Digital
+OutputSigType27=Digital
+OutputSigType28=Digital|Analog|Serial|String
+OutputSigType29=Digital
+OutputSigType30=Digital
+OutputSigType31=Digital
+OutputSigType32=Digital
+OutputSigType33=Digital
+OutputSigType34=Digital
+OutputSigType35=Digital
+OutputSigType36=Digital
+OutputSigType37=Digital|Analog|Serial|String
+OutputSigType38=Digital
+OutputSigType39=Digital
+OutputSigType40=Digital
+OutputSigType41=Digital|Analog|Serial|String
+OutputSigType42=Digital
+OutputSigType43=Digital
+OutputSigType44=Digital
+OutputSigType45=Digital
+OutputSigType46=Digital
+OutputSigType47=Digital|Analog|Serial|String
+OutputSigType48=Analog
+OutputSigType49=Serial
+OutputSigType50=Digital|Analog|Serial|String
+OutputSigType51=Analog
+OutputSigType52=Serial
+OutputSigType53=Digital|Analog|Serial|String
+OutputSigType54=Digital
+OutputSigType55=Digital
+OutputSigType56=Digital|Analog|Serial|String
+OutputSigType57=Digital
+OutputSigType58=Digital
+OutputSigType59=Digital
+OutputSigType60=Digital|Analog|Serial|String
+OutputSigType61=Digital
+OutputSigType62=Digital
+OutputSigType63=Digital
+OutputSigType64=Digital
+OutputSigType65=Digital
+OutputSigType66=Digital|Analog|Serial|String
+OutputSigType67=Digital
+OutputSigType68=Digital
+OutputSigType69=Digital
+OutputSigType70=Digital
+OutputSigType71=Digital|Analog|Serial|String
+OutputSigType72=Digital
+OutputSigType73=Digital
+OutputSigType74=Digital|Analog|Serial|String
+OutputSigType75=Digital
+OutputSigType76=Digital
+OutputSigType77=Digital|Analog|Serial|String
+OutputSigType78=Digital
+OutputSigType79=Digital
+OutputSigType80=Digital|Analog|Serial|String
+OutputSigType81=Digital
+OutputSigType82=Digital
+OutputSigType83=Digital|Analog|Serial|String
+OutputSigType84=Digital|Analog|Serial|String
+OutputSigType85=Digital
+OutputSigType86=Digital
+OutputSigType87=Digital|Analog|Serial|String
+OutputSigType88=Digital|Analog|Serial|String
+OutputSigType89=Digital|Analog|Serial|String
+OutputSigType90=Digital|Analog|Serial|String
+OutputSigType91=Digital|Analog|Serial|String
+OutputSigType92=Digital|Analog|Serial|String
+OutputSigType93=Digital|Analog|Serial|String
+OutputSigType94=Digital|Analog|Serial|String
+OutputSigType95=Digital|Analog|Serial|String
+OutputSigType96=Digital|Analog|Serial|String
+OutputSigType97=Digital|Analog|Serial|String
+OutputSigType98=Digital|Analog|Serial|String
+OutputSigType99=Digital|Analog|Serial|String
+OutputSigType100=Digital|Analog|Serial|String
+OutputSigType101=Digital|Analog|Serial|String
+OutputSigType102=Digital
+OutputSigType103=Digital
+OutputSigType104=Digital
+OutputSigType105=Digital
+OutputSigType106=Digital
+OutputSigType107=Digital
+OutputSigType108=Digital
+OutputSigType109=Digital
+OutputSigType110=Digital
+OutputSigType111=Digital
+OutputSigType112=Digital|Analog|Serial|String
+OutputSigType113=Analog
+OutputSigType114=Serial
+OutputSigType115=Digital|Analog|Serial|String
+OutputSigType116=Analog
+OutputSigType117=Serial
+OutputSigType118=Digital|Analog|Serial|String
+OutputSigType119=Digital
+OutputSigType120=Digital
+OutputSigType121=Digital
+OutputSigType122=Digital
+OutputSigType123=Digital
+OutputSigType124=Digital
+OutputSigType125=Digital
+OutputSigType126=Digital
+OutputSigType127=Digital
+OutputSigType128=Digital
+OutputSigType129=Digital
+OutputSigType130=Digital
+OutputSigType131=Digital
+OutputSigType132=Digital
+OutputSigType133=Digital
+OutputSigType134=Digital
+OutputSigType135=Digital
+OutputSigType136=Digital
+OutputSigType137=Digital|Analog|Serial|String
+OutputSigType138=Serial
+OutputSigType139=Serial
+OutputSigType140=Serial
+OutputSigType141=Serial
+OutputSigType142=Digital|Analog|Serial|String
+OutputSigType143=Serial
+OutputSigType144=Serial
+OutputSigType145=Serial
+OutputSigType146=Serial
+OutputSigType147=Digital|Analog|Serial|String
+OutputSigType148=Digital
+OutputSigType149=Digital|Analog|Serial|String
+OutputSigType150=Serial
+ParamSigType1=Time|Percent|Constant|String|FileName|HexAddress|Any
+InputCue1=Power_On
+InputCue2=Power_Off
+InputCue3=Power_Toggle
+InputCue4=[~UNUSED~]
+InputCue5=Input_CVBS1
+InputCue6=Input_CVBS2
+InputCue7=Input_S-Video
+InputCue8=Input_Component
+InputCue9=Input_VGA
+InputCue10=Input_3G-SDI
+InputCue11=Input_DVI
+InputCue12=Input_HDMI
+InputCue13=Input_Test_Pattern
+InputCue14=Input_Main/DVI
+InputCue15=Input_Sub/HDMI
+InputCue16=Input_Dual_Pipe
+InputCue17=[~UNUSED~]
+InputCue18=Aspect_Source
+InputCue19=Aspect_Fill_&_Display
+InputCue20=Aspect_Fill_&_Crop
+InputCue21=Aspect_Anamorphic
+InputCue22=Aspect_TheaterScope
+InputCue23=[~UNUSED~]
+InputCue24=PIP_Mode_Off
+InputCue25=PIP_Mode_PIP
+InputCue26=PIP_Mode_PAP
+InputCue27=PIP_Mode_POP
+InputCue28=[~UNUSED~]
+InputCue29=PIP_Input_CVBS1
+InputCue30=PIP_Input_CVBS2
+InputCue31=PIP_Input_S-Video
+InputCue32=PIP_Input_Component
+InputCue33=PIP_Input_VGA
+InputCue34=PIP_Input_3G-SDI
+InputCue35=PIP_Input_DVI
+InputCue36=PIP_Input_HDMI
+InputCue37=[~UNUSED~]
+InputCue38=PIP_Size_Small
+InputCue39=PIP_Size_Medium
+InputCue40=PIP_Size_Large
+InputCue41=[~UNUSED~]
+InputCue42=PIP_Position_Top_Left
+InputCue43=PIP_Position_Top_Right
+InputCue44=PIP_Position_Bottom_Left
+InputCue45=PIP_Position_Bottom_Right
+InputCue46=PIP_Position_Custom
+InputCue47=[~UNUSED~]
+InputCue48=PIP_H_Position_Right
+InputCue49=PIP_H_Position_Left
+InputCue50=[~UNUSED~]
+InputCue51=PIP_V_Position_Up
+InputCue52=PIP_V_Position_Down
+InputCue53=[~UNUSED~]
+InputCue54=*3D_On
+InputCue55=*3D_Off
+InputCue56=[~UNUSED~]
+InputCue57=*3D_Mult_1X
+InputCue58=*3D_Mult_2X
+InputCue59=*3D_Mult_3X
+InputCue60=[~UNUSED~]
+InputCue61=*3D_Format_Auto
+InputCue62=*3D_Format_SEQ
+InputCue63=*3D_Format_FPack
+InputCue64=*3D_Format_TaB
+InputCue65=*3D_Format_SBS
+InputCue66=[~UNUSED~]
+InputCue67=*3D_Darktime_0us
+InputCue68=*3D_Darktime_650us
+InputCue69=*3D_Darktime_1300us
+InputCue70=*3D_Darktime_7500us
+InputCue71=[~UNUSED~]
+InputCue72=*3D_Polarity_Pos
+InputCue73=*3D_Polarity_Neg
+InputCue74=[~UNUSED~]
+InputCue75=*3D_Dominance_Left
+InputCue76=*3D_Dominance_Right
+InputCue77=[~UNUSED~]
+InputCue78=*3D_SDI_Stream_1
+InputCue79=*3D_SDI_Stream_2
+InputCue80=[~UNUSED~]
+InputCue81=Shutter_Open
+InputCue82=Shutter_Close
+InputCue83=Shutter_Toggle
+InputCue84=[~UNUSED~]
+InputCue85=Freeze_On
+InputCue86=Freeze_Off
+InputCue87=Freeze_Toggle
+InputCue88=[~UNUSED~]
+InputCue89=Lens_Up
+InputCue90=Lens_Down
+InputCue91=Lens_Left
+InputCue92=Lens_Right
+InputCue93=[~UNUSED~]
+InputCue94=Lens_Center
+InputCue95=[~UNUSED~]
+InputCue96=Zoom_In
+InputCue97=Zoom_Out
+InputCue98=[~UNUSED~]
+InputCue99=Focus_Near
+InputCue100=Focus_Far
+InputCue101=[~UNUSED~]
+InputCue102=Lens_Preset_1
+InputCue103=Lens_Preset_2
+InputCue104=Lens_Preset_3
+InputCue105=Lens_Preset_4
+InputCue106=Lens_Preset_5
+InputCue107=Lens_Preset_6
+InputCue108=Lens_Preset_7
+InputCue109=Lens_Preset_8
+InputCue110=Lens_Preset_9
+InputCue111=Lens_Preset_10
+InputCue112=[~UNUSED~]
+InputCue113=Brightness_Up
+InputCue114=Brightness_Down
+InputCue115=[~UNUSED~]
+InputCue116=Contrast_Up
+InputCue117=Contrast_Down
+InputCue118=[~UNUSED~]
+InputCue119=Lamp_Mode_Both(Dual)/All(Quad)
+InputCue120=Lamp_Mode_Lamp_1(Dual)/Auto_3(Quad)
+InputCue121=Lamp_Mode_Lamp_2(Dual)/Auto_2(Quad)
+InputCue122=Lamp_Mode_Auto_1
+InputCue123=Lamp_Mode_Lamps_1_2_3
+InputCue124=Lamp_Mode_Lamps_1_2_4
+InputCue125=Lamp_Mode_Lamps_1_3_4
+InputCue126=Lamp_Mode_Lamps_2_3_4
+InputCue127=Lamp_Mode_Lamps_1_2
+InputCue128=Lamp_Mode_Lamps_1_3
+InputCue129=Lamp_Mode_Lamps_1_4
+InputCue130=Lamp_Mode_Lamps_2_3
+InputCue131=Lamp_Mode_Lamps_2_4
+InputCue132=Lamp_Mode_Lamps_3_4
+InputCue133=Lamp_Mode_Lamp_1
+InputCue134=Lamp_Mode_Lamp_2
+InputCue135=Lamp_Mode_Lamp_3
+InputCue136=Lamp_Mode_Lamp_4
+InputCue137=[~UNUSED~]
+InputCue138=[~UNUSED~]
+InputCue139=[~UNUSED~]
+InputCue140=[~UNUSED~]
+InputCue141=[~UNUSED~]
+InputCue142=[~UNUSED~]
+InputCue143=[~UNUSED~]
+InputCue144=[~UNUSED~]
+InputCue145=[~UNUSED~]
+InputCue146=[~UNUSED~]
+InputCue147=[~UNUSED~]
+InputCue148=[~UNUSED~]
+InputCue149=[~UNUSED~]
+InputCue150=From_Device
+OutputCue1=Power_Is_On
+OutputCue2=Power_Is_Off
+OutputCue3=[~UNUSED~]
+OutputCue4=[~UNUSED~]
+OutputCue5=Input_Is_CVBS1
+OutputCue6=Input_Is_CVBS2
+OutputCue7=Input_Is_S-Video
+OutputCue8=Input_Is_Component
+OutputCue9=Input_Is_VGA
+OutputCue10=Input_Is_3G-SDI
+OutputCue11=Input_Is_DVI
+OutputCue12=Input_Is_HDMI
+OutputCue13=Input_Is_Test_Pattern
+OutputCue14=Input_Is_Main/DVI
+OutputCue15=Input_Is_Sub/HDMI
+OutputCue16=Input_Is_Dual_Pipe
+OutputCue17=[~UNUSED~]
+OutputCue18=Aspect_Is_Source
+OutputCue19=Aspect_Is_Fill_&_Display
+OutputCue20=Aspect_Is_Fill_&_Crop
+OutputCue21=Aspect_Is_Anamorphic
+OutputCue22=Aspect_Is_TheaterScope
+OutputCue23=[~UNUSED~]
+OutputCue24=PIP_Mode_Is_Off
+OutputCue25=PIP_Mode_Is_PIP
+OutputCue26=PIP_Mode_Is_PAP
+OutputCue27=PIP_Mode_Is_POP
+OutputCue28=[~UNUSED~]
+OutputCue29=PIP_Input_Is_CVBS1
+OutputCue30=PIP_Input_Is_CVBS2
+OutputCue31=PIP_Input_Is_S-Video
+OutputCue32=PIP_Input_Is_Component
+OutputCue33=PIP_Input_Is_VGA
+OutputCue34=PIP_Input_Is_3G-SDI
+OutputCue35=PIP_Input_Is_DVI
+OutputCue36=PIP_Input_Is_HDMI
+OutputCue37=[~UNUSED~]
+OutputCue38=PIP_Size_Is_Small
+OutputCue39=PIP_Size_Is_Medium
+OutputCue40=PIP_Size_Is_Large
+OutputCue41=[~UNUSED~]
+OutputCue42=PIP_Position_Is_Top_Left
+OutputCue43=PIP_Position_Is_Top_Right
+OutputCue44=PIP_Position_Is_Bottom_Left
+OutputCue45=PIP_Position_Is_Bottom_Right
+OutputCue46=PIP_Position_Is_Custom
+OutputCue47=[~UNUSED~]
+OutputCue48=PIP_H_Position_Gauge
+OutputCue49=PIP_H_Position_Text
+OutputCue50=[~UNUSED~]
+OutputCue51=PIP_V_Position_Gauge
+OutputCue52=PIP_V_Position_Text
+OutputCue53=[~UNUSED~]
+OutputCue54=*3D_Is_On
+OutputCue55=*3D_Is_Off
+OutputCue56=[~UNUSED~]
+OutputCue57=*3D_Mult_Is_1X
+OutputCue58=*3D_Mult_Is_2X
+OutputCue59=*3D_Mult_Is_3X
+OutputCue60=[~UNUSED~]
+OutputCue61=*3D_Format_Is_Auto
+OutputCue62=*3D_Format_Is_SEQ
+OutputCue63=*3D_Format_Is_FPack
+OutputCue64=*3D_Format_Is_TaB
+OutputCue65=*3D_Format_Is_SBS
+OutputCue66=[~UNUSED~]
+OutputCue67=*3D_Darktime_Is_0us
+OutputCue68=*3D_Darktime_Is_650us
+OutputCue69=*3D_Darktime_Is_1300us
+OutputCue70=*3D_Darktime_Is_7500us
+OutputCue71=[~UNUSED~]
+OutputCue72=*3D_Polarity_Is_Pos
+OutputCue73=*3D_Polarity_Is_Neg
+OutputCue74=[~UNUSED~]
+OutputCue75=*3D_Dominance_Is_Left
+OutputCue76=*3D_Dominance_Is_Right
+OutputCue77=[~UNUSED~]
+OutputCue78=*3D_SDI_Stream_Is_1
+OutputCue79=*3D_SDI_Stream_Is_2
+OutputCue80=[~UNUSED~]
+OutputCue81=Shutter_Is_Open
+OutputCue82=Shutter_Is_Close
+OutputCue83=[~UNUSED~]
+OutputCue84=[~UNUSED~]
+OutputCue85=Freeze_Is_On
+OutputCue86=Freeze_Is_Off
+OutputCue87=[~UNUSED~]
+OutputCue88=[~UNUSED~]
+OutputCue89=[~UNUSED~]
+OutputCue90=[~UNUSED~]
+OutputCue91=[~UNUSED~]
+OutputCue92=[~UNUSED~]
+OutputCue93=[~UNUSED~]
+OutputCue94=[~UNUSED~]
+OutputCue95=[~UNUSED~]
+OutputCue96=[~UNUSED~]
+OutputCue97=[~UNUSED~]
+OutputCue98=[~UNUSED~]
+OutputCue99=[~UNUSED~]
+OutputCue100=[~UNUSED~]
+OutputCue101=[~UNUSED~]
+OutputCue102=Lens_Preset_1_Is_Selected
+OutputCue103=Lens_Preset_2_Is_Selected
+OutputCue104=Lens_Preset_3_Is_Selected
+OutputCue105=Lens_Preset_4_Is_Selected
+OutputCue106=Lens_Preset_5_Is_Selected
+OutputCue107=Lens_Preset_6_Is_Selected
+OutputCue108=Lens_Preset_7_Is_Selected
+OutputCue109=Lens_Preset_8_Is_Selected
+OutputCue110=Lens_Preset_9_Is_Selected
+OutputCue111=Lens_Preset_10_Is_Selected
+OutputCue112=[~UNUSED~]
+OutputCue113=Brightness_Gauge
+OutputCue114=Brightness_Text
+OutputCue115=[~UNUSED~]
+OutputCue116=Contrast_Gauge
+OutputCue117=Contrast_Text
+OutputCue118=[~UNUSED~]
+OutputCue119=Lamp_Mode_Is_Both(Dual)/All(Quad)
+OutputCue120=Lamp_Mode_Is_Lamp_1(Dual)/Auto_3(Quad)
+OutputCue121=Lamp_Mode_Is_Lamp_2(Dual)/Auto_2(Quad)
+OutputCue122=Lamp_Mode_Is_Auto_1
+OutputCue123=Lamp_Mode_Is_Lamps_1_2_3
+OutputCue124=Lamp_Mode_Is_Lamps_1_2_4
+OutputCue125=Lamp_Mode_Is_Lamps_1_3_4
+OutputCue126=Lamp_Mode_Is_Lamps_2_3_4
+OutputCue127=Lamp_Mode_Is_Lamps_1_2
+OutputCue128=Lamp_Mode_Is_Lamps_1_3
+OutputCue129=Lamp_Mode_Is_Lamps_1_4
+OutputCue130=Lamp_Mode_Is_Lamps_2_3
+OutputCue131=Lamp_Mode_Is_Lamps_2_4
+OutputCue132=Lamp_Mode_Is_Lamps_3_4
+OutputCue133=Lamp_Mode_Is_Lamp_1
+OutputCue134=Lamp_Mode_Is_Lamp_2
+OutputCue135=Lamp_Mode_Is_Lamp_3
+OutputCue136=Lamp_Mode_Is_Lamp_4
+OutputCue137=[~UNUSED~]
+OutputCue138=Lamp_1_Hours_Text
+OutputCue139=Lamp_2_Hours_Text
+OutputCue140=Lamp_3_Hours_Text
+OutputCue141=Lamp_4_Hours_Text
+OutputCue142=[~UNUSED~]
+OutputCue143=Lamp_1_Strikes_Text
+OutputCue144=Lamp_2_Strikes_Text
+OutputCue145=Lamp_3_Strikes_Text
+OutputCue146=Lamp_4_Strikes_Text
+OutputCue147=[~UNUSED~]
+OutputCue148=Please_Wait
+OutputCue149=[~UNUSED~]
+OutputCue150=To_Device
+ParamCue1=p1
+MPi=136
+Pi1=2
+Pi2=3
+Pi3=4
+Pi5=5
+Pi6=6
+Pi7=7
+Pi8=8
+Pi9=9
+Pi10=10
+Pi11=11
+Pi12=12
+Pi13=13
+Pi14=14
+Pi15=15
+Pi16=16
+Pi18=17
+Pi19=18
+Pi20=19
+Pi21=20
+Pi22=21
+Pi24=22
+Pi25=23
+Pi26=24
+Pi27=25
+Pi29=26
+Pi30=27
+Pi31=28
+Pi32=29
+Pi33=30
+Pi34=31
+Pi35=32
+Pi36=33
+Pi38=34
+Pi39=35
+Pi40=36
+Pi42=37
+Pi43=38
+Pi44=39
+Pi45=40
+Pi46=41
+Pi48=42
+Pi49=43
+Pi51=44
+Pi52=45
+Pi54=46
+Pi55=47
+Pi57=48
+Pi58=49
+Pi59=50
+Pi61=51
+Pi62=52
+Pi63=53
+Pi64=54
+Pi65=55
+Pi67=56
+Pi68=57
+Pi69=58
+Pi70=59
+Pi72=60
+Pi73=61
+Pi75=62
+Pi76=63
+Pi78=64
+Pi79=65
+Pi81=66
+Pi82=67
+Pi83=68
+Pi85=69
+Pi86=70
+Pi87=71
+Pi89=72
+Pi90=73
+Pi91=74
+Pi92=75
+Pi94=76
+Pi96=77
+Pi97=78
+Pi99=79
+Pi100=80
+Pi102=81
+Pi103=82
+Pi104=83
+Pi105=84
+Pi106=85
+Pi107=86
+Pi108=87
+Pi109=88
+Pi110=89
+Pi111=90
+Pi113=91
+Pi114=92
+Pi116=93
+Pi117=94
+Pi119=95
+Pi120=96
+Pi121=97
+Pi122=98
+Pi123=99
+Pi124=100
+Pi125=101
+Pi126=102
+Pi127=103
+Pi128=104
+Pi129=105
+Pi130=106
+Pi131=107
+Pi132=108
+Pi133=109
+Pi134=110
+Pi135=111
+Pi136=112
+MPo=150
+Po1=116
+Po2=117
+Po5=118
+Po6=119
+Po7=120
+Po8=121
+Po9=122
+Po10=123
+Po11=124
+Po12=125
+Po13=126
+Po14=127
+Po15=128
+Po16=129
+Po18=130
+Po19=131
+Po20=132
+Po21=133
+Po22=134
+Po24=135
+Po25=136
+Po26=137
+Po27=138
+Po29=139
+Po30=140
+Po31=141
+Po32=142
+Po33=143
+Po34=144
+Po35=145
+Po36=146
+Po38=147
+Po39=148
+Po40=149
+Po42=150
+Po43=151
+Po44=152
+Po45=153
+Po46=154
+Po48=155
+Po49=156
+Po51=157
+Po52=158
+Po54=159
+Po55=160
+Po57=161
+Po58=162
+Po59=163
+Po61=164
+Po62=165
+Po63=166
+Po64=167
+Po65=168
+Po67=169
+Po68=170
+Po69=171
+Po70=172
+Po72=173
+Po73=174
+Po75=175
+Po76=176
+Po78=177
+Po79=178
+Po81=179
+Po82=180
+Po85=181
+Po86=182
+Po102=183
+Po103=184
+Po104=185
+Po105=186
+Po106=187
+Po107=188
+Po108=189
+Po109=190
+Po110=191
+Po111=192
+Po113=193
+Po114=194
+Po116=195
+Po117=196
+Po119=197
+Po120=198
+Po121=199
+Po122=200
+Po123=201
+Po124=202
+Po125=203
+Po126=204
+Po127=205
+Po128=206
+Po129=207
+Po130=208
+Po131=209
+Po132=210
+Po133=211
+Po134=212
+Po135=213
+Po136=214
+Po138=215
+Po139=216
+Po140=217
+Po141=218
+Po143=219
+Po144=220
+Po145=221
+Po146=222
+Po148=223
+Po150=224
+CnxLogic1=S SER/Model:134
+CnxLogic2=C O 0150 I Q:tx$
+CnxLogic3=C I 0150 O Q:rx$
+CnxLogic4=S SER/Baud:38400
+CnxLogic5=S SER/Parity:N
+CnxLogic6=S SER/Databits:8
+CnxLogic7=S SER/Stopbits:1
+CnxLogic8=S SER/SWHandshaking:(None)
+CnxLogic9=S SER/HWHandshaking:(None)
+CnxLogic10=S SER/Protocol:(RS232)
+FileName=Digital Projection Titan Serial v2.0.umc
+EncodingType=0
+ZeroOnIoOk=0
+]
+[
+ObjTp=Sm
+H=1
+SmC=157
+Nm=Central Control Modules
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=2
+SmC=157
+Nm=Network Modules
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=3
+SmC=157
+Nm=Ethernet
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=4
+SmC=156
+Nm=Logic
+ObjVer=1
+CF=2
+mC=24
+C1=21
+C2=22
+C3=10
+C4=29
+C5=27
+C6=42
+C7=50
+C8=58
+C9=66
+C10=74
+C11=82
+C12=90
+C13=98
+C14=106
+C15=114
+C16=122
+C17=130
+C18=138
+C19=146
+C20=156
+C21=183
+C22=185
+C23=24
+C24=6
+]
+[
+ObjTp=Sm
+H=5
+SmC=157
+Nm=DefineArguments
+ObjVer=1
+CF=2
+n1I=1
+n1O=1
+mC=1
+C1=179
+mI=1
+mO=1
+tO=1
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=6
+SmC=285
+Nm=Virtual Serial Driver for Macro Connection
+ObjVer=1
+PrH=4
+CF=2
+n1I=4
+n1O=2
+mI=4
+I1=5
+mO=2
+tO=2
+O1=4
+mP=8
+P1=
+P2=38400
+P3=N
+P4=8
+P5=1
+P6=(None)
+P7=(None)
+P8=(RS232)
+]
+[
+ObjTp=Sm
+H=10
+SmC=103
+Nm=Digital Projection Titan v2.0 Processor.usp
+ObjVer=1
+PrH=4
+CF=2
+n1I=29
+n2I=37
+n1O=12
+mI=66
+I1=10
+I2=86
+I3=1
+I4=85
+I5=87
+I6=88
+I7=89
+I8=171
+I9=143
+I10=382
+I11=141
+I12=74
+I13=75
+I14=82
+I15=84
+I16=168
+I17=153
+I18=156
+I19=157
+I20=90
+I21=91
+I22=95
+I23=96
+I24=97
+I25=98
+I26=99
+I27=100
+I28=101
+I29=102
+I30=4
+I32=13
+I33=20
+I34=118
+I35=125
+I36=126
+I37=127
+I38=128
+I39=130
+I40=270
+I41=131
+I42=140
+I43=335
+I44=348
+I45=362
+I46=376
+I47=391
+I48=402
+I50=15
+I51=30
+I52=119
+I53=142
+I54=144
+I55=145
+I56=146
+I57=152
+I58=280
+I59=154
+I60=155
+I61=343
+I62=354
+I63=368
+I64=383
+I65=398
+I66=430
+mO=47
+tO=47
+O1=525
+O2=558
+O3=104
+O4=105
+O5=106
+O6=107
+O7=108
+O8=109
+O9=110
+O10=111
+O11=112
+O12=113
+O13=5
+O14=114
+O15=115
+O16=116
+O17=117
+O18=403
+O19=172
+O20=397
+O21=401
+O22=518
+O23=519
+O24=520
+O25=521
+O26=526
+O27=522
+O28=523
+O29=524
+O31=19
+O32=78
+O33=103
+O34=158
+O35=164
+O36=165
+O37=166
+O38=167
+O39=271
+O40=169
+O41=170
+O42=336
+O43=349
+O44=363
+O45=377
+O46=392
+O47=404
+mP=1
+P1=
+]
+[
+ObjTp=Sm
+H=21
+SmC=72
+Nm=Serial/Analog One-Shot
+ObjVer=1
+PrH=4
+CF=2
+n1I=1
+n1O=2
+Cmn1=From Device Pulse\\
+mI=1
+I1=4
+mO=2
+tO=2
+O1=8
+mP=1
+P1=.5s
+]
+[
+ObjTp=Sm
+H=22
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=4
+CF=2
+n1I=3
+n1O=2
+Cmn1=Response Received Pulse\\
+mI=3
+I1=9
+I2=8
+mO=2
+tO=2
+O1=10
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=23
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=27
+CF=2
+n1I=13
+n1O=1
+Cmn1=Input Request\\
+mI=13
+I1=83
+I2=46
+I3=36
+I4=17
+I5=18
+I6=37
+I7=38
+I8=39
+I9=40
+I10=41
+I11=42
+I12=43
+I13=44
+mO=1
+tO=1
+O1=20
+mP=13
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+P5=4d
+P6=5d
+P7=6d
+P8=7d
+P9=8d
+P10=9d
+P11=10d
+P12=11d
+P13=12d
+]
+[
+ObjTp=Sm
+H=24
+SmC=101
+Nm=Serial I/O
+ObjVer=1
+PrH=4
+CF=2
+n1I=129
+n1O=99
+Cmn1=Commands/Responses\\
+mI=129
+I1=4
+I3=21
+I4=22
+I6=27
+I7=28
+I8=29
+I9=45
+I10=47
+I11=48
+I12=49
+I13=50
+I14=51
+I15=52
+I16=53
+I17=54
+I19=135
+I20=136
+I21=137
+I22=138
+I23=139
+I25=178
+I26=179
+I27=409
+I28=410
+I30=200
+I31=201
+I32=202
+I33=203
+I34=204
+I35=205
+I36=206
+I37=207
+I39=223
+I40=232
+I41=233
+I43=243
+I44=244
+I45=245
+I46=246
+I47=250
+I49=253
+I50=259
+I52=272
+I53=275
+I54=276
+I56=294
+I57=295
+I58=296
+I59=305
+I60=306
+I62=318
+I63=319
+I64=320
+I65=321
+I67=337
+I68=338
+I70=331
+I71=339
+I73=356
+I74=358
+I76=370
+I77=372
+I79=393
+I80=394
+I82=405
+I83=406
+I84=414
+I85=415
+I86=416
+I87=417
+I88=420
+I89=421
+I90=458
+I91=459
+I92=460
+I93=461
+I94=462
+I95=463
+I96=464
+I97=465
+I98=466
+I99=467
+I101=489
+I102=490
+I103=491
+I104=494
+I105=492
+I106=495
+I107=493
+I108=496
+I109=497
+I110=498
+I111=499
+I112=501
+I113=500
+I114=502
+I115=505
+I116=503
+I117=504
+I118=506
+I119=507
+I120=508
+I121=509
+I122=510
+I123=511
+I124=512
+I125=513
+I126=514
+I127=516
+I128=517
+I129=515
+mO=99
+tO=99
+O1=5
+O2=23
+O3=24
+O4=25
+O6=33
+O7=34
+O8=35
+O9=65
+O10=66
+O11=67
+O12=68
+O13=69
+O14=70
+O15=71
+O16=72
+O17=73
+O19=147
+O20=148
+O21=149
+O22=150
+O23=151
+O25=411
+O26=180
+O27=181
+O28=412
+O30=212
+O31=213
+O32=214
+O33=215
+O34=216
+O35=217
+O36=218
+O37=219
+O39=239
+O40=240
+O41=241
+O43=254
+O44=255
+O45=256
+O46=257
+O47=258
+O49=260
+O50=261
+O52=277
+O53=278
+O54=279
+O56=297
+O57=298
+O58=267
+O59=307
+O60=299
+O62=323
+O63=324
+O64=325
+O65=326
+O67=340
+O68=341
+O70=350
+O71=351
+O73=364
+O74=365
+O76=375
+O77=379
+O79=395
+O80=396
+O82=422
+O83=423
+O84=424
+O85=425
+O86=426
+O87=427
+O88=428
+O89=429
+O90=468
+O91=469
+O92=470
+O93=471
+O94=472
+O95=473
+O96=474
+O97=475
+O98=476
+O99=477
+mP=226
+P1=
+P2=*power = on\x0D
+P3=*power = off\x0D
+P4=
+P5=*input = 0\x0D
+P6=*input = 1\x0D
+P7=*input = 2\x0D
+P8=*input = 3\x0D
+P9=*input = 4\x0D
+P10=*input = 5\x0D
+P11=*input = 6\x0D
+P12=*input = 7\x0D
+P13=*input = 8\x0D
+P14=*input = 9\x0D
+P15=*input = 10\x0D
+P16=*input = 11\x0D
+P17=
+P18=*aspect.ratio = 0\x0D
+P19=*aspect.ratio = 1\x0D
+P20=*aspect.ratio = 2\x0D
+P21=*aspect.ratio = 3\x0D
+P22=*aspect.ratio = 4\x0D
+P23=
+P24=*pip.mode  = 0\x0D
+P25=*pip.mode  = 1\x0D
+P26=*pip.mode  = 2\x0D
+P27=*pip.mode  = 3\x0D
+P28=
+P29=*pip.input = 0\x0D
+P30=*pip.input = 1\x0D
+P31=*pip.input = 2\x0D
+P32=*pip.input = 3\x0D
+P33=*pip.input = 4\x0D
+P34=*pip.input = 5\x0D
+P35=*pip.input = 6\x0D
+P36=*pip.input = 7\x0D
+P37=
+P38=*pip.size = 0\x0D
+P39=*pip.size = 1\x0D
+P40=*pip.size = 2\x0D
+P41=
+P42=*pip.position = 0\x0D
+P43=*pip.position = 1\x0D
+P44=*pip.position = 2\x0D
+P45=*pip.position = 3\x0D
+P46=*pip.position = 4\x0D
+P47=
+P48=*3d.enable = on\x0D
+P49=*3d.enable = off\x0D
+P50=
+P51=*3d.frmultiplier = 1\x0D
+P52=*3d.frmultiplier = 2\x0D
+P53=*3d.frmultiplier = 3\x0D
+P54=
+P55=*3d.format = auto\x0D
+P56=*3d.format = seq\x0D
+P57=*3d.format = fpack\x0D
+P58=*3d.format = tab\x0D
+P59=*3d.format = sbs\x0D
+P60=
+P61=*3d.darktime = 0\x0D
+P62=*3d.darktime = 1\x0D
+P63=*3d.darktime = 2\x0D
+P64=*3d.darktime = 3\x0D
+P65=
+P66=*3d.syncpolarity = pos\x0D
+P67=*3d.syncpolarity = neg\x0D
+P68=
+P69=*3d.dominance = left\x0D
+P70=*3d.dominance = right\x0D
+P71=
+P72=*3gsdi.stream = 0\x0D
+P73=*3gsdi.stream = 1\x0D
+P74=
+P75=*shutter = off\x0D
+P76=*shutter = on\x0D
+P77=
+P78=*freeze = on\x0D
+P79=*freeze = off\x0D
+P80=
+P81=*lamp.mode = 0\x0D
+P82=*lamp.mode = 1\x0D
+P83=*lamp.mode = 2\x0D
+P84=*lamp.mode = 3\x0D
+P85=*lamp.mode = 4\x0D
+P86=*lamp.mode = 5\x0D
+P87=*lamp.mode = 6\x0D
+P88=*lamp.mode = 7\x0D
+P89=*lamp.mode = 8\x0D
+P90=*lamp.mode = 9\x0D
+P91=*lamp.mode = 10\x0D
+P92=*lamp.mode = 11\x0D
+P93=*lamp.mode = 12\x0D
+P94=*lamp.mode = 13\x0D
+P95=*lamp.mode = 14\x0D
+P96=*lamp.mode = 15\x0D
+P97=*lamp.mode = 16\x0D
+P98=*lamp.mode = 17\x0D
+P99=
+P100=*power = ?\x0D
+P101=*input = ?\x0D
+P102=*aspect.ratio = ?\x0D
+P103=*pip.mode  = ?\x0D
+P104=*pip.input = ?\x0D
+P105=*pip.size = ?\x0D
+P106=*pip.position = ?\x0D
+P107=*3d.enable = ?\x0D
+P108=*3d.frmultiplier = ?\x0D
+P109=*3d.format = ?\x0D
+P110=*3d.darktime = ?\x0D
+P111=*3d.syncpolarity = ?\x0D
+P112=*3d.dominance = ?\x0D
+P113=*3gsdi.stream = ?\x0D
+P114=*shutter = ?\x0D
+P115=*freeze = ?\x0D
+P116=*lamp.mode = ?\x0D
+P117=*brightness = ?\x0D
+P118=*contrast = ?\x0D
+P119=*pip.hpos = ?\x0D
+P120=*pip.vpos = ?\x0D
+P121=*lamp1.hours ?\x0D
+P122=*lamp2.hours ?\x0D
+P123=*lamp3.hours ?\x0D
+P124=*lamp4.hours ?\x0D
+P125=*lamp1.strikes ?\x0D
+P126=*lamp2.strikes ?\x0D
+P127=*lamp3.strikes ?\x0D
+P128=*lamp4.strikes ?\x0D
+P129=power = on\x0D
+P130=power = off\x0D
+P131=power = standby\x0D
+P132=
+P133=ack input = 0\x0D
+P134=ack input = 1\x0D
+P135=ack input = 2\x0D
+P136=ack input = 3\x0D
+P137=ack input = 4\x0D
+P138=ack input = 5\x0D
+P139=ack input = 6\x0D
+P140=ack input = 7\x0D
+P141=ack input = 8\x0D
+P142=ack input = 9\x0D
+P143=ack input = 10\x0D
+P144=ack input = 11\x0D
+P145=
+P146=aspect.ratio = 0\x0D
+P147=aspect.ratio = 1\x0D
+P148=aspect.ratio = 2\x0D
+P149=aspect.ratio = 3\x0D
+P150=aspect.ratio = 4\x0D
+P151=
+P152=pip.mode = 0\x0D
+P153=pip.mode = 1\x0D
+P154=pip.mode = 2\x0D
+P155=pip.mode = 3\x0D
+P156=
+P157=pip.input = 0\x0D
+P158=pip.input = 1\x0D
+P159=pip.input = 2\x0D
+P160=pip.input = 3\x0D
+P161=pip.input = 4\x0D
+P162=pip.input = 5\x0D
+P163=pip.input = 6\x0D
+P164=pip.input = 7\x0D
+P165=
+P166=pip.size = 0\x0D
+P167=pip.size = 1\x0D
+P168=pip.size = 2\x0D
+P169=
+P170=pip.position = 0\x0D
+P171=pip.position = 1\x0D
+P172=pip.position = 2\x0D
+P173=pip.position = 3\x0D
+P174=pip.position = 4\x0D
+P175=
+P176=3d.enable = on\x0D
+P177=3d.enable = off\x0D
+P178=
+P179=3d.frmultiplier = 1\x0D
+P180=3d.frmultiplier = 2\x0D
+P181=3d.frmultiplier = 3\x0D
+P182=
+P183=3d.format = auto\x0D
+P184=3d.format = seq\x0D
+P185=3d.format = fpack\x0D
+P186=3d.format = tab\x0D
+P187=3d.format = sbs\x0D
+P188=
+P189=3d.darktime = 0\x0D
+P190=3d.darktime = 1\x0D
+P191=3d.darktime = 2\x0D
+P192=3d.darktime = 3\x0D
+P193=
+P194=3d.syncpolarity = pos\x0D
+P195=3d.syncpolarity = neg\x0D
+P196=
+P197=3d.dominance = left\x0D
+P198=3d.dominance = right\x0D
+P199=
+P200=3gsdi.stream = 0\x0D
+P201=3gsdi.stream = 1\x0D
+P202=
+P203=shutter = off\x0D
+P204=shutter = on\x0D
+P205=
+P206=freeze = on\x0D
+P207=freeze = off\x0D
+P208=
+P209=lamp.mode = 0\x0D
+P210=lamp.mode = 1\x0D
+P211=lamp.mode = 2\x0D
+P212=lamp.mode = 3\x0D
+P213=lamp.mode = 4\x0D
+P214=lamp.mode = 5\x0D
+P215=lamp.mode = 6\x0D
+P216=lamp.mode = 7\x0D
+P217=lamp.mode = 8\x0D
+P218=lamp.mode = 9\x0D
+P219=lamp.mode = 10\x0D
+P220=lamp.mode = 11\x0D
+P221=lamp.mode = 12\x0D
+P222=lamp.mode = 13\x0D
+P223=lamp.mode = 14\x0D
+P224=lamp.mode = 15\x0D
+P225=lamp.mode = 16\x0D
+P226=lamp.mode = 17\x0D
+]
+[
+ObjTp=Sm
+H=25
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=27
+CF=2
+n1I=2
+n1O=12
+Cmn1=Input Feedback\\
+mI=2
+I1=30
+mO=12
+tO=12
+O1=31
+O2=32
+O3=55
+O4=56
+O5=57
+O6=58
+O7=59
+O8=60
+O9=61
+O10=62
+O11=63
+O12=64
+mP=12
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+P6=6d
+P7=7d
+P8=8d
+P9=9d
+P10=10d
+P11=11d
+P12=12d
+]
+[
+ObjTp=Sm
+H=26
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=27
+CF=2
+n1I=2
+n1O=12
+Cmn1=Send Input Request\\
+mI=2
+I1=78
+mO=12
+tO=12
+O1=27
+O2=28
+O3=29
+O4=45
+O5=47
+O6=48
+O7=49
+O8=50
+O9=51
+O10=52
+O11=53
+O12=54
+mP=12
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+P6=6d
+P7=7d
+P8=8d
+P9=9d
+P10=10d
+P11=11d
+P12=12d
+]
+[
+ObjTp=Sm
+H=27
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=Input\\
+mC=7
+C1=38
+C2=39
+C3=40
+C4=23
+C5=26
+C6=28
+C7=25
+]
+[
+ObjTp=Sm
+H=28
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=27
+CF=2
+n1I=12
+n1O=1
+Cmn1=Input Status\\
+mI=12
+I1=33
+I2=34
+I3=35
+I4=65
+I5=66
+I6=67
+I7=68
+I8=69
+I9=70
+I10=71
+I11=72
+I12=73
+mO=1
+tO=1
+O1=30
+mP=12
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+P6=6d
+P7=7d
+P8=8d
+P9=9d
+P10=10d
+P11=11d
+P12=12d
+]
+[
+ObjTp=Sm
+H=29
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=Power\\
+mC=10
+C1=168
+C2=34
+C3=35
+C4=37
+C5=30
+C6=31
+C7=33
+C8=32
+C9=170
+C10=169
+]
+[
+ObjTp=Sm
+H=30
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=29
+CF=2
+n1I=5
+n1O=1
+Cmn1=Power Request\\
+mI=5
+I1=94
+I2=11
+I3=12
+I4=563
+I5=562
+mO=1
+tO=1
+O1=13
+mP=5
+P1=9999d
+P2=1d
+P3=2d
+P4=1d
+P5=2d
+]
+[
+ObjTp=Sm
+H=31
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=29
+CF=2
+n1I=2
+n1O=2
+Cmn1=Send Power Request\\
+mI=2
+I1=19
+mO=2
+tO=2
+O1=21
+O2=22
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=32
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=29
+CF=2
+n1I=2
+n1O=2
+Cmn1=Power Feedback\\
+mI=2
+I1=15
+mO=2
+tO=2
+O1=560
+O2=561
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=33
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=29
+CF=2
+n1I=3
+n1O=1
+Cmn1=Power Status\\
+mI=3
+I1=23
+I2=24
+I3=25
+mO=1
+tO=1
+O1=15
+mP=3
+P1=1d
+P2=2d
+P3=2d
+]
+[
+ObjTp=Sm
+H=34
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=29
+CF=2
+n1I=4
+n1O=1
+Cmn1=Power Selected\\
+mI=4
+I1=11
+I2=12
+I3=563
+I4=562
+mO=1
+tO=1
+O1=92
+]
+[
+ObjTp=Sm
+H=35
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=29
+CF=2
+n1I=3
+n1O=2
+Cmn1=Power Selected Pulse\\
+mI=3
+I1=92
+mO=2
+tO=2
+O1=93
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=37
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=29
+CF=2
+n1I=3
+n1O=2
+Cmn1=Power Selection Clear\\
+mI=3
+I1=9
+I2=93
+mO=2
+tO=2
+O1=94
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=38
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=27
+CF=2
+n1I=12
+n1O=1
+Cmn1=Input Selected\\
+mI=12
+I1=46
+I2=36
+I3=17
+I4=18
+I5=37
+I6=38
+I7=39
+I8=40
+I9=41
+I10=42
+I11=43
+I12=44
+mO=1
+tO=1
+O1=80
+]
+[
+ObjTp=Sm
+H=39
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=27
+CF=2
+n1I=3
+n1O=2
+Cmn1=Input Selected Pulse\\
+mI=3
+I1=80
+mO=2
+tO=2
+O1=81
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=40
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=27
+CF=2
+n1I=3
+n1O=2
+Cmn1=Input Selection Clear\\
+mI=3
+I1=9
+I2=81
+mO=2
+tO=2
+O1=83
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=42
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=Aspect\\
+mC=7
+C1=43
+C2=44
+C3=45
+C4=46
+C5=47
+C6=48
+C7=49
+]
+[
+ObjTp=Sm
+H=43
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=42
+CF=2
+n1I=5
+n1O=1
+Cmn1=Aspect Selected\\
+mI=5
+I1=120
+I2=121
+I3=122
+I4=123
+I5=124
+mO=1
+tO=1
+O1=132
+]
+[
+ObjTp=Sm
+H=44
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=42
+CF=2
+n1I=3
+n1O=2
+Cmn1=Aspect Selected Pulse\\
+mI=3
+I1=132
+mO=2
+tO=2
+O1=133
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=45
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=42
+CF=2
+n1I=3
+n1O=2
+Cmn1=Aspect Selection Clear\\
+mI=3
+I1=9
+I2=133
+mO=2
+tO=2
+O1=134
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=46
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=42
+CF=2
+n1I=6
+n1O=1
+Cmn1=Aspect Request\\
+mI=6
+I1=134
+I2=120
+I3=121
+I4=122
+I5=123
+I6=124
+mO=1
+tO=1
+O1=118
+mP=6
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+P5=4d
+P6=5d
+]
+[
+ObjTp=Sm
+H=47
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=42
+CF=2
+n1I=2
+n1O=5
+Cmn1=Send Aspect Request\\
+mI=2
+I1=103
+mO=5
+tO=5
+O1=135
+O2=136
+O3=137
+O4=138
+O5=139
+mP=5
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+]
+[
+ObjTp=Sm
+H=48
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=42
+CF=2
+n1I=5
+n1O=1
+Cmn1=Aspect Status\\
+mI=5
+I1=147
+I2=148
+I3=149
+I4=150
+I5=151
+mO=1
+tO=1
+O1=119
+mP=5
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+]
+[
+ObjTp=Sm
+H=49
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=42
+CF=2
+n1I=2
+n1O=5
+Cmn1=Aspect Feedback\\
+mI=2
+I1=119
+mO=5
+tO=5
+O1=159
+O2=160
+O3=161
+O4=162
+O5=163
+mP=5
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+]
+[
+ObjTp=Sm
+H=50
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=PIP\\
+mC=7
+C1=51
+C2=52
+C3=53
+C4=54
+C5=55
+C6=56
+C7=57
+]
+[
+ObjTp=Sm
+H=51
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=50
+CF=2
+n1I=4
+n1O=1
+Cmn1=PIP Selected\\
+mI=4
+I1=173
+I2=174
+I3=407
+I4=408
+mO=1
+tO=1
+O1=175
+]
+[
+ObjTp=Sm
+H=52
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=50
+CF=2
+n1I=3
+n1O=2
+Cmn1=PIP Selected Pulse\\
+mI=3
+I1=175
+mO=2
+tO=2
+O1=176
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=53
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=50
+CF=2
+n1I=3
+n1O=2
+Cmn1=PIP Selection Clear\\
+mI=3
+I1=9
+I2=176
+mO=2
+tO=2
+O1=177
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=54
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=50
+CF=2
+n1I=5
+n1O=1
+Cmn1=PIP Request\\
+mI=5
+I1=177
+I2=173
+I3=174
+I4=407
+I5=408
+mO=1
+tO=1
+O1=125
+mP=5
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+P5=4d
+]
+[
+ObjTp=Sm
+H=55
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=50
+CF=2
+n1I=2
+n1O=4
+Cmn1=Send PIP Request\\
+mI=2
+I1=158
+mO=4
+tO=4
+O1=178
+O2=179
+O3=409
+O4=410
+mP=4
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+]
+[
+ObjTp=Sm
+H=56
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=50
+CF=2
+n1I=4
+n1O=1
+Cmn1=PIP Status\\
+mI=4
+I1=411
+I2=180
+I3=181
+I4=412
+mO=1
+tO=1
+O1=142
+mP=4
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+]
+[
+ObjTp=Sm
+H=57
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=50
+CF=2
+n1I=2
+n1O=4
+Cmn1=PIP Feedback\\
+mI=2
+I1=142
+mO=4
+tO=4
+O1=182
+O2=183
+O3=184
+O4=413
+mP=4
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+]
+[
+ObjTp=Sm
+H=58
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=PIP Input\\
+mC=7
+C1=59
+C2=60
+C3=61
+C4=62
+C5=63
+C6=64
+C7=65
+]
+[
+ObjTp=Sm
+H=59
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=58
+CF=2
+n1I=8
+n1O=1
+Cmn1=PIP Input Selected\\
+mI=8
+I1=185
+I2=186
+I3=187
+I4=188
+I5=189
+I6=190
+I7=191
+I8=192
+mO=1
+tO=1
+O1=197
+]
+[
+ObjTp=Sm
+H=60
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=58
+CF=2
+n1I=3
+n1O=2
+Cmn1=PIP Input Selected Pulse\\
+mI=3
+I1=197
+mO=2
+tO=2
+O1=198
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=61
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=58
+CF=2
+n1I=3
+n1O=2
+Cmn1=PIP Input Selection Clear\\
+mI=3
+I1=9
+I2=198
+mO=2
+tO=2
+O1=199
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=62
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=58
+CF=2
+n1I=9
+n1O=1
+Cmn1=PIP Input Request\\
+mI=9
+I1=199
+I2=185
+I3=186
+I4=187
+I5=188
+I6=189
+I7=190
+I8=191
+I9=192
+mO=1
+tO=1
+O1=126
+mP=9
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+P5=4d
+P6=5d
+P7=6d
+P8=7d
+P9=8d
+]
+[
+ObjTp=Sm
+H=63
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=58
+CF=2
+n1I=2
+n1O=8
+Cmn1=Send PIP Input Request\\
+mI=2
+I1=164
+mO=8
+tO=8
+O1=200
+O2=201
+O3=202
+O4=203
+O5=204
+O6=205
+O7=206
+O8=207
+mP=8
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+P6=6d
+P7=7d
+P8=8d
+]
+[
+ObjTp=Sm
+H=64
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=58
+CF=2
+n1I=8
+n1O=1
+Cmn1=PIP Input Status\\
+mI=8
+I1=212
+I2=213
+I3=214
+I4=215
+I5=216
+I6=217
+I7=218
+I8=219
+mO=1
+tO=1
+O1=144
+mP=8
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+P6=6d
+P7=7d
+P8=8d
+]
+[
+ObjTp=Sm
+H=65
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=58
+CF=2
+n1I=2
+n1O=8
+Cmn1=PIP Input Feedback\\
+mI=2
+I1=144
+mO=8
+tO=8
+O1=224
+O2=225
+O3=226
+O4=227
+O5=228
+O6=229
+O7=230
+O8=231
+mP=8
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+P6=6d
+P7=7d
+P8=8d
+]
+[
+ObjTp=Sm
+H=66
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=PIP Size\\
+mC=7
+C1=67
+C2=68
+C3=69
+C4=70
+C5=71
+C6=72
+C7=73
+]
+[
+ObjTp=Sm
+H=67
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=66
+CF=2
+n1I=3
+n1O=1
+Cmn1=PIP Size Selected\\
+mI=3
+I1=193
+I2=194
+I3=195
+mO=1
+tO=1
+O1=220
+]
+[
+ObjTp=Sm
+H=68
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=66
+CF=2
+n1I=3
+n1O=2
+Cmn1=PIP Size Selected Pulse\\
+mI=3
+I1=220
+mO=2
+tO=2
+O1=221
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=69
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=66
+CF=2
+n1I=3
+n1O=2
+Cmn1=PIP Size Selection Clear\\
+mI=3
+I1=9
+I2=221
+mO=2
+tO=2
+O1=222
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=70
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=66
+CF=2
+n1I=4
+n1O=1
+Cmn1=PIP Size Request\\
+mI=4
+I1=222
+I2=193
+I3=194
+I4=195
+mO=1
+tO=1
+O1=127
+mP=4
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+]
+[
+ObjTp=Sm
+H=71
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=66
+CF=2
+n1I=2
+n1O=3
+Cmn1=Send PIP Size Request\\
+mI=2
+I1=165
+mO=3
+tO=3
+O1=223
+O2=232
+O3=233
+mP=3
+P1=1d
+P2=2d
+P3=3d
+]
+[
+ObjTp=Sm
+H=72
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=66
+CF=2
+n1I=3
+n1O=1
+Cmn1=PIP Size Status\\
+mI=3
+I1=239
+I2=240
+I3=241
+mO=1
+tO=1
+O1=145
+mP=3
+P1=1d
+P2=2d
+P3=3d
+]
+[
+ObjTp=Sm
+H=73
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=66
+CF=2
+n1I=2
+n1O=3
+Cmn1=PIP Size Feedback\\
+mI=2
+I1=145
+mO=3
+tO=3
+O1=247
+O2=248
+O3=249
+mP=3
+P1=1d
+P2=2d
+P3=3d
+]
+[
+ObjTp=Sm
+H=74
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=PIP Position\\
+mC=7
+C1=75
+C2=76
+C3=77
+C4=78
+C5=79
+C6=80
+C7=81
+]
+[
+ObjTp=Sm
+H=75
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=74
+CF=2
+n1I=5
+n1O=1
+Cmn1=PIP Position Selected\\
+mI=5
+I1=196
+I2=208
+I3=209
+I4=210
+I5=211
+mO=1
+tO=1
+O1=237
+]
+[
+ObjTp=Sm
+H=76
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=74
+CF=2
+n1I=3
+n1O=2
+Cmn1=PIP Position Selected Pulse\\
+mI=3
+I1=237
+mO=2
+tO=2
+O1=238
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=77
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=74
+CF=2
+n1I=3
+n1O=2
+Cmn1=PIP Position Selection Clear\\
+mI=3
+I1=9
+I2=238
+mO=2
+tO=2
+O1=242
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=78
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=74
+CF=2
+n1I=6
+n1O=1
+Cmn1=PIP Position Request\\
+mI=6
+I1=242
+I2=196
+I3=208
+I4=209
+I5=210
+I6=211
+mO=1
+tO=1
+O1=128
+mP=6
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+P5=4d
+P6=5d
+]
+[
+ObjTp=Sm
+H=79
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=74
+CF=2
+n1I=2
+n1O=5
+Cmn1=Send PIP Position Request\\
+mI=2
+I1=166
+mO=5
+tO=5
+O1=243
+O2=244
+O3=245
+O4=246
+O5=250
+mP=5
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+]
+[
+ObjTp=Sm
+H=80
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=74
+CF=2
+n1I=5
+n1O=1
+Cmn1=PIP Position Status\\
+mI=5
+I1=254
+I2=255
+I3=256
+I4=257
+I5=258
+mO=1
+tO=1
+O1=146
+mP=5
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+]
+[
+ObjTp=Sm
+H=81
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=74
+CF=2
+n1I=2
+n1O=5
+Cmn1=PIP Position Feedback\\
+mI=2
+I1=146
+mO=5
+tO=5
+O1=262
+O2=263
+O3=264
+O4=265
+O5=266
+mP=5
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+]
+[
+ObjTp=Sm
+H=82
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=*3D\\
+mC=7
+C1=83
+C2=84
+C3=85
+C4=86
+C5=87
+C6=88
+C7=89
+]
+[
+ObjTp=Sm
+H=83
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=82
+CF=2
+n1I=2
+n1O=1
+Cmn1=*3D Selected\\
+mI=2
+I1=234
+I2=235
+mO=1
+tO=1
+O1=236
+]
+[
+ObjTp=Sm
+H=84
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=82
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Selected Pulse\\
+mI=3
+I1=236
+mO=2
+tO=2
+O1=251
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=85
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=82
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Selection Clear\\
+mI=3
+I1=9
+I2=251
+mO=2
+tO=2
+O1=252
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=86
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=82
+CF=2
+n1I=3
+n1O=1
+Cmn1=*3D Request\\
+mI=3
+I1=252
+I2=234
+I3=235
+mO=1
+tO=1
+O1=130
+mP=3
+P1=9999d
+P2=1d
+P3=2d
+]
+[
+ObjTp=Sm
+H=87
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=82
+CF=2
+n1I=2
+n1O=2
+Cmn1=Send *3D Request\\
+mI=2
+I1=167
+mO=2
+tO=2
+O1=253
+O2=259
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=88
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=82
+CF=2
+n1I=2
+n1O=1
+Cmn1=*3D Status\\
+mI=2
+I1=260
+I2=261
+mO=1
+tO=1
+O1=152
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=89
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=82
+CF=2
+n1I=2
+n1O=2
+Cmn1=*3D Feedback\\
+mI=2
+I1=152
+mO=2
+tO=2
+O1=268
+O2=269
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=90
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=*3D Mult\\
+mC=7
+C1=91
+C2=92
+C3=93
+C4=94
+C5=95
+C6=96
+C7=97
+]
+[
+ObjTp=Sm
+H=91
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=90
+CF=2
+n1I=3
+n1O=1
+Cmn1=*3D Mult Selected\\
+mI=3
+I1=288
+I2=289
+I3=290
+mO=1
+tO=1
+O1=291
+]
+[
+ObjTp=Sm
+H=92
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=90
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Mult Selected Pulse\\
+mI=3
+I1=291
+mO=2
+tO=2
+O1=273
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=93
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=90
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Mult Selection Clear\\
+mI=3
+I1=9
+I2=273
+mO=2
+tO=2
+O1=274
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=94
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=90
+CF=2
+n1I=4
+n1O=1
+Cmn1=*3D Mult Request\\
+mI=4
+I1=274
+I2=288
+I3=289
+I4=290
+mO=1
+tO=1
+O1=270
+mP=4
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+]
+[
+ObjTp=Sm
+H=95
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=90
+CF=2
+n1I=2
+n1O=3
+Cmn1=Send *3D Mult Request\\
+mI=2
+I1=271
+mO=3
+tO=3
+O1=272
+O2=275
+O3=276
+mP=3
+P1=1d
+P2=2d
+P3=3d
+]
+[
+ObjTp=Sm
+H=96
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=90
+CF=2
+n1I=3
+n1O=1
+Cmn1=*3D Mult Status\\
+mI=3
+I1=277
+I2=278
+I3=279
+mO=1
+tO=1
+O1=280
+mP=3
+P1=1d
+P2=2d
+P3=3d
+]
+[
+ObjTp=Sm
+H=97
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=90
+CF=2
+n1I=2
+n1O=3
+Cmn1=*3D Mult Feedback\\
+mI=2
+I1=280
+mO=3
+tO=3
+O1=281
+O2=282
+O3=283
+mP=3
+P1=1d
+P2=2d
+P3=3d
+]
+[
+ObjTp=Sm
+H=98
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=*3D Format\\
+mC=7
+C1=99
+C2=100
+C3=101
+C4=102
+C5=103
+C6=104
+C7=105
+]
+[
+ObjTp=Sm
+H=99
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=98
+CF=2
+n1I=5
+n1O=1
+Cmn1=*3D Format Selected\\
+mI=5
+I1=284
+I2=285
+I3=286
+I4=303
+I5=304
+mO=1
+tO=1
+O1=287
+]
+[
+ObjTp=Sm
+H=100
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=98
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Format Selected Pulse\\
+mI=3
+I1=287
+mO=2
+tO=2
+O1=292
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=101
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=98
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Format Selection Clear\\
+mI=3
+I1=9
+I2=292
+mO=2
+tO=2
+O1=293
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=102
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=98
+CF=2
+n1I=6
+n1O=1
+Cmn1=*3D Format Request\\
+mI=6
+I1=293
+I2=284
+I3=285
+I4=286
+I5=303
+I6=304
+mO=1
+tO=1
+O1=131
+mP=6
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+P5=4d
+P6=5d
+]
+[
+ObjTp=Sm
+H=103
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=98
+CF=2
+n1I=2
+n1O=5
+Cmn1=Send *3D Format Request\\
+mI=2
+I1=169
+mO=5
+tO=5
+O1=294
+O2=295
+O3=296
+O4=305
+O5=306
+mP=5
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+]
+[
+ObjTp=Sm
+H=104
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=98
+CF=2
+n1I=5
+n1O=1
+Cmn1=*3D Format Status\\
+mI=5
+I1=297
+I2=298
+I3=267
+I4=307
+I5=299
+mO=1
+tO=1
+O1=154
+mP=5
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+]
+[
+ObjTp=Sm
+H=105
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=98
+CF=2
+n1I=2
+n1O=5
+Cmn1=*3D Format Feedback\\
+mI=2
+I1=154
+mO=5
+tO=5
+O1=300
+O2=301
+O3=302
+O4=308
+O5=309
+mP=5
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+]
+[
+ObjTp=Sm
+H=106
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=*3D Darktime\\
+mC=7
+C1=107
+C2=108
+C3=109
+C4=110
+C5=111
+C6=112
+C7=113
+]
+[
+ObjTp=Sm
+H=107
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=106
+CF=2
+n1I=4
+n1O=1
+Cmn1=*3D Darktime Selected\\
+mI=4
+I1=310
+I2=311
+I3=312
+I4=313
+mO=1
+tO=1
+O1=315
+]
+[
+ObjTp=Sm
+H=108
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=106
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Darktime Selected Pulse\\
+mI=3
+I1=315
+mO=2
+tO=2
+O1=316
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=109
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=106
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Darktime Selection Clear\\
+mI=3
+I1=9
+I2=316
+mO=2
+tO=2
+O1=317
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=110
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=106
+CF=2
+n1I=5
+n1O=1
+Cmn1=*3D Darktime Request\\
+mI=5
+I1=317
+I2=310
+I3=311
+I4=312
+I5=313
+mO=1
+tO=1
+O1=140
+mP=5
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+P5=4d
+]
+[
+ObjTp=Sm
+H=111
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=106
+CF=2
+n1I=2
+n1O=4
+Cmn1=Send *3D Darktime Request\\
+mI=2
+I1=170
+mO=4
+tO=4
+O1=318
+O2=319
+O3=320
+O4=321
+mP=4
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+]
+[
+ObjTp=Sm
+H=112
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=106
+CF=2
+n1I=4
+n1O=1
+Cmn1=*3D Darktime Status\\
+mI=4
+I1=323
+I2=324
+I3=325
+I4=326
+mO=1
+tO=1
+O1=155
+mP=4
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+]
+[
+ObjTp=Sm
+H=113
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=106
+CF=2
+n1I=2
+n1O=4
+Cmn1=*3D Darktime Feedback\\
+mI=2
+I1=155
+mO=4
+tO=4
+O1=327
+O2=328
+O3=329
+O4=330
+mP=4
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+]
+[
+ObjTp=Sm
+H=114
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=*3D Polarity\\
+mC=7
+C1=115
+C2=116
+C3=117
+C4=118
+C5=119
+C6=120
+C7=121
+]
+[
+ObjTp=Sm
+H=115
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=114
+CF=2
+n1I=2
+n1O=1
+Cmn1=*3D Polarity Selected\\
+mI=2
+I1=314
+I2=322
+mO=1
+tO=1
+O1=332
+]
+[
+ObjTp=Sm
+H=116
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=114
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Polarity Selected Pulse\\
+mI=3
+I1=332
+mO=2
+tO=2
+O1=333
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=117
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=114
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Polarity Selection Clear\\
+mI=3
+I1=9
+I2=333
+mO=2
+tO=2
+O1=334
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=118
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=114
+CF=2
+n1I=3
+n1O=1
+Cmn1=*3D Polarity Request\\
+mI=3
+I1=334
+I2=314
+I3=322
+mO=1
+tO=1
+O1=335
+mP=3
+P1=9999d
+P2=1d
+P3=2d
+]
+[
+ObjTp=Sm
+H=119
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=114
+CF=2
+n1I=2
+n1O=2
+Cmn1=Send *3D Polarity Request\\
+mI=2
+I1=336
+mO=2
+tO=2
+O1=337
+O2=338
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=120
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=114
+CF=2
+n1I=2
+n1O=1
+Cmn1=*3D Polarity Status\\
+mI=2
+I1=340
+I2=341
+mO=1
+tO=1
+O1=343
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=121
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=114
+CF=2
+n1I=2
+n1O=2
+Cmn1=*3D Polarity Feedback\\
+mI=2
+I1=343
+mO=2
+tO=2
+O1=344
+O2=345
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=122
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=*3D Dominance\\
+mC=7
+C1=123
+C2=124
+C3=125
+C4=126
+C5=127
+C6=128
+C7=129
+]
+[
+ObjTp=Sm
+H=123
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=122
+CF=2
+n1I=2
+n1O=1
+Cmn1=*3D Dominance Selected\\
+mI=2
+I1=357
+I2=355
+mO=1
+tO=1
+O1=342
+]
+[
+ObjTp=Sm
+H=124
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=122
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Dominance Selected Pulse\\
+mI=3
+I1=342
+mO=2
+tO=2
+O1=346
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=125
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=122
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D Dominance Selection Clear\\
+mI=3
+I1=9
+I2=346
+mO=2
+tO=2
+O1=347
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=126
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=122
+CF=2
+n1I=3
+n1O=1
+Cmn1=*3D Dominance Request\\
+mI=3
+I1=347
+I2=357
+I3=355
+mO=1
+tO=1
+O1=348
+mP=3
+P1=9999d
+P2=1d
+P3=2d
+]
+[
+ObjTp=Sm
+H=127
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=122
+CF=2
+n1I=2
+n1O=2
+Cmn1=Send *3D Dominance Request\\
+mI=2
+I1=349
+mO=2
+tO=2
+O1=331
+O2=339
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=128
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=122
+CF=2
+n1I=2
+n1O=1
+Cmn1=*3D Dominance Status\\
+mI=2
+I1=350
+I2=351
+mO=1
+tO=1
+O1=354
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=129
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=122
+CF=2
+n1I=2
+n1O=2
+Cmn1=*3D Dominance Feedback\\
+mI=2
+I1=354
+mO=2
+tO=2
+O1=352
+O2=353
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=130
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=*3D SDI Stream\\
+mC=7
+C1=131
+C2=132
+C3=133
+C4=134
+C5=135
+C6=136
+C7=137
+]
+[
+ObjTp=Sm
+H=131
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=130
+CF=2
+n1I=2
+n1O=1
+Cmn1=*3D SDI Stream Selected\\
+mI=2
+I1=371
+I2=369
+mO=1
+tO=1
+O1=359
+]
+[
+ObjTp=Sm
+H=132
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=130
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D SDI Stream Selected Pulse\\
+mI=3
+I1=359
+mO=2
+tO=2
+O1=360
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=133
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=130
+CF=2
+n1I=3
+n1O=2
+Cmn1=*3D SDI Stream Selection Clear\\
+mI=3
+I1=9
+I2=360
+mO=2
+tO=2
+O1=361
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=134
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=130
+CF=2
+n1I=3
+n1O=1
+Cmn1=*3D SDI Stream Request\\
+mI=3
+I1=361
+I2=371
+I3=369
+mO=1
+tO=1
+O1=362
+mP=3
+P1=9999d
+P2=1d
+P3=2d
+]
+[
+ObjTp=Sm
+H=135
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=130
+CF=2
+n1I=2
+n1O=2
+Cmn1=Send *3D SDI Stream Request\\
+mI=2
+I1=363
+mO=2
+tO=2
+O1=356
+O2=358
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=136
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=130
+CF=2
+n1I=2
+n1O=1
+Cmn1=*3D SDI Stream Status\\
+mI=2
+I1=364
+I2=365
+mO=1
+tO=1
+O1=368
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=137
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=130
+CF=2
+n1I=2
+n1O=2
+Cmn1=*3D SDI Stream Feedback\\
+mI=2
+I1=368
+mO=2
+tO=2
+O1=366
+O2=367
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=138
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=Shutter\\
+mC=10
+C1=171
+C2=139
+C3=140
+C4=141
+C5=142
+C6=143
+C7=144
+C8=145
+C9=172
+C10=173
+]
+[
+ObjTp=Sm
+H=139
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=138
+CF=2
+n1I=4
+n1O=1
+Cmn1=Shutter Selected\\
+mI=4
+I1=386
+I2=380
+I3=569
+I4=568
+mO=1
+tO=1
+O1=373
+]
+[
+ObjTp=Sm
+H=140
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=138
+CF=2
+n1I=3
+n1O=2
+Cmn1=Shutter Selected Pulse\\
+mI=3
+I1=373
+mO=2
+tO=2
+O1=374
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=141
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=138
+CF=2
+n1I=3
+n1O=2
+Cmn1=Shutter SelectiOpen Clear\\
+mI=3
+I1=9
+I2=374
+mO=2
+tO=2
+O1=387
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=142
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=138
+CF=2
+n1I=5
+n1O=1
+Cmn1=Shutter Request\\
+mI=5
+I1=387
+I2=386
+I3=380
+I4=569
+I5=568
+mO=1
+tO=1
+O1=376
+mP=5
+P1=9999d
+P2=1d
+P3=2d
+P4=1d
+P5=2d
+]
+[
+ObjTp=Sm
+H=143
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=138
+CF=2
+n1I=2
+n1O=2
+Cmn1=Send Shutter Request\\
+mI=2
+I1=377
+mO=2
+tO=2
+O1=370
+O2=372
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=144
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=138
+CF=2
+n1I=2
+n1O=1
+Cmn1=Shutter Status\\
+mI=2
+I1=375
+I2=379
+mO=1
+tO=1
+O1=383
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=145
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=138
+CF=2
+n1I=2
+n1O=2
+Cmn1=Shutter Feedback\\
+mI=2
+I1=383
+mO=2
+tO=2
+O1=566
+O2=567
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=146
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=Freeze\\
+mC=10
+C1=174
+C2=147
+C3=148
+C4=149
+C5=150
+C6=151
+C7=152
+C8=153
+C9=175
+C10=176
+]
+[
+ObjTp=Sm
+H=147
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=146
+CF=2
+n1I=2
+n1O=1
+Cmn1=Freeze Selected\\
+mI=2
+I1=384
+I2=385
+mO=1
+tO=1
+O1=388
+]
+[
+ObjTp=Sm
+H=148
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=146
+CF=2
+n1I=3
+n1O=2
+Cmn1=Freeze Selected Pulse\\
+mI=3
+I1=388
+mO=2
+tO=2
+O1=389
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=149
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=146
+CF=2
+n1I=3
+n1O=2
+Cmn1=Freeze Selection Clear\\
+mI=3
+I1=9
+I2=389
+mO=2
+tO=2
+O1=390
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=150
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=146
+CF=2
+n1I=5
+n1O=1
+Cmn1=Freeze Request\\
+mI=5
+I1=390
+I2=384
+I3=385
+I4=575
+I5=574
+mO=1
+tO=1
+O1=391
+mP=5
+P1=9999d
+P2=1d
+P3=2d
+P4=1d
+P5=2d
+]
+[
+ObjTp=Sm
+H=151
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=146
+CF=2
+n1I=2
+n1O=2
+Cmn1=Send Freeze Request\\
+mI=2
+I1=392
+mO=2
+tO=2
+O1=393
+O2=394
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=152
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=146
+CF=2
+n1I=2
+n1O=1
+Cmn1=Freeze Status\\
+mI=2
+I1=395
+I2=396
+mO=1
+tO=1
+O1=398
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=153
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=146
+CF=2
+n1I=2
+n1O=2
+Cmn1=Freeze Feedback\\
+mI=2
+I1=398
+mO=2
+tO=2
+O1=572
+O2=573
+mP=2
+P1=1d
+P2=2d
+]
+[
+ObjTp=Sm
+H=156
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=Lamp Mode\\
+mC=7
+C1=157
+C2=158
+C3=159
+C4=160
+C5=161
+C6=162
+C7=163
+]
+[
+ObjTp=Sm
+H=157
+SmC=3
+Nm=OR
+ObjVer=1
+PrH=156
+CF=2
+n1I=18
+n1O=1
+Cmn1=Lamp Mode Selected\\
+mI=18
+I1=448
+I2=449
+I3=450
+I4=451
+I5=452
+I6=453
+I7=454
+I8=455
+I9=439
+I10=440
+I11=441
+I12=442
+I13=443
+I14=444
+I15=445
+I16=446
+I17=447
+I18=457
+mO=1
+tO=1
+O1=456
+]
+[
+ObjTp=Sm
+H=158
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=156
+CF=2
+n1I=3
+n1O=2
+Cmn1=Lamp Mode Selected Pulse\\
+mI=3
+I1=456
+mO=2
+tO=2
+O1=418
+mP=1
+P1=.1s
+]
+[
+ObjTp=Sm
+H=159
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=156
+CF=2
+n1I=3
+n1O=2
+Cmn1=Lamp Mode Selection Clear\\
+mI=3
+I1=9
+I2=418
+mO=2
+tO=2
+O1=419
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=160
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=156
+CF=2
+n1I=19
+n1O=1
+Cmn1=Lamp Mode Request\\
+mI=19
+I1=419
+I2=448
+I3=449
+I4=450
+I5=451
+I6=452
+I7=453
+I8=454
+I9=455
+I10=439
+I11=440
+I12=441
+I13=442
+I14=443
+I15=444
+I16=445
+I17=446
+I18=447
+I19=457
+mO=1
+tO=1
+O1=402
+mP=19
+P1=9999d
+P2=1d
+P3=2d
+P4=3d
+P5=4d
+P6=5d
+P7=6d
+P8=7d
+P9=8d
+P10=9d
+P11=10d
+P12=11d
+P13=12d
+P14=13d
+P15=14d
+P16=15d
+P17=16d
+P18=17d
+P19=18d
+]
+[
+ObjTp=Sm
+H=161
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=156
+CF=2
+n1I=2
+n1O=18
+Cmn1=Send Lamp Mode Request\\
+mI=2
+I1=404
+mO=18
+tO=18
+O1=405
+O2=406
+O3=414
+O4=415
+O5=416
+O6=417
+O7=420
+O8=421
+O9=458
+O10=459
+O11=460
+O12=461
+O13=462
+O14=463
+O15=464
+O16=465
+O17=466
+O18=467
+mP=18
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+P6=6d
+P7=7d
+P8=8d
+P9=9d
+P10=10d
+P11=11d
+P12=12d
+P13=13d
+P14=14d
+P15=15d
+P16=16d
+P17=17d
+P18=18d
+]
+[
+ObjTp=Sm
+H=162
+SmC=32
+Nm=Analog Initialize
+ObjVer=1
+PrH=156
+CF=2
+n1I=18
+n1O=1
+Cmn1=Lamp Mode Status\\
+mI=18
+I1=422
+I2=423
+I3=424
+I4=425
+I5=426
+I6=427
+I7=428
+I8=429
+I9=468
+I10=469
+I11=470
+I12=471
+I13=472
+I14=473
+I15=474
+I16=475
+I17=476
+I18=477
+mO=1
+tO=1
+O1=430
+mP=18
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+P6=6d
+P7=7d
+P8=8d
+P9=9d
+P10=10d
+P11=11d
+P12=12d
+P13=13d
+P14=14d
+P15=15d
+P16=16d
+P17=17d
+P18=18d
+]
+[
+ObjTp=Sm
+H=163
+SmC=38
+Nm=Analog Equate
+ObjVer=1
+PrH=156
+CF=2
+n1I=2
+n1O=18
+Cmn1=Lamp Mode Feedback\\
+mI=2
+I1=430
+mO=18
+tO=18
+O1=431
+O2=432
+O3=433
+O4=434
+O5=435
+O6=436
+O7=437
+O8=438
+O9=478
+O10=479
+O11=480
+O12=481
+O13=482
+O14=483
+O15=484
+O16=485
+O17=486
+O18=487
+mP=18
+P1=1d
+P2=2d
+P3=3d
+P4=4d
+P5=5d
+P6=6d
+P7=7d
+P8=8d
+P9=9d
+P10=10d
+P11=11d
+P12=12d
+P13=13d
+P14=14d
+P15=15d
+P16=16d
+P17=17d
+P18=18d
+]
+[
+ObjTp=Sm
+H=164
+SmC=155
+Nm=press and hold v1.2.cmc
+ObjVer=1
+PrH=183
+CF=2
+n1I=1
+n1O=2
+mI=1
+I1=525
+mO=2
+tO=2
+O1=488
+O2=9
+mP=2
+P1=15s
+P2=1s
+]
+[
+ObjTp=Sm
+H=165
+SmC=8
+Nm=Oscillator
+ObjVer=1
+PrH=183
+CF=2
+n1I=1
+n1O=1
+Cmn1=Send Polls\\
+mI=1
+I1=488
+mO=1
+tO=1
+O1=527
+mP=2
+P1=.01s
+P2=10s
+]
+[
+ObjTp=Sm
+H=166
+SmC=17
+Nm=Ring Counter
+ObjVer=1
+PrH=183
+CF=2
+n1I=3
+n1O=29
+Cmn1=Poll All Parameters\\
+mI=3
+I1=527
+mO=29
+tO=29
+O1=557
+O2=528
+O3=529
+O4=530
+O5=531
+O6=532
+O7=533
+O8=534
+O9=535
+O10=536
+O11=537
+O12=538
+O13=539
+O14=540
+O15=541
+O16=542
+O17=543
+O18=544
+O19=545
+O20=546
+O21=547
+O22=548
+O23=549
+O24=550
+O25=551
+O26=552
+O27=553
+O28=554
+O29=555
+]
+[
+ObjTp=Sm
+H=167
+SmC=21
+Nm=Multiple One Shots
+ObjVer=1
+PrH=183
+CF=2
+n1I=30
+n1O=29
+Cmn1=Poll All Parameter Pulses\\
+mI=30
+I2=557
+I3=528
+I4=529
+I5=530
+I6=531
+I7=532
+I8=533
+I9=534
+I10=535
+I11=536
+I12=537
+I13=538
+I14=539
+I15=540
+I16=541
+I17=542
+I18=543
+I19=544
+I20=545
+I21=546
+I22=547
+I23=548
+I24=549
+I25=550
+I26=551
+I27=552
+I28=553
+I29=554
+I30=555
+mO=29
+tO=29
+O1=586
+O2=587
+O3=491
+O4=494
+O5=492
+O6=495
+O7=493
+O8=496
+O9=497
+O10=498
+O11=499
+O12=501
+O13=500
+O14=502
+O15=588
+O16=503
+O17=504
+O18=591
+O19=592
+O20=589
+O21=590
+O22=510
+O23=511
+O24=512
+O25=513
+O26=514
+O27=516
+O28=517
+O29=515
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=168
+SmC=13
+Nm=Toggle
+ObjVer=1
+PrH=29
+CF=2
+n1I=3
+n1O=2
+Cmn1=Power Toggle Pulse\\
+mI=3
+I2=559
+I3=129
+mO=2
+tO=2
+O1=559
+]
+[
+ObjTp=Sm
+H=169
+SmC=20
+Nm=Buffer
+ObjVer=1
+PrH=29
+CF=2
+n1I=3
+n1O=2
+Cmn1=Power On/Off Feedback\\
+mI=3
+I1=2
+I2=560
+I3=561
+mO=2
+tO=2
+O1=14
+O2=16
+]
+[
+ObjTp=Sm
+H=170
+SmC=20
+Nm=Buffer
+ObjVer=1
+PrH=29
+CF=2
+n1I=3
+n1O=2
+Cmn1=Power On/Off Signals\\
+mI=3
+I1=559
+I2=560
+I3=561
+mO=2
+tO=2
+O1=562
+O2=563
+]
+[
+ObjTp=Sm
+H=171
+SmC=13
+Nm=Toggle
+ObjVer=1
+PrH=138
+CF=2
+n1I=3
+n1O=2
+Cmn1=Shutter Toggle Pulse\\
+mI=3
+I2=565
+I3=564
+mO=2
+tO=2
+O1=565
+]
+[
+ObjTp=Sm
+H=172
+SmC=20
+Nm=Buffer
+ObjVer=1
+PrH=138
+CF=2
+n1I=3
+n1O=2
+Cmn1=Shutter Open/Close Signals\\
+mI=3
+I1=565
+I2=566
+I3=567
+mO=2
+tO=2
+O1=568
+O2=569
+]
+[
+ObjTp=Sm
+H=173
+SmC=20
+Nm=Buffer
+ObjVer=1
+PrH=138
+CF=2
+n1I=3
+n1O=2
+Cmn1=Shutter Open/Close Feedback\\
+mI=3
+I1=2
+I2=566
+I3=567
+mO=2
+tO=2
+O1=378
+O2=381
+]
+[
+ObjTp=Sm
+H=174
+SmC=13
+Nm=Toggle
+ObjVer=1
+PrH=146
+CF=2
+n1I=3
+n1O=2
+Cmn1=Freeze Toggle Pulse\\
+mI=3
+I2=570
+I3=571
+mO=2
+tO=2
+O1=570
+]
+[
+ObjTp=Sm
+H=175
+SmC=20
+Nm=Buffer
+ObjVer=1
+PrH=146
+CF=2
+n1I=3
+n1O=2
+Cmn1=Freeze On/Off Signals\\
+mI=3
+I1=570
+I2=572
+I3=573
+mO=2
+tO=2
+O1=574
+O2=575
+]
+[
+ObjTp=Sm
+H=176
+SmC=20
+Nm=Buffer
+ObjVer=1
+PrH=146
+CF=2
+n1I=3
+n1O=2
+Cmn1=Freeze On/Off Feedback\\
+mI=3
+I1=2
+I2=572
+I3=573
+mO=2
+tO=2
+O1=399
+O2=400
+]
+[
+ObjTp=Sm
+H=177
+SmC=16
+Nm=Delay
+ObjVer=1
+PrH=185
+CF=2
+n1I=2
+n1O=1
+Cmn1=Start Signal\\
+mI=2
+I1=2
+mO=1
+tO=1
+O1=79
+mP=1
+P1=5s
+]
+[
+ObjTp=Sm
+H=178
+SmC=9
+Nm=One Shot
+ObjVer=1
+PrH=185
+CF=2
+n1I=3
+n1O=2
+Cmn1=Start Pulse\\
+mI=3
+I1=79
+mO=2
+tO=2
+O1=556
+mP=1
+P1=.01s
+]
+[
+ObjTp=Sm
+H=179
+SmC=55
+Nm=Argument Definition
+ObjVer=1
+PrH=5
+CF=2
+n1I=150
+n1O=150
+mI=150
+I1=11
+I2=12
+I3=129
+I4=594
+I5=46
+I6=36
+I7=17
+I8=18
+I9=37
+I10=38
+I11=39
+I12=40
+I13=41
+I14=42
+I15=43
+I16=44
+I17=594
+I18=120
+I19=121
+I20=122
+I21=123
+I22=124
+I23=594
+I24=173
+I25=174
+I26=407
+I27=408
+I28=594
+I29=185
+I30=186
+I31=187
+I32=188
+I33=189
+I34=190
+I35=191
+I36=192
+I37=594
+I38=193
+I39=194
+I40=195
+I41=594
+I42=196
+I43=208
+I44=209
+I45=210
+I46=211
+I47=594
+I48=171
+I49=143
+I50=594
+I51=382
+I52=141
+I53=594
+I54=234
+I55=235
+I56=594
+I57=288
+I58=289
+I59=290
+I60=594
+I61=284
+I62=285
+I63=286
+I64=303
+I65=304
+I66=594
+I67=310
+I68=311
+I69=312
+I70=313
+I71=594
+I72=314
+I73=322
+I74=594
+I75=357
+I76=355
+I77=594
+I78=371
+I79=369
+I80=594
+I81=386
+I82=380
+I83=564
+I84=594
+I85=384
+I86=385
+I87=571
+I88=594
+I89=74
+I90=75
+I91=82
+I92=84
+I93=594
+I94=86
+I95=594
+I96=168
+I97=153
+I98=594
+I99=156
+I100=157
+I101=594
+I102=90
+I103=91
+I104=95
+I105=96
+I106=97
+I107=98
+I108=99
+I109=100
+I110=101
+I111=102
+I112=594
+I113=85
+I114=87
+I115=594
+I116=88
+I117=89
+I118=594
+I119=448
+I120=449
+I121=450
+I122=451
+I123=452
+I124=453
+I125=454
+I126=455
+I127=439
+I128=440
+I129=441
+I130=442
+I131=443
+I132=444
+I133=445
+I134=446
+I135=447
+I136=457
+I137=594
+I138=594
+I139=594
+I140=594
+I141=594
+I142=594
+I143=594
+I144=594
+I145=594
+I146=594
+I147=594
+I148=594
+I149=594
+I150=4
+mO=150
+tO=150
+O1=14
+O2=16
+O3=594
+O4=594
+O5=31
+O6=32
+O7=55
+O8=56
+O9=57
+O10=58
+O11=59
+O12=60
+O13=61
+O14=62
+O15=63
+O16=64
+O17=594
+O18=159
+O19=160
+O20=161
+O21=162
+O22=163
+O23=594
+O24=182
+O25=183
+O26=184
+O27=413
+O28=594
+O29=224
+O30=225
+O31=226
+O32=227
+O33=228
+O34=229
+O35=230
+O36=231
+O37=594
+O38=247
+O39=248
+O40=249
+O41=594
+O42=262
+O43=263
+O44=264
+O45=265
+O46=266
+O47=594
+O48=403
+O49=172
+O50=594
+O51=397
+O52=401
+O53=594
+O54=268
+O55=269
+O56=594
+O57=281
+O58=282
+O59=283
+O60=594
+O61=300
+O62=301
+O63=302
+O64=308
+O65=309
+O66=594
+O67=327
+O68=328
+O69=329
+O70=330
+O71=594
+O72=344
+O73=345
+O74=594
+O75=352
+O76=353
+O77=594
+O78=366
+O79=367
+O80=594
+O81=378
+O82=381
+O83=594
+O84=594
+O85=399
+O86=400
+O87=594
+O88=594
+O89=594
+O90=594
+O91=594
+O92=594
+O93=594
+O94=594
+O95=594
+O96=594
+O97=594
+O98=594
+O99=594
+O100=594
+O101=594
+O102=104
+O103=105
+O104=106
+O105=107
+O106=108
+O107=109
+O108=110
+O109=111
+O110=112
+O111=113
+O112=594
+O113=114
+O114=115
+O115=594
+O116=116
+O117=117
+O118=594
+O119=431
+O120=432
+O121=433
+O122=434
+O123=435
+O124=436
+O125=437
+O126=438
+O127=478
+O128=479
+O129=480
+O130=481
+O131=482
+O132=483
+O133=484
+O134=485
+O135=486
+O136=487
+O137=594
+O138=518
+O139=519
+O140=520
+O141=521
+O142=594
+O143=526
+O144=522
+O145=523
+O146=524
+O147=594
+O148=558
+O149=594
+O150=5
+mP=1
+P1=
+MPi=136
+Pi1=2
+Pi2=3
+Pi3=4
+Pi5=5
+Pi6=6
+Pi7=7
+Pi8=8
+Pi9=9
+Pi10=10
+Pi11=11
+Pi12=12
+Pi13=13
+Pi14=14
+Pi15=15
+Pi16=16
+Pi18=17
+Pi19=18
+Pi20=19
+Pi21=20
+Pi22=21
+Pi24=22
+Pi25=23
+Pi26=24
+Pi27=25
+Pi29=26
+Pi30=27
+Pi31=28
+Pi32=29
+Pi33=30
+Pi34=31
+Pi35=32
+Pi36=33
+Pi38=34
+Pi39=35
+Pi40=36
+Pi42=37
+Pi43=38
+Pi44=39
+Pi45=40
+Pi46=41
+Pi48=42
+Pi49=43
+Pi51=44
+Pi52=45
+Pi54=46
+Pi55=47
+Pi57=48
+Pi58=49
+Pi59=50
+Pi61=51
+Pi62=52
+Pi63=53
+Pi64=54
+Pi65=55
+Pi67=56
+Pi68=57
+Pi69=58
+Pi70=59
+Pi72=60
+Pi73=61
+Pi75=62
+Pi76=63
+Pi78=64
+Pi79=65
+Pi81=66
+Pi82=67
+Pi83=68
+Pi85=69
+Pi86=70
+Pi87=71
+Pi89=72
+Pi90=73
+Pi91=74
+Pi92=75
+Pi94=76
+Pi96=77
+Pi97=78
+Pi99=79
+Pi100=80
+Pi102=81
+Pi103=82
+Pi104=83
+Pi105=84
+Pi106=85
+Pi107=86
+Pi108=87
+Pi109=88
+Pi110=89
+Pi111=90
+Pi113=91
+Pi114=92
+Pi116=93
+Pi117=94
+Pi119=95
+Pi120=96
+Pi121=97
+Pi122=98
+Pi123=99
+Pi124=100
+Pi125=101
+Pi126=102
+Pi127=103
+Pi128=104
+Pi129=105
+Pi130=106
+Pi131=107
+Pi132=108
+Pi133=109
+Pi134=110
+Pi135=111
+Pi136=112
+MPo=150
+Po1=116
+Po2=117
+Po5=118
+Po6=119
+Po7=120
+Po8=121
+Po9=122
+Po10=123
+Po11=124
+Po12=125
+Po13=126
+Po14=127
+Po15=128
+Po16=129
+Po18=130
+Po19=131
+Po20=132
+Po21=133
+Po22=134
+Po24=135
+Po25=136
+Po26=137
+Po27=138
+Po29=139
+Po30=140
+Po31=141
+Po32=142
+Po33=143
+Po34=144
+Po35=145
+Po36=146
+Po38=147
+Po39=148
+Po40=149
+Po42=150
+Po43=151
+Po44=152
+Po45=153
+Po46=154
+Po48=155
+Po49=156
+Po51=157
+Po52=158
+Po54=159
+Po55=160
+Po57=161
+Po58=162
+Po59=163
+Po61=164
+Po62=165
+Po63=166
+Po64=167
+Po65=168
+Po67=169
+Po68=170
+Po69=171
+Po70=172
+Po72=173
+Po73=174
+Po75=175
+Po76=176
+Po78=177
+Po79=178
+Po81=179
+Po82=180
+Po85=181
+Po86=182
+Po102=183
+Po103=184
+Po104=185
+Po105=186
+Po106=187
+Po107=188
+Po108=189
+Po109=190
+Po110=191
+Po111=192
+Po113=193
+Po114=194
+Po116=195
+Po117=196
+Po119=197
+Po120=198
+Po121=199
+Po122=200
+Po123=201
+Po124=202
+Po125=203
+Po126=204
+Po127=205
+Po128=206
+Po129=207
+Po130=208
+Po131=209
+Po132=210
+Po133=211
+Po134=212
+Po135=213
+Po136=214
+Po138=215
+Po139=216
+Po140=217
+Po141=218
+Po143=219
+Po144=220
+Po145=221
+Po146=222
+Po148=223
+Po150=224
+]
+[
+ObjTp=Sm
+H=180
+SmC=98
+Nm=Stepper
+ObjVer=1
+PrH=185
+CF=2
+n1I=1
+n1O=9
+Cmn1=Initialize\\
+mI=1
+I1=556
+mO=9
+tO=9
+O1=9
+O2=580
+O3=581
+O4=593
+O5=583
+O6=582
+O7=584
+O8=585
+O9=385
+mP=16
+P1=0s
+P2=.01s
+P3=.25s
+P4=.01s
+P5=.25s
+P6=.01s
+P7=.25s
+P8=.01s
+P9=.25s
+P10=.01s
+P11=.25s
+P12=.01s
+P13=.25s
+P14=.01s
+P15=.25s
+P16=.01s
+]
+[
+ObjTp=Sm
+H=181
+SmC=20
+Nm=Buffer
+ObjVer=1
+PrH=185
+CF=2
+n1I=8
+n1O=7
+Cmn1=Initialization Queries/Commands\\
+mI=8
+I1=2
+I2=580
+I3=581
+I4=593
+I5=583
+I6=582
+I7=584
+I8=585
+mO=7
+tO=7
+O1=489
+O2=490
+O3=505
+O4=506
+O5=507
+O6=508
+O7=509
+]
+[
+ObjTp=Sm
+H=182
+SmC=20
+Nm=Buffer
+ObjVer=1
+PrH=183
+CF=2
+n1I=8
+n1O=7
+Cmn1=Buffer For Initialization Queries\\
+mI=8
+I1=2
+I2=586
+I3=587
+I4=588
+I5=591
+I6=592
+I7=589
+I8=590
+mO=7
+tO=7
+O1=489
+O2=490
+O3=505
+O4=506
+O5=507
+O6=508
+O7=509
+]
+[
+ObjTp=Sm
+H=183
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=Polling\\
+mC=5
+C1=164
+C2=165
+C3=166
+C4=167
+C5=182
+]
+[
+ObjTp=Sm
+H=185
+SmC=156
+Nm=SUBSYSTEM
+ObjVer=1
+PrH=4
+CF=2
+Cmn1=Startup\\
+mC=4
+C1=177
+C2=178
+C3=180
+C4=181
+]
+[
+ObjTp=Sg
+H=4
+Nm=From_Device
+SgTp=4
+]
+[
+ObjTp=Sg
+H=5
+Nm=To_Device
+SgTp=4
+]
+[
+ObjTp=Sg
+H=8
+Nm=From_Device_Pulse
+]
+[
+ObjTp=Sg
+H=9
+Nm=//__digital_reserved__
+]
+[
+ObjTp=Sg
+H=10
+Nm=Response_Received
+]
+[
+ObjTp=Sg
+H=11
+Nm=Power_On
+]
+[
+ObjTp=Sg
+H=12
+Nm=Power_Off
+]
+[
+ObjTp=Sg
+H=13
+Nm=Power_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=14
+Nm=Power_Is_On
+]
+[
+ObjTp=Sg
+H=15
+Nm=Power_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=16
+Nm=Power_Is_Off
+]
+[
+ObjTp=Sg
+H=17
+Nm=Input_S-Video
+]
+[
+ObjTp=Sg
+H=18
+Nm=Input_Component
+]
+[
+ObjTp=Sg
+H=19
+Nm=Send_Power
+SgTp=2
+]
+[
+ObjTp=Sg
+H=20
+Nm=Input_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=21
+Nm=Send_Power_On
+]
+[
+ObjTp=Sg
+H=22
+Nm=Send_Power_Off
+]
+[
+ObjTp=Sg
+H=23
+Nm=Power_On_In
+]
+[
+ObjTp=Sg
+H=24
+Nm=Power_Off_In
+]
+[
+ObjTp=Sg
+H=25
+Nm=Power_Standby_In
+]
+[
+ObjTp=Sg
+H=27
+Nm=Send_Input_CVBS1
+]
+[
+ObjTp=Sg
+H=28
+Nm=Send_Input_CVBS2
+]
+[
+ObjTp=Sg
+H=29
+Nm=Send_Input_S-Video
+]
+[
+ObjTp=Sg
+H=30
+Nm=Input_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=31
+Nm=Input_Is_CVBS1
+]
+[
+ObjTp=Sg
+H=32
+Nm=Input_Is_CVBS2
+]
+[
+ObjTp=Sg
+H=33
+Nm=Input_CVBS1_In
+]
+[
+ObjTp=Sg
+H=34
+Nm=Input_CVBS2_In
+]
+[
+ObjTp=Sg
+H=35
+Nm=Input_S-Video_In
+]
+[
+ObjTp=Sg
+H=36
+Nm=Input_CVBS2
+]
+[
+ObjTp=Sg
+H=37
+Nm=Input_VGA
+]
+[
+ObjTp=Sg
+H=38
+Nm=Input_3G-SDI
+]
+[
+ObjTp=Sg
+H=39
+Nm=Input_DVI
+]
+[
+ObjTp=Sg
+H=40
+Nm=Input_HDMI
+]
+[
+ObjTp=Sg
+H=41
+Nm=Input_Test_Pattern
+]
+[
+ObjTp=Sg
+H=42
+Nm=Input_Main/DVI
+]
+[
+ObjTp=Sg
+H=43
+Nm=Input_Sub/HDMI
+]
+[
+ObjTp=Sg
+H=44
+Nm=Input_Dual_Pipe
+]
+[
+ObjTp=Sg
+H=45
+Nm=Send_Input_Component
+]
+[
+ObjTp=Sg
+H=46
+Nm=Input_CVBS1
+]
+[
+ObjTp=Sg
+H=47
+Nm=Send_Input_VGA
+]
+[
+ObjTp=Sg
+H=48
+Nm=Send_Input_3G-SDI
+]
+[
+ObjTp=Sg
+H=49
+Nm=Send_Input_DVI
+]
+[
+ObjTp=Sg
+H=50
+Nm=Send_Input_HDMI
+]
+[
+ObjTp=Sg
+H=51
+Nm=Send_Input_Test_Pattern
+]
+[
+ObjTp=Sg
+H=52
+Nm=Send_Input_Main/DVI
+]
+[
+ObjTp=Sg
+H=53
+Nm=Send_Input_Sub/HDMI
+]
+[
+ObjTp=Sg
+H=54
+Nm=Send_Input_Dual_Pipe
+]
+[
+ObjTp=Sg
+H=55
+Nm=Input_Is_S-Video
+]
+[
+ObjTp=Sg
+H=56
+Nm=Input_Is_Component
+]
+[
+ObjTp=Sg
+H=57
+Nm=Input_Is_VGA
+]
+[
+ObjTp=Sg
+H=58
+Nm=Input_Is_3G-SDI
+]
+[
+ObjTp=Sg
+H=59
+Nm=Input_Is_DVI
+]
+[
+ObjTp=Sg
+H=60
+Nm=Input_Is_HDMI
+]
+[
+ObjTp=Sg
+H=61
+Nm=Input_Is_Test_Pattern
+]
+[
+ObjTp=Sg
+H=62
+Nm=Input_Is_Main/DVI
+]
+[
+ObjTp=Sg
+H=63
+Nm=Input_Is_Sub/HDMI
+]
+[
+ObjTp=Sg
+H=64
+Nm=Input_Is_Dual_Pipe
+]
+[
+ObjTp=Sg
+H=65
+Nm=Input_Component_In
+]
+[
+ObjTp=Sg
+H=66
+Nm=Input_VGA_In
+]
+[
+ObjTp=Sg
+H=67
+Nm=Input_3G-SDI_In
+]
+[
+ObjTp=Sg
+H=68
+Nm=Input_DVI_In
+]
+[
+ObjTp=Sg
+H=69
+Nm=Input_HDMI_In
+]
+[
+ObjTp=Sg
+H=70
+Nm=Input_Test_Pattern_In
+]
+[
+ObjTp=Sg
+H=71
+Nm=Input_Main/DVI_In
+]
+[
+ObjTp=Sg
+H=72
+Nm=Input_Sub/HDMI_In
+]
+[
+ObjTp=Sg
+H=73
+Nm=Input_Dual_Pipe_In
+]
+[
+ObjTp=Sg
+H=74
+Nm=Lens_Up
+]
+[
+ObjTp=Sg
+H=75
+Nm=Lens_Down
+]
+[
+ObjTp=Sg
+H=78
+Nm=Send_Input
+SgTp=2
+]
+[
+ObjTp=Sg
+H=79
+Nm=Start_Signal
+]
+[
+ObjTp=Sg
+H=80
+Nm=Input_Selected_OR
+]
+[
+ObjTp=Sg
+H=81
+Nm=Input_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=82
+Nm=Lens_Left
+]
+[
+ObjTp=Sg
+H=83
+Nm=Input_Selection_Clear
+]
+[
+ObjTp=Sg
+H=84
+Nm=Lens_Right
+]
+[
+ObjTp=Sg
+H=85
+Nm=Brightness_Up
+]
+[
+ObjTp=Sg
+H=86
+Nm=Lens_Center
+]
+[
+ObjTp=Sg
+H=87
+Nm=Brightness_Down
+]
+[
+ObjTp=Sg
+H=88
+Nm=Contrast_Up
+]
+[
+ObjTp=Sg
+H=89
+Nm=Contrast_Down
+]
+[
+ObjTp=Sg
+H=90
+Nm=Lens_Preset_1
+]
+[
+ObjTp=Sg
+H=91
+Nm=Lens_Preset_2
+]
+[
+ObjTp=Sg
+H=92
+Nm=Power_Selected_OR
+]
+[
+ObjTp=Sg
+H=93
+Nm=Power_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=94
+Nm=Power_Selection_Clear
+]
+[
+ObjTp=Sg
+H=95
+Nm=Lens_Preset_3
+]
+[
+ObjTp=Sg
+H=96
+Nm=Lens_Preset_4
+]
+[
+ObjTp=Sg
+H=97
+Nm=Lens_Preset_5
+]
+[
+ObjTp=Sg
+H=98
+Nm=Lens_Preset_6
+]
+[
+ObjTp=Sg
+H=99
+Nm=Lens_Preset_7
+]
+[
+ObjTp=Sg
+H=100
+Nm=Lens_Preset_8
+]
+[
+ObjTp=Sg
+H=101
+Nm=Lens_Preset_9
+]
+[
+ObjTp=Sg
+H=102
+Nm=Lens_Preset_10
+]
+[
+ObjTp=Sg
+H=103
+Nm=Send_Aspect
+SgTp=2
+]
+[
+ObjTp=Sg
+H=104
+Nm=Lens_Preset_1_Is_Selected
+]
+[
+ObjTp=Sg
+H=105
+Nm=Lens_Preset_2_Is_Selected
+]
+[
+ObjTp=Sg
+H=106
+Nm=Lens_Preset_3_Is_Selected
+]
+[
+ObjTp=Sg
+H=107
+Nm=Lens_Preset_4_Is_Selected
+]
+[
+ObjTp=Sg
+H=108
+Nm=Lens_Preset_5_Is_Selected
+]
+[
+ObjTp=Sg
+H=109
+Nm=Lens_Preset_6_Is_Selected
+]
+[
+ObjTp=Sg
+H=110
+Nm=Lens_Preset_7_Is_Selected
+]
+[
+ObjTp=Sg
+H=111
+Nm=Lens_Preset_8_Is_Selected
+]
+[
+ObjTp=Sg
+H=112
+Nm=Lens_Preset_9_Is_Selected
+]
+[
+ObjTp=Sg
+H=113
+Nm=Lens_Preset_10_Is_Selected
+]
+[
+ObjTp=Sg
+H=114
+Nm=Brightness_Gauge
+SgTp=2
+]
+[
+ObjTp=Sg
+H=115
+Nm=Brightness_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=116
+Nm=Contrast_Gauge
+SgTp=2
+]
+[
+ObjTp=Sg
+H=117
+Nm=Contrast_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=118
+Nm=Aspect_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=119
+Nm=Aspect_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=120
+Nm=Aspect_Source
+]
+[
+ObjTp=Sg
+H=121
+Nm=Aspect_Fill_&_Display
+]
+[
+ObjTp=Sg
+H=122
+Nm=Aspect_Fill_&_Crop
+]
+[
+ObjTp=Sg
+H=123
+Nm=Aspect_Anamorphic
+]
+[
+ObjTp=Sg
+H=124
+Nm=Aspect_TheaterScope
+]
+[
+ObjTp=Sg
+H=125
+Nm=PIP_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=126
+Nm=PIP_Input_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=127
+Nm=PIP_Size_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=128
+Nm=PIP_Position_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=129
+Nm=Power_Toggle
+]
+[
+ObjTp=Sg
+H=130
+Nm=*3D_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=131
+Nm=*3D_Format_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=132
+Nm=Aspect_Selected_OR
+]
+[
+ObjTp=Sg
+H=133
+Nm=Aspect_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=134
+Nm=Aspect_Selection_Clear
+]
+[
+ObjTp=Sg
+H=135
+Nm=Send_Aspect_Source
+]
+[
+ObjTp=Sg
+H=136
+Nm=Send_Aspect_Fill_&_Display
+]
+[
+ObjTp=Sg
+H=137
+Nm=Send_Aspect_Fill_&_Crop
+]
+[
+ObjTp=Sg
+H=138
+Nm=Send_Aspect_Anamorphic
+]
+[
+ObjTp=Sg
+H=139
+Nm=Send_Aspect_TheaterScope
+]
+[
+ObjTp=Sg
+H=140
+Nm=*3D_Darktime_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=141
+Nm=PIP_V_Position_Down
+]
+[
+ObjTp=Sg
+H=142
+Nm=PIP_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=143
+Nm=PIP_H_Position_Left
+]
+[
+ObjTp=Sg
+H=144
+Nm=PIP_Input_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=145
+Nm=PIP_Size_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=146
+Nm=PIP_Position_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=147
+Nm=Aspect_Source_In
+]
+[
+ObjTp=Sg
+H=148
+Nm=Aspect_Fill_&_Display_In
+]
+[
+ObjTp=Sg
+H=149
+Nm=Aspect_Fill_&_Crop_In
+]
+[
+ObjTp=Sg
+H=150
+Nm=Aspect_Anamorphic_In
+]
+[
+ObjTp=Sg
+H=151
+Nm=Aspect_TheaterScope_In
+]
+[
+ObjTp=Sg
+H=152
+Nm=*3D_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=153
+Nm=Zoom_Out
+]
+[
+ObjTp=Sg
+H=154
+Nm=*3D_Format_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=155
+Nm=*3D_Darktime_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=156
+Nm=Focus_Near
+]
+[
+ObjTp=Sg
+H=157
+Nm=Focus_Far
+]
+[
+ObjTp=Sg
+H=158
+Nm=Send_PIP
+SgTp=2
+]
+[
+ObjTp=Sg
+H=159
+Nm=Aspect_Is_Source
+]
+[
+ObjTp=Sg
+H=160
+Nm=Aspect_Is_Fill_&_Display
+]
+[
+ObjTp=Sg
+H=161
+Nm=Aspect_Is_Fill_&_Crop
+]
+[
+ObjTp=Sg
+H=162
+Nm=Aspect_Is_Anamorphic
+]
+[
+ObjTp=Sg
+H=163
+Nm=Aspect_Is_TheaterScope
+]
+[
+ObjTp=Sg
+H=164
+Nm=Send_PIP_Input
+SgTp=2
+]
+[
+ObjTp=Sg
+H=165
+Nm=Send_PIP_Size
+SgTp=2
+]
+[
+ObjTp=Sg
+H=166
+Nm=Send_PIP_Position
+SgTp=2
+]
+[
+ObjTp=Sg
+H=167
+Nm=Send_*3D
+SgTp=2
+]
+[
+ObjTp=Sg
+H=168
+Nm=Zoom_In
+]
+[
+ObjTp=Sg
+H=169
+Nm=Send_*3D_Format
+SgTp=2
+]
+[
+ObjTp=Sg
+H=170
+Nm=Send_*3D_Darktime
+SgTp=2
+]
+[
+ObjTp=Sg
+H=171
+Nm=PIP_H_Position_Right
+]
+[
+ObjTp=Sg
+H=172
+Nm=PIP_H_Position_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=173
+Nm=PIP_Mode_Off
+]
+[
+ObjTp=Sg
+H=174
+Nm=PIP_Mode_PIP
+]
+[
+ObjTp=Sg
+H=175
+Nm=PIP_Selected_OR
+]
+[
+ObjTp=Sg
+H=176
+Nm=PIP_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=177
+Nm=PIP_Selection_Clear
+]
+[
+ObjTp=Sg
+H=178
+Nm=Send_PIP_Mode_Off
+]
+[
+ObjTp=Sg
+H=179
+Nm=Send_PIP_Mode_PIP
+]
+[
+ObjTp=Sg
+H=180
+Nm=PIP_Mode_PIP_In
+]
+[
+ObjTp=Sg
+H=181
+Nm=PIP_Mode_PAP_In
+]
+[
+ObjTp=Sg
+H=182
+Nm=PIP_Mode_Is_Off
+]
+[
+ObjTp=Sg
+H=183
+Nm=PIP_Mode_Is_PIP
+]
+[
+ObjTp=Sg
+H=184
+Nm=PIP_Mode_Is_PAP
+]
+[
+ObjTp=Sg
+H=185
+Nm=PIP_Input_CVBS1
+]
+[
+ObjTp=Sg
+H=186
+Nm=PIP_Input_CVBS2
+]
+[
+ObjTp=Sg
+H=187
+Nm=PIP_Input_S-Video
+]
+[
+ObjTp=Sg
+H=188
+Nm=PIP_Input_Component
+]
+[
+ObjTp=Sg
+H=189
+Nm=PIP_Input_VGA
+]
+[
+ObjTp=Sg
+H=190
+Nm=PIP_Input_3G-SDI
+]
+[
+ObjTp=Sg
+H=191
+Nm=PIP_Input_DVI
+]
+[
+ObjTp=Sg
+H=192
+Nm=PIP_Input_HDMI
+]
+[
+ObjTp=Sg
+H=193
+Nm=PIP_Size_Small
+]
+[
+ObjTp=Sg
+H=194
+Nm=PIP_Size_Medium
+]
+[
+ObjTp=Sg
+H=195
+Nm=PIP_Size_Large
+]
+[
+ObjTp=Sg
+H=196
+Nm=PIP_Position_Top_Left
+]
+[
+ObjTp=Sg
+H=197
+Nm=PIP_Input_Selected_OR
+]
+[
+ObjTp=Sg
+H=198
+Nm=PIP_Input_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=199
+Nm=PIP_Input_Selection_Clear
+]
+[
+ObjTp=Sg
+H=200
+Nm=Send_PIP_Input_CVBS1
+]
+[
+ObjTp=Sg
+H=201
+Nm=Send_PIP_Input_CVBS2
+]
+[
+ObjTp=Sg
+H=202
+Nm=Send_PIP_Input_S-Video
+]
+[
+ObjTp=Sg
+H=203
+Nm=Send_PIP_Input_Component
+]
+[
+ObjTp=Sg
+H=204
+Nm=Send_PIP_Input_VGA
+]
+[
+ObjTp=Sg
+H=205
+Nm=Send_PIP_Input_3G-SDI
+]
+[
+ObjTp=Sg
+H=206
+Nm=Send_PIP_Input_DVI
+]
+[
+ObjTp=Sg
+H=207
+Nm=Send_PIP_Input_HDMI
+]
+[
+ObjTp=Sg
+H=208
+Nm=PIP_Position_Top_Right
+]
+[
+ObjTp=Sg
+H=209
+Nm=PIP_Position_Bottom_Left
+]
+[
+ObjTp=Sg
+H=210
+Nm=PIP_Position_Bottom_Right
+]
+[
+ObjTp=Sg
+H=211
+Nm=PIP_Position_Custom
+]
+[
+ObjTp=Sg
+H=212
+Nm=PIP_Input_CVBS1_In
+]
+[
+ObjTp=Sg
+H=213
+Nm=PIP_Input_CVBS2_In
+]
+[
+ObjTp=Sg
+H=214
+Nm=PIP_Input_S-Video_In
+]
+[
+ObjTp=Sg
+H=215
+Nm=PIP_Input_Component_In
+]
+[
+ObjTp=Sg
+H=216
+Nm=PIP_Input_VGA_In
+]
+[
+ObjTp=Sg
+H=217
+Nm=PIP_Input_3G-SDI_In
+]
+[
+ObjTp=Sg
+H=218
+Nm=PIP_Input_DVI_In
+]
+[
+ObjTp=Sg
+H=219
+Nm=PIP_Input_HDMI_In
+]
+[
+ObjTp=Sg
+H=220
+Nm=PIP_Size_Selected_OR
+]
+[
+ObjTp=Sg
+H=221
+Nm=PIP_Size_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=222
+Nm=PIP_Size_Selection_Clear
+]
+[
+ObjTp=Sg
+H=223
+Nm=Send_PIP_Size_Small
+]
+[
+ObjTp=Sg
+H=224
+Nm=PIP_Input_Is_CVBS1
+]
+[
+ObjTp=Sg
+H=225
+Nm=PIP_Input_Is_CVBS2
+]
+[
+ObjTp=Sg
+H=226
+Nm=PIP_Input_Is_S-Video
+]
+[
+ObjTp=Sg
+H=227
+Nm=PIP_Input_Is_Component
+]
+[
+ObjTp=Sg
+H=228
+Nm=PIP_Input_Is_VGA
+]
+[
+ObjTp=Sg
+H=229
+Nm=PIP_Input_Is_3G-SDI
+]
+[
+ObjTp=Sg
+H=230
+Nm=PIP_Input_Is_DVI
+]
+[
+ObjTp=Sg
+H=231
+Nm=PIP_Input_Is_HDMI
+]
+[
+ObjTp=Sg
+H=232
+Nm=Send_PIP_Size_Medium
+]
+[
+ObjTp=Sg
+H=233
+Nm=Send_PIP_Size_Large
+]
+[
+ObjTp=Sg
+H=234
+Nm=*3D_On
+]
+[
+ObjTp=Sg
+H=235
+Nm=*3D_Off
+]
+[
+ObjTp=Sg
+H=236
+Nm=*3D_Selected_OR
+]
+[
+ObjTp=Sg
+H=237
+Nm=PIP_Position_Selected_OR
+]
+[
+ObjTp=Sg
+H=238
+Nm=PIP_Position_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=239
+Nm=PIP_Size_Small_In
+]
+[
+ObjTp=Sg
+H=240
+Nm=PIP_Size_Medium_In
+]
+[
+ObjTp=Sg
+H=241
+Nm=PIP_Size_Large_In
+]
+[
+ObjTp=Sg
+H=242
+Nm=PIP_Position_Selection_Clear
+]
+[
+ObjTp=Sg
+H=243
+Nm=Send_PIP_Position_Top_Left
+]
+[
+ObjTp=Sg
+H=244
+Nm=Send_PIP_Position_Top_Right
+]
+[
+ObjTp=Sg
+H=245
+Nm=Send_PIP_Position_Bottom_Left
+]
+[
+ObjTp=Sg
+H=246
+Nm=Send_PIP_Position_Bottom_Right
+]
+[
+ObjTp=Sg
+H=247
+Nm=PIP_Size_Is_Small
+]
+[
+ObjTp=Sg
+H=248
+Nm=PIP_Size_Is_Medium
+]
+[
+ObjTp=Sg
+H=249
+Nm=PIP_Size_Is_Large
+]
+[
+ObjTp=Sg
+H=250
+Nm=Send_PIP_Position_Custom
+]
+[
+ObjTp=Sg
+H=251
+Nm=*3D_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=252
+Nm=*3D_Selection_Clear
+]
+[
+ObjTp=Sg
+H=253
+Nm=Send_*3D_On
+]
+[
+ObjTp=Sg
+H=254
+Nm=PIP_Position_Top_Left_In
+]
+[
+ObjTp=Sg
+H=255
+Nm=PIP_Position_Top_Right_In
+]
+[
+ObjTp=Sg
+H=256
+Nm=PIP_Position_Bottom_Left_In
+]
+[
+ObjTp=Sg
+H=257
+Nm=PIP_Position_Bottom_Right_In
+]
+[
+ObjTp=Sg
+H=258
+Nm=PIP_Position_Custom_In
+]
+[
+ObjTp=Sg
+H=259
+Nm=Send_*3D_Off
+]
+[
+ObjTp=Sg
+H=260
+Nm=*3D_On_In
+]
+[
+ObjTp=Sg
+H=261
+Nm=*3D_Off_In
+]
+[
+ObjTp=Sg
+H=262
+Nm=PIP_Position_Is_Top_Left
+]
+[
+ObjTp=Sg
+H=263
+Nm=PIP_Position_Is_Top_Right
+]
+[
+ObjTp=Sg
+H=264
+Nm=PIP_Position_Is_Bottom_Left
+]
+[
+ObjTp=Sg
+H=265
+Nm=PIP_Position_Is_Bottom_Right
+]
+[
+ObjTp=Sg
+H=266
+Nm=PIP_Position_Is_Custom
+]
+[
+ObjTp=Sg
+H=267
+Nm=*3D_Format_FPack_In
+]
+[
+ObjTp=Sg
+H=268
+Nm=*3D_Is_On
+]
+[
+ObjTp=Sg
+H=269
+Nm=*3D_Is_Off
+]
+[
+ObjTp=Sg
+H=270
+Nm=*3D_Mult_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=271
+Nm=Send_*3D_Mult
+SgTp=2
+]
+[
+ObjTp=Sg
+H=272
+Nm=Send_*3D_Mult_1X
+]
+[
+ObjTp=Sg
+H=273
+Nm=*3D_Mult_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=274
+Nm=*3D_Mult_Selection_Clear
+]
+[
+ObjTp=Sg
+H=275
+Nm=Send_*3D_Mult_2X
+]
+[
+ObjTp=Sg
+H=276
+Nm=Send_*3D_Mult_3X
+]
+[
+ObjTp=Sg
+H=277
+Nm=*3D_Mult_1X_In
+]
+[
+ObjTp=Sg
+H=278
+Nm=*3D_Mult_2X_In
+]
+[
+ObjTp=Sg
+H=279
+Nm=*3D_Mult_3X_In
+]
+[
+ObjTp=Sg
+H=280
+Nm=*3D_Mult_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=281
+Nm=*3D_Mult_Is_1X
+]
+[
+ObjTp=Sg
+H=282
+Nm=*3D_Mult_Is_2X
+]
+[
+ObjTp=Sg
+H=283
+Nm=*3D_Mult_Is_3X
+]
+[
+ObjTp=Sg
+H=284
+Nm=*3D_Format_Auto
+]
+[
+ObjTp=Sg
+H=285
+Nm=*3D_Format_SEQ
+]
+[
+ObjTp=Sg
+H=286
+Nm=*3D_Format_FPack
+]
+[
+ObjTp=Sg
+H=287
+Nm=*3D_Format_Selected_OR
+]
+[
+ObjTp=Sg
+H=288
+Nm=*3D_Mult_1X
+]
+[
+ObjTp=Sg
+H=289
+Nm=*3D_Mult_2X
+]
+[
+ObjTp=Sg
+H=290
+Nm=*3D_Mult_3X
+]
+[
+ObjTp=Sg
+H=291
+Nm=*3D_Mult_Selected_OR
+]
+[
+ObjTp=Sg
+H=292
+Nm=*3D_Format_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=293
+Nm=*3D_Format_Selection_Clear
+]
+[
+ObjTp=Sg
+H=294
+Nm=Send_*3D_Format_Auto
+]
+[
+ObjTp=Sg
+H=295
+Nm=Send_*3D_Format_SEQ
+]
+[
+ObjTp=Sg
+H=296
+Nm=Send_*3D_Format_FPack
+]
+[
+ObjTp=Sg
+H=297
+Nm=*3D_Format_Auto_In
+]
+[
+ObjTp=Sg
+H=298
+Nm=*3D_Format_SEQ_In
+]
+[
+ObjTp=Sg
+H=299
+Nm=*3D_Format_SBS_In
+]
+[
+ObjTp=Sg
+H=300
+Nm=*3D_Format_Is_Auto
+]
+[
+ObjTp=Sg
+H=301
+Nm=*3D_Format_Is_SEQ
+]
+[
+ObjTp=Sg
+H=302
+Nm=*3D_Format_Is_FPack
+]
+[
+ObjTp=Sg
+H=303
+Nm=*3D_Format_TaB
+]
+[
+ObjTp=Sg
+H=304
+Nm=*3D_Format_SBS
+]
+[
+ObjTp=Sg
+H=305
+Nm=Send_*3D_Format_TaB
+]
+[
+ObjTp=Sg
+H=306
+Nm=Send_*3D_Format_SBS
+]
+[
+ObjTp=Sg
+H=307
+Nm=*3D_Format_TaB_In
+]
+[
+ObjTp=Sg
+H=308
+Nm=*3D_Format_Is_TaB
+]
+[
+ObjTp=Sg
+H=309
+Nm=*3D_Format_Is_SBS
+]
+[
+ObjTp=Sg
+H=310
+Nm=*3D_Darktime_0us
+]
+[
+ObjTp=Sg
+H=311
+Nm=*3D_Darktime_650us
+]
+[
+ObjTp=Sg
+H=312
+Nm=*3D_Darktime_1300us
+]
+[
+ObjTp=Sg
+H=313
+Nm=*3D_Darktime_7500us
+]
+[
+ObjTp=Sg
+H=314
+Nm=*3D_Polarity_Pos
+]
+[
+ObjTp=Sg
+H=315
+Nm=*3D_Darktime_Selected_OR
+]
+[
+ObjTp=Sg
+H=316
+Nm=*3D_Darktime_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=317
+Nm=*3D_Darktime_Selection_Clear
+]
+[
+ObjTp=Sg
+H=318
+Nm=Send_*3D_Darktime_0us
+]
+[
+ObjTp=Sg
+H=319
+Nm=Send_*3D_Darktime_650us
+]
+[
+ObjTp=Sg
+H=320
+Nm=Send_*3D_Darktime_1300us
+]
+[
+ObjTp=Sg
+H=321
+Nm=Send_*3D_Darktime_7500us
+]
+[
+ObjTp=Sg
+H=322
+Nm=*3D_Polarity_Neg
+]
+[
+ObjTp=Sg
+H=323
+Nm=*3D_Darktime_0us_In
+]
+[
+ObjTp=Sg
+H=324
+Nm=*3D_Darktime_650us_In
+]
+[
+ObjTp=Sg
+H=325
+Nm=*3D_Darktime_1300us_In
+]
+[
+ObjTp=Sg
+H=326
+Nm=*3D_Darktime_7500us_In
+]
+[
+ObjTp=Sg
+H=327
+Nm=*3D_Darktime_Is_0us
+]
+[
+ObjTp=Sg
+H=328
+Nm=*3D_Darktime_Is_650us
+]
+[
+ObjTp=Sg
+H=329
+Nm=*3D_Darktime_Is_1300us
+]
+[
+ObjTp=Sg
+H=330
+Nm=*3D_Darktime_Is_7500us
+]
+[
+ObjTp=Sg
+H=331
+Nm=Send_*3D_Dominance_Left
+]
+[
+ObjTp=Sg
+H=332
+Nm=*3D_Polarity_Selected_OR
+]
+[
+ObjTp=Sg
+H=333
+Nm=*3D_Polarity_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=334
+Nm=*3D_Polarity_Selection_Clear
+]
+[
+ObjTp=Sg
+H=335
+Nm=*3D_Polarity_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=336
+Nm=Send_*3D_Polarity
+SgTp=2
+]
+[
+ObjTp=Sg
+H=337
+Nm=Send_*3D_Polarity_Pos
+]
+[
+ObjTp=Sg
+H=338
+Nm=Send_*3D_Polarity_Neg
+]
+[
+ObjTp=Sg
+H=339
+Nm=Send_*3D_Dominance_Right
+]
+[
+ObjTp=Sg
+H=340
+Nm=*3D_Polarity_Pos_In
+]
+[
+ObjTp=Sg
+H=341
+Nm=*3D_Polarity_Neg_In
+]
+[
+ObjTp=Sg
+H=342
+Nm=*3D_Dominance_Selected_OR
+]
+[
+ObjTp=Sg
+H=343
+Nm=*3D_Polarity_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=344
+Nm=*3D_Polarity_Is_Pos
+]
+[
+ObjTp=Sg
+H=345
+Nm=*3D_Polarity_Is_Neg
+]
+[
+ObjTp=Sg
+H=346
+Nm=*3D_Dominance_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=347
+Nm=*3D_Dominance_Selection_Clear
+]
+[
+ObjTp=Sg
+H=348
+Nm=*3D_Dominance_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=349
+Nm=Send_*3D_Dominance
+SgTp=2
+]
+[
+ObjTp=Sg
+H=350
+Nm=*3D_Dominance_Left_In
+]
+[
+ObjTp=Sg
+H=351
+Nm=*3D_Dominance_Right_In
+]
+[
+ObjTp=Sg
+H=352
+Nm=*3D_Dominance_Is_Left
+]
+[
+ObjTp=Sg
+H=353
+Nm=*3D_Dominance_Is_Right
+]
+[
+ObjTp=Sg
+H=354
+Nm=*3D_Dominance_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=355
+Nm=*3D_Dominance_Right
+]
+[
+ObjTp=Sg
+H=356
+Nm=Send_*3D_SDI_Stream_1
+]
+[
+ObjTp=Sg
+H=357
+Nm=*3D_Dominance_Left
+]
+[
+ObjTp=Sg
+H=358
+Nm=Send_*3D_SDI_Stream_2
+]
+[
+ObjTp=Sg
+H=359
+Nm=*3D_SDI_Stream_Selected_OR
+]
+[
+ObjTp=Sg
+H=360
+Nm=*3D_SDI_Stream_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=361
+Nm=*3D_SDI_Stream_Selection_Clear
+]
+[
+ObjTp=Sg
+H=362
+Nm=*3D_SDI_Stream_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=363
+Nm=Send_*3D_SDI_Stream
+SgTp=2
+]
+[
+ObjTp=Sg
+H=364
+Nm=*3D_SDI_Stream_1_In
+]
+[
+ObjTp=Sg
+H=365
+Nm=*3D_SDI_Stream_2_In
+]
+[
+ObjTp=Sg
+H=366
+Nm=*3D_SDI_Stream_Is_1
+]
+[
+ObjTp=Sg
+H=367
+Nm=*3D_SDI_Stream_Is_2
+]
+[
+ObjTp=Sg
+H=368
+Nm=*3D_SDI_Stream_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=369
+Nm=*3D_SDI_Stream_2
+]
+[
+ObjTp=Sg
+H=370
+Nm=Send_Shutter_Open
+]
+[
+ObjTp=Sg
+H=371
+Nm=*3D_SDI_Stream_1
+]
+[
+ObjTp=Sg
+H=372
+Nm=Send_Shutter_Close
+]
+[
+ObjTp=Sg
+H=373
+Nm=Shutter_Selected_OR
+]
+[
+ObjTp=Sg
+H=374
+Nm=Shutter_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=375
+Nm=Shutter_Open_In
+]
+[
+ObjTp=Sg
+H=376
+Nm=Shutter_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=377
+Nm=Send_Shutter
+SgTp=2
+]
+[
+ObjTp=Sg
+H=378
+Nm=Shutter_Is_Open
+]
+[
+ObjTp=Sg
+H=379
+Nm=Shutter_Close_In
+]
+[
+ObjTp=Sg
+H=380
+Nm=Shutter_Close
+]
+[
+ObjTp=Sg
+H=381
+Nm=Shutter_Is_Close
+]
+[
+ObjTp=Sg
+H=382
+Nm=PIP_V_Position_Up
+]
+[
+ObjTp=Sg
+H=383
+Nm=Shutter_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=384
+Nm=Freeze_On
+]
+[
+ObjTp=Sg
+H=385
+Nm=Freeze_Off
+]
+[
+ObjTp=Sg
+H=386
+Nm=Shutter_Open
+]
+[
+ObjTp=Sg
+H=387
+Nm=Shutter_SelectiOpen_Clear
+]
+[
+ObjTp=Sg
+H=388
+Nm=Freeze_Selected_OR
+]
+[
+ObjTp=Sg
+H=389
+Nm=Freeze_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=390
+Nm=Freeze_Selection_Clear
+]
+[
+ObjTp=Sg
+H=391
+Nm=Freeze_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=392
+Nm=Send_Freeze
+SgTp=2
+]
+[
+ObjTp=Sg
+H=393
+Nm=Send_Freeze_On
+]
+[
+ObjTp=Sg
+H=394
+Nm=Send_Freeze_Off
+]
+[
+ObjTp=Sg
+H=395
+Nm=Freeze_On_In
+]
+[
+ObjTp=Sg
+H=396
+Nm=Freeze_Off_In
+]
+[
+ObjTp=Sg
+H=397
+Nm=PIP_V_Position_Gauge
+SgTp=2
+]
+[
+ObjTp=Sg
+H=398
+Nm=Freeze_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=399
+Nm=Freeze_Is_On
+]
+[
+ObjTp=Sg
+H=400
+Nm=Freeze_Is_Off
+]
+[
+ObjTp=Sg
+H=401
+Nm=PIP_V_Position_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=402
+Nm=Lamp_Mode_Request
+SgTp=2
+]
+[
+ObjTp=Sg
+H=403
+Nm=PIP_H_Position_Gauge
+SgTp=2
+]
+[
+ObjTp=Sg
+H=404
+Nm=Send_Lamp_Mode
+SgTp=2
+]
+[
+ObjTp=Sg
+H=405
+Nm=Send_Lamp_Mode_Both/All
+]
+[
+ObjTp=Sg
+H=406
+Nm=Send_Lamp_Mode_Lamp_1/Auto_3
+]
+[
+ObjTp=Sg
+H=407
+Nm=PIP_Mode_PAP
+]
+[
+ObjTp=Sg
+H=408
+Nm=PIP_Mode_POP
+]
+[
+ObjTp=Sg
+H=409
+Nm=Send_PIP_Mode_PAP
+]
+[
+ObjTp=Sg
+H=410
+Nm=Send_PIP_Mode_POP
+]
+[
+ObjTp=Sg
+H=411
+Nm=PIP_Mode_Off_In
+]
+[
+ObjTp=Sg
+H=412
+Nm=PIP_Mode_POP_In
+]
+[
+ObjTp=Sg
+H=413
+Nm=PIP_Mode_Is_POP
+]
+[
+ObjTp=Sg
+H=414
+Nm=Send_Lamp_Mode_Lamp_2/Auto_2
+]
+[
+ObjTp=Sg
+H=415
+Nm=Send_Lamp_Mode_Auto_1
+]
+[
+ObjTp=Sg
+H=416
+Nm=Send_Lamp_Mode_Lamps_1_2_3
+]
+[
+ObjTp=Sg
+H=417
+Nm=Send_Lamp_Mode_Lamps_1_2_4
+]
+[
+ObjTp=Sg
+H=418
+Nm=Lamp_Mode_Selected_Pulse
+]
+[
+ObjTp=Sg
+H=419
+Nm=Lamp_Mode_Selection_Clear
+]
+[
+ObjTp=Sg
+H=420
+Nm=Send_Lamp_Mode_Lamps_1_3_4
+]
+[
+ObjTp=Sg
+H=421
+Nm=Send_Lamp_Mode_Lamps_2_3_4
+]
+[
+ObjTp=Sg
+H=422
+Nm=Lamp_Mode_Both/All_In
+]
+[
+ObjTp=Sg
+H=423
+Nm=Lamp_Mode_Lamp_1/Auto_3_In
+]
+[
+ObjTp=Sg
+H=424
+Nm=Lamp_Mode_Lamp_2/Auto_2_In
+]
+[
+ObjTp=Sg
+H=425
+Nm=Lamp_Mode_Auto_1_In
+]
+[
+ObjTp=Sg
+H=426
+Nm=Lamp_Mode_Lamps_1_2_3_In
+]
+[
+ObjTp=Sg
+H=427
+Nm=Lamp_Mode_Lamps_1_2_4_In
+]
+[
+ObjTp=Sg
+H=428
+Nm=Lamp_Mode_Lamps_1_3_4_In
+]
+[
+ObjTp=Sg
+H=429
+Nm=Lamp_Mode_Lamps_2_3_4_In
+]
+[
+ObjTp=Sg
+H=430
+Nm=Lamp_Mode_Status
+SgTp=2
+]
+[
+ObjTp=Sg
+H=431
+Nm=Lamp_Mode_Is_Both(Dual)/All(Quad)
+]
+[
+ObjTp=Sg
+H=432
+Nm=Lamp_Mode_Is_Lamp_1(Dual)/Auto_3(Quad)
+]
+[
+ObjTp=Sg
+H=433
+Nm=Lamp_Mode_Is_Lamp_2(Dual)/Auto_2(Quad)
+]
+[
+ObjTp=Sg
+H=434
+Nm=Lamp_Mode_Is_Auto_1
+]
+[
+ObjTp=Sg
+H=435
+Nm=Lamp_Mode_Is_Lamps_1_2_3
+]
+[
+ObjTp=Sg
+H=436
+Nm=Lamp_Mode_Is_Lamps_1_2_4
+]
+[
+ObjTp=Sg
+H=437
+Nm=Lamp_Mode_Is_Lamps_1_3_4
+]
+[
+ObjTp=Sg
+H=438
+Nm=Lamp_Mode_Is_Lamps_2_3_4
+]
+[
+ObjTp=Sg
+H=439
+Nm=Lamp_Mode_Lamps_1_2
+]
+[
+ObjTp=Sg
+H=440
+Nm=Lamp_Mode_Lamps_1_3
+]
+[
+ObjTp=Sg
+H=441
+Nm=Lamp_Mode_Lamps_1_4
+]
+[
+ObjTp=Sg
+H=442
+Nm=Lamp_Mode_Lamps_2_3
+]
+[
+ObjTp=Sg
+H=443
+Nm=Lamp_Mode_Lamps_2_4
+]
+[
+ObjTp=Sg
+H=444
+Nm=Lamp_Mode_Lamps_3_4
+]
+[
+ObjTp=Sg
+H=445
+Nm=Lamp_Mode_Lamp_1
+]
+[
+ObjTp=Sg
+H=446
+Nm=Lamp_Mode_Lamp_2
+]
+[
+ObjTp=Sg
+H=447
+Nm=Lamp_Mode_Lamp_3
+]
+[
+ObjTp=Sg
+H=448
+Nm=Lamp_Mode_Both(Dual)/All(Quad)
+]
+[
+ObjTp=Sg
+H=449
+Nm=Lamp_Mode_Lamp_1(Dual)/Auto_3(Quad)
+]
+[
+ObjTp=Sg
+H=450
+Nm=Lamp_Mode_Lamp_2(Dual)/Auto_2(Quad)
+]
+[
+ObjTp=Sg
+H=451
+Nm=Lamp_Mode_Auto_1
+]
+[
+ObjTp=Sg
+H=452
+Nm=Lamp_Mode_Lamps_1_2_3
+]
+[
+ObjTp=Sg
+H=453
+Nm=Lamp_Mode_Lamps_1_2_4
+]
+[
+ObjTp=Sg
+H=454
+Nm=Lamp_Mode_Lamps_1_3_4
+]
+[
+ObjTp=Sg
+H=455
+Nm=Lamp_Mode_Lamps_2_3_4
+]
+[
+ObjTp=Sg
+H=456
+Nm=Lamp_Mode_Selected_OR
+]
+[
+ObjTp=Sg
+H=457
+Nm=Lamp_Mode_Lamp_4
+]
+[
+ObjTp=Sg
+H=458
+Nm=Send_Lamp_Mode_Lamps_1_2
+]
+[
+ObjTp=Sg
+H=459
+Nm=Send_Lamp_Mode_Lamps_1_3
+]
+[
+ObjTp=Sg
+H=460
+Nm=Send_Lamp_Mode_Lamps_1_4
+]
+[
+ObjTp=Sg
+H=461
+Nm=Send_Lamp_Mode_Lamps_2_3
+]
+[
+ObjTp=Sg
+H=462
+Nm=Send_Lamp_Mode_Lamps_2_4
+]
+[
+ObjTp=Sg
+H=463
+Nm=Send_Lamp_Mode_Lamps_3_4
+]
+[
+ObjTp=Sg
+H=464
+Nm=Send_Lamp_Mode_Lamp_1
+]
+[
+ObjTp=Sg
+H=465
+Nm=Send_Lamp_Mode_Lamp_2
+]
+[
+ObjTp=Sg
+H=466
+Nm=Send_Lamp_Mode_Lamp_3
+]
+[
+ObjTp=Sg
+H=467
+Nm=Send_Lamp_Mode_Lamp_4
+]
+[
+ObjTp=Sg
+H=468
+Nm=Lamp_Mode_Lamps_1_2_In
+]
+[
+ObjTp=Sg
+H=469
+Nm=Lamp_Mode_Lamps_1_3_In
+]
+[
+ObjTp=Sg
+H=470
+Nm=Lamp_Mode_Lamps_1_4_In
+]
+[
+ObjTp=Sg
+H=471
+Nm=Lamp_Mode_Lamps_2_3_In
+]
+[
+ObjTp=Sg
+H=472
+Nm=Lamp_Mode_Lamps_2_4_In
+]
+[
+ObjTp=Sg
+H=473
+Nm=Lamp_Mode_Lamps_3_4_In
+]
+[
+ObjTp=Sg
+H=474
+Nm=Lamp_Mode_Lamp_1_In
+]
+[
+ObjTp=Sg
+H=475
+Nm=Lamp_Mode_Lamp_2_In
+]
+[
+ObjTp=Sg
+H=476
+Nm=Lamp_Mode_Lamp_3_In
+]
+[
+ObjTp=Sg
+H=477
+Nm=Lamp_Mode_Lamp_4_In
+]
+[
+ObjTp=Sg
+H=478
+Nm=Lamp_Mode_Is_Lamps_1_2
+]
+[
+ObjTp=Sg
+H=479
+Nm=Lamp_Mode_Is_Lamps_1_3
+]
+[
+ObjTp=Sg
+H=480
+Nm=Lamp_Mode_Is_Lamps_1_4
+]
+[
+ObjTp=Sg
+H=481
+Nm=Lamp_Mode_Is_Lamps_2_3
+]
+[
+ObjTp=Sg
+H=482
+Nm=Lamp_Mode_Is_Lamps_2_4
+]
+[
+ObjTp=Sg
+H=483
+Nm=Lamp_Mode_Is_Lamps_3_4
+]
+[
+ObjTp=Sg
+H=484
+Nm=Lamp_Mode_Is_Lamp_1
+]
+[
+ObjTp=Sg
+H=485
+Nm=Lamp_Mode_Is_Lamp_2
+]
+[
+ObjTp=Sg
+H=486
+Nm=Lamp_Mode_Is_Lamp_3
+]
+[
+ObjTp=Sg
+H=487
+Nm=Lamp_Mode_Is_Lamp_4
+]
+[
+ObjTp=Sg
+H=488
+Nm=All_Clear_15s
+]
+[
+ObjTp=Sg
+H=489
+Nm=Send_Power_Query
+]
+[
+ObjTp=Sg
+H=490
+Nm=Send_Input_Query
+]
+[
+ObjTp=Sg
+H=491
+Nm=Send_Aspect_Query
+]
+[
+ObjTp=Sg
+H=492
+Nm=Send_PIP_Input_Query
+]
+[
+ObjTp=Sg
+H=493
+Nm=Send_PIP_Position_Query
+]
+[
+ObjTp=Sg
+H=494
+Nm=Send_PIP_Mode_Query
+]
+[
+ObjTp=Sg
+H=495
+Nm=Send_PIP_Size_Query
+]
+[
+ObjTp=Sg
+H=496
+Nm=Send_*3D_Query
+]
+[
+ObjTp=Sg
+H=497
+Nm=Send_*3D_Mult_Query
+]
+[
+ObjTp=Sg
+H=498
+Nm=Send_*3D_Format_Query
+]
+[
+ObjTp=Sg
+H=499
+Nm=Send_*3D_Darktime_Query
+]
+[
+ObjTp=Sg
+H=500
+Nm=Send_*3D_Dominance_Query
+]
+[
+ObjTp=Sg
+H=501
+Nm=Send_*3D_Polarity_Query
+]
+[
+ObjTp=Sg
+H=502
+Nm=Send_*3D_SDI_Stream_Query
+]
+[
+ObjTp=Sg
+H=503
+Nm=Send_Freeze_Query
+]
+[
+ObjTp=Sg
+H=504
+Nm=Send_Lamp_Mode_Query
+]
+[
+ObjTp=Sg
+H=505
+Nm=Send_Shutter_Query
+]
+[
+ObjTp=Sg
+H=506
+Nm=Send_Brightness_Query
+]
+[
+ObjTp=Sg
+H=507
+Nm=Send_Contrast_Query
+]
+[
+ObjTp=Sg
+H=508
+Nm=Send_PIP_H_Pos_Query
+]
+[
+ObjTp=Sg
+H=509
+Nm=Send_PIP_V_Pos_Query
+]
+[
+ObjTp=Sg
+H=510
+Nm=Send_Lamp_1_Hours_Query
+]
+[
+ObjTp=Sg
+H=511
+Nm=Send_Lamp_2_Hours_Query
+]
+[
+ObjTp=Sg
+H=512
+Nm=Send_Lamp_3_Hours_Query
+]
+[
+ObjTp=Sg
+H=513
+Nm=Send_Lamp_4_Hours_Query
+]
+[
+ObjTp=Sg
+H=514
+Nm=Send_Lamp_1_Strikes_Query
+]
+[
+ObjTp=Sg
+H=515
+Nm=Send_Lamp_4_Strikes_Query
+]
+[
+ObjTp=Sg
+H=516
+Nm=Send_Lamp_2_Strikes_Query
+]
+[
+ObjTp=Sg
+H=517
+Nm=Send_Lamp_3_Strikes_Query
+]
+[
+ObjTp=Sg
+H=518
+Nm=Lamp_1_Hours_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=519
+Nm=Lamp_2_Hours_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=520
+Nm=Lamp_3_Hours_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=521
+Nm=Lamp_4_Hours_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=522
+Nm=Lamp_2_Strikes_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=523
+Nm=Lamp_3_Strikes_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=524
+Nm=Lamp_4_Strikes_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=525
+Nm=All_Clear
+]
+[
+ObjTp=Sg
+H=526
+Nm=Lamp_1_Strikes_Text
+SgTp=4
+]
+[
+ObjTp=Sg
+H=527
+Nm=Poll_OSC
+]
+[
+ObjTp=Sg
+H=528
+Nm=Input_Query_RC
+]
+[
+ObjTp=Sg
+H=529
+Nm=Aspect_Query_RC
+]
+[
+ObjTp=Sg
+H=530
+Nm=PIP_Mode_Query_RC
+]
+[
+ObjTp=Sg
+H=531
+Nm=PIP_Input_Query_RC
+]
+[
+ObjTp=Sg
+H=532
+Nm=PIP_Size_Query_RC
+]
+[
+ObjTp=Sg
+H=533
+Nm=PIP_Position_Query_RC
+]
+[
+ObjTp=Sg
+H=534
+Nm=*3D_Query_RC
+]
+[
+ObjTp=Sg
+H=535
+Nm=*3D_Mult_Query_RC
+]
+[
+ObjTp=Sg
+H=536
+Nm=*3D_Format_Query_RC
+]
+[
+ObjTp=Sg
+H=537
+Nm=*3D_Darktime_Query_RC
+]
+[
+ObjTp=Sg
+H=538
+Nm=*3D_Polarity_Query_RC
+]
+[
+ObjTp=Sg
+H=539
+Nm=*3D_Dominance_Query_RC
+]
+[
+ObjTp=Sg
+H=540
+Nm=*3D_SDI_Stream_Query_RC
+]
+[
+ObjTp=Sg
+H=541
+Nm=Shutter_Query_RC
+]
+[
+ObjTp=Sg
+H=542
+Nm=Freeze_Query_RC
+]
+[
+ObjTp=Sg
+H=543
+Nm=Lamp_Mode_Query_RC
+]
+[
+ObjTp=Sg
+H=544
+Nm=Brightness_Query_RC
+]
+[
+ObjTp=Sg
+H=545
+Nm=Contrast_Query_RC
+]
+[
+ObjTp=Sg
+H=546
+Nm=PIP_H_Pos_Query_RC
+]
+[
+ObjTp=Sg
+H=547
+Nm=PIP_V_Pos_Query_RC
+]
+[
+ObjTp=Sg
+H=548
+Nm=Lamp_1_Hours_Query_RC
+]
+[
+ObjTp=Sg
+H=549
+Nm=Lamp_2_Hours_Query_RC
+]
+[
+ObjTp=Sg
+H=550
+Nm=Lamp_3_Hours_Query_RC
+]
+[
+ObjTp=Sg
+H=551
+Nm=Lamp_4_Hours_Query_RC
+]
+[
+ObjTp=Sg
+H=552
+Nm=Lamp_1_Strikes_Query_RC
+]
+[
+ObjTp=Sg
+H=553
+Nm=Lamp_2_Strikes_Query_RC
+]
+[
+ObjTp=Sg
+H=554
+Nm=Lamp_3_Strikes_Query_RC
+]
+[
+ObjTp=Sg
+H=555
+Nm=Lamp_4_Strikes_Query_RC
+]
+[
+ObjTp=Sg
+H=556
+Nm=Start_Pulse
+]
+[
+ObjTp=Sg
+H=557
+Nm=Power_Query_RC
+]
+[
+ObjTp=Sg
+H=558
+Nm=Please_Wait
+]
+[
+ObjTp=Sg
+H=559
+Nm=Power_Toggle_Pulse
+]
+[
+ObjTp=Sg
+H=560
+Nm=Power_On_EQU
+]
+[
+ObjTp=Sg
+H=561
+Nm=Power_Off_EQU
+]
+[
+ObjTp=Sg
+H=562
+Nm=Power_Off_BU
+]
+[
+ObjTp=Sg
+H=563
+Nm=Power_On_BU
+]
+[
+ObjTp=Sg
+H=564
+Nm=Shutter_Toggle
+]
+[
+ObjTp=Sg
+H=565
+Nm=Shutter_Toggle_Pulse
+]
+[
+ObjTp=Sg
+H=566
+Nm=Shutter_Open_EQU
+]
+[
+ObjTp=Sg
+H=567
+Nm=Shutter_Close_EQU
+]
+[
+ObjTp=Sg
+H=568
+Nm=Shutter_Close_BU
+]
+[
+ObjTp=Sg
+H=569
+Nm=Shutter_Open_BU
+]
+[
+ObjTp=Sg
+H=570
+Nm=Freeze_Toggle_Pulse
+]
+[
+ObjTp=Sg
+H=571
+Nm=Freeze_Toggle
+]
+[
+ObjTp=Sg
+H=572
+Nm=Freeze_On_EQU
+]
+[
+ObjTp=Sg
+H=573
+Nm=Freeze_Off_EQU
+]
+[
+ObjTp=Sg
+H=574
+Nm=Freeze_Off_BU
+]
+[
+ObjTp=Sg
+H=575
+Nm=Freeze_On_BU
+]
+[
+ObjTp=Sg
+H=580
+Nm=Query_Power
+]
+[
+ObjTp=Sg
+H=581
+Nm=Query_Input
+]
+[
+ObjTp=Sg
+H=582
+Nm=Query_Contrast
+]
+[
+ObjTp=Sg
+H=583
+Nm=Query_Brightness
+]
+[
+ObjTp=Sg
+H=584
+Nm=Query_PIP_H_Pos
+]
+[
+ObjTp=Sg
+H=585
+Nm=Query_PIP_V_Pos
+]
+[
+ObjTp=Sg
+H=586
+Nm=Send_Power_Query_RC_Pulse
+]
+[
+ObjTp=Sg
+H=587
+Nm=Send_Input_Query_RC_Pulse
+]
+[
+ObjTp=Sg
+H=588
+Nm=Send_Shutter_Query_RC_Pulse
+]
+[
+ObjTp=Sg
+H=589
+Nm=Send_PIP_H_Pos_Query_RC_Pulse
+]
+[
+ObjTp=Sg
+H=590
+Nm=Send_PIP_V_Pos_Query_RC_Pulse
+]
+[
+ObjTp=Sg
+H=591
+Nm=Send_Brightness_Query_RC_Pulse
+]
+[
+ObjTp=Sg
+H=592
+Nm=Send_Contrast_Query_RC_Pulse
+]
+[
+ObjTp=Sg
+H=593
+Nm=Query_Shutter
+]
+[
+ObjTp=Sg
+H=594
+Nm=[~UNUSED~]
+SgTp=31
+]
+[
+ObjTp=Dp
+H=2
+Tp=2
+DT=1
+FD1=Pulse to turn unit on.
+SD=Power On
+Trg=2
+Cmd=166
+]
+[
+ObjTp=Dp
+H=3
+Tp=2
+DT=1
+FD1=Pulse to turn unit off.
+SD=Power Off
+Trg=2
+Cmd=165
+]
+[
+ObjTp=Dp
+H=4
+Tp=2
+DT=1
+FD1=Pulse to turn unit on or off.
+SD=Power Toggle
+Trg=2
+Cmd=164
+]
+[
+ObjTp=Dp
+H=5
+Tp=2
+DT=1
+FD1=Pulse to select input CVBS1.
+SD=Input CVBS1
+Trg=2
+Cmd=239
+]
+[
+ObjTp=Dp
+H=6
+Tp=2
+DT=1
+FD1=Pulse to select input CVBS2.
+SD=Input CVBS2
+Trg=2
+Cmd=240
+]
+[
+ObjTp=Dp
+H=7
+Tp=2
+DT=1
+FD1=Pulse to select input s-video.
+SD=Input S-Video
+Trg=2
+Cmd=283
+]
+[
+ObjTp=Dp
+H=8
+Tp=2
+DT=1
+FD1=Pulse to select input component.
+SD=Input Component
+Trg=2
+Cmd=363
+]
+[
+ObjTp=Dp
+H=9
+Tp=2
+DT=1
+FD1=Pulse to select input VGA.
+SD=Input VGA
+Trg=2
+Cmd=115
+]
+[
+ObjTp=Dp
+H=10
+Tp=2
+DT=1
+FD1=Pulse to select input 3G-SDI.
+SD=Input 3G-SDI
+Trg=2
+Cmd=117
+]
+[
+ObjTp=Dp
+H=11
+Tp=2
+DT=1
+FD1=Pulse to select input DVI.
+SD=Input DVI
+Trg=2
+Cmd=375
+]
+[
+ObjTp=Dp
+H=12
+Tp=2
+DT=1
+FD1=Pulse to select input HDMI.
+SD=Input HDMI
+Trg=2
+Cmd=406
+]
+[
+ObjTp=Dp
+H=13
+Tp=2
+DT=1
+FD1=Pulse to select input test pattern.
+SD=Input Test Pattern
+Trg=2
+]
+[
+ObjTp=Dp
+H=14
+Tp=2
+DT=1
+FD1=Pulse to select input main/DVI.
+SD=Input Main/DVI
+Trg=2
+]
+[
+ObjTp=Dp
+H=15
+Tp=2
+DT=1
+FD1=Pulse to select input sub/HDMI.
+SD=Input Sub/HDMI
+Trg=2
+]
+[
+ObjTp=Dp
+H=16
+Tp=2
+DT=1
+FD1=Pulse to select input dual pipe.
+SD=Input Dual Pipe
+Trg=2
+]
+[
+ObjTp=Dp
+H=17
+Tp=2
+DT=1
+FD1=Pulse to select aspect source.
+SD=Aspect Source
+Trg=2
+Cmd=368
+]
+[
+ObjTp=Dp
+H=18
+Tp=2
+DT=1
+FD1=Pulse to select aspect fill & display.
+SD=Aspect Fill & Display
+Trg=2
+Cmd=400
+]
+[
+ObjTp=Dp
+H=19
+Tp=2
+DT=1
+FD1=Pulse to select aspect fill & crop.
+SD=Aspect Fill & Crop
+Trg=2
+Cmd=401
+]
+[
+ObjTp=Dp
+H=20
+Tp=2
+DT=1
+FD1=Pulse to select aspect anamorphic.
+SD=Aspect Anamorphic
+Trg=2
+Cmd=369
+]
+[
+ObjTp=Dp
+H=21
+Tp=2
+DT=1
+FD1=Pulse to select aspect theaterscope.
+SD=Aspect TheaterScope
+Trg=2
+]
+[
+ObjTp=Dp
+H=22
+Tp=2
+DT=1
+FD1=Pulse to set PIP mode to off.
+SD=PIP Mode Off.
+Trg=2
+]
+[
+ObjTp=Dp
+H=23
+Tp=2
+DT=1
+FD1=Pulse to set PIP mode to PIP.
+SD=PIP Mode PIP
+Trg=2
+]
+[
+ObjTp=Dp
+H=24
+Tp=2
+DT=1
+FD1=Pulse to set PIP mode to PAP.
+SD=PIP Mode PAP
+Trg=2
+]
+[
+ObjTp=Dp
+H=25
+Tp=2
+DT=1
+FD1=Pulse to set PIP mode to POP.
+SD=PIP Mode POP
+Trg=2
+]
+[
+ObjTp=Dp
+H=26
+Tp=2
+DT=1
+FD1=Pulse to set PIP input to CVBS1.
+SD=PIP Input CVBS1.
+Trg=2
+]
+[
+ObjTp=Dp
+H=27
+Tp=2
+DT=1
+FD1=Pulse to set PIP input to CVBS2.
+SD=PIP Input CVBS2.
+Trg=2
+]
+[
+ObjTp=Dp
+H=28
+Tp=2
+DT=1
+FD1=Pulse to set PIP input to s-video.
+SD=PIP Input S-Video
+Trg=2
+]
+[
+ObjTp=Dp
+H=29
+Tp=2
+DT=1
+FD1=Pulse to set PIP input to component.
+SD=PIP Input Component.
+Trg=2
+]
+[
+ObjTp=Dp
+H=30
+Tp=2
+DT=1
+FD1=Pulse to set PIP input to VGA.
+SD=PIP Input VGA
+Trg=2
+]
+[
+ObjTp=Dp
+H=31
+Tp=2
+DT=1
+FD1=Pulse to set PIP input to 3G-SDI.
+SD=PIP Input 3G-SDI
+Trg=2
+]
+[
+ObjTp=Dp
+H=32
+Tp=2
+DT=1
+FD1=Pulse to set PIP input to DVI.
+SD=PIP Input DVI
+Trg=2
+]
+[
+ObjTp=Dp
+H=33
+Tp=2
+DT=1
+FD1=Pulse to set PIP input to HDMI.
+SD=PIP Input HDMI
+Trg=2
+]
+[
+ObjTp=Dp
+H=34
+Tp=2
+DT=1
+FD1=Pulse to set PIP size to small.
+SD=PIP Size Small
+Trg=2
+]
+[
+ObjTp=Dp
+H=35
+Tp=2
+DT=1
+FD1=Pulse to set PIP size to medium.
+SD=PIP Size Medium.
+Trg=2
+]
+[
+ObjTp=Dp
+H=36
+Tp=2
+DT=1
+FD1=Pulse to set PIP size to large.
+SD=PIP Size Large
+Trg=2
+]
+[
+ObjTp=Dp
+H=37
+Tp=2
+DT=1
+FD1=Pulse to set PIP position to top left.
+SD=PIP Position Top Left
+Trg=2
+]
+[
+ObjTp=Dp
+H=38
+Tp=2
+DT=1
+FD1=Pulse to set PIP position to top right.
+SD=PIP Position Top Right
+Trg=2
+]
+[
+ObjTp=Dp
+H=39
+Tp=2
+DT=1
+FD1=Pulse to set PIP position to bottom left.
+SD=PIP Position Bottom Left
+Trg=2
+]
+[
+ObjTp=Dp
+H=40
+Tp=2
+DT=1
+FD1=Pulse to set PIP position to bottom right.
+SD=PIP Position Bottom Right
+Trg=2
+]
+[
+ObjTp=Dp
+H=41
+Tp=2
+DT=1
+FD1=Pulse to set PIP position to custom.
+SD=PIP Position Custom
+Trg=2
+]
+[
+ObjTp=Dp
+H=42
+Tp=2
+DT=1
+FD1=Press to adjust the custom PIP horizontal position.
+SD=PIP H Position Right
+Trg=2
+]
+[
+ObjTp=Dp
+H=43
+Tp=2
+DT=1
+FD1=Press to adjust the custom PIP horizontal position.
+SD=PIP H Position Left
+Trg=2
+]
+[
+ObjTp=Dp
+H=44
+Tp=2
+DT=1
+FD1=Press to adjust the custom PIP vertical position.
+SD=PIP V Position Up
+Trg=2
+]
+[
+ObjTp=Dp
+H=45
+Tp=2
+DT=1
+FD1=Press to adjust the custom PIP vertical position.
+SD=PIP V Position Down
+Trg=2
+]
+[
+ObjTp=Dp
+H=46
+Tp=2
+DT=1
+FD1=Pulse to turn 3D on.
+SD=3D On
+Trg=2
+]
+[
+ObjTp=Dp
+H=47
+Tp=2
+DT=1
+FD1=Pulse to turn 3D off.
+SD=3D Off
+Trg=2
+]
+[
+ObjTp=Dp
+H=48
+Tp=2
+DT=1
+FD1=Pulse to adjust the 3D multiplier value.
+SD=3D Mult 1X
+Trg=2
+]
+[
+ObjTp=Dp
+H=49
+Tp=2
+DT=1
+FD1=Pulse to adjust the 3D multiplier value.
+SD=3D Mult 2X
+Trg=2
+]
+[
+ObjTp=Dp
+H=50
+Tp=2
+DT=1
+FD1=Pulse to adjust the 3D multiplier value.
+SD=3D Mult 3X
+Trg=2
+]
+[
+ObjTp=Dp
+H=51
+Tp=2
+DT=1
+FD1=Pulse to set 3D format to auto.
+SD=3D Format Auto
+Trg=2
+]
+[
+ObjTp=Dp
+H=52
+Tp=2
+DT=1
+FD1=Pulse to set 3D format to frame sequential.
+SD=3D Format SEQ
+Trg=2
+]
+[
+ObjTp=Dp
+H=53
+Tp=2
+DT=1
+FD1=Pulse to set 3D format to frame packing.
+SD=3D Format FPack
+Trg=2
+]
+[
+ObjTp=Dp
+H=54
+Tp=2
+DT=1
+FD1=Pulse to set 3D format to top and bottom.
+SD=3D Format TaB
+Trg=2
+]
+[
+ObjTp=Dp
+H=55
+Tp=2
+DT=1
+FD1=Pulse to set 3D format to side by side.
+SD=3D Format SBS
+Trg=2
+]
+[
+ObjTp=Dp
+H=56
+Tp=2
+DT=1
+FD1=Pulse to set the 3D darktime to 0us.
+SD=3D Darktime 0us
+Trg=2
+]
+[
+ObjTp=Dp
+H=57
+Tp=2
+DT=1
+FD1=Pulse to set the 3D darktime to 650us.
+SD=3D Darktime 650us
+Trg=2
+]
+[
+ObjTp=Dp
+H=58
+Tp=2
+DT=1
+FD1=Pulse to set the 3D darktime to 1300us.
+SD=3D Darktime 1300us
+Trg=2
+]
+[
+ObjTp=Dp
+H=59
+Tp=2
+DT=1
+FD1=Pulse to set the 3D darktime to 7500us.
+SD=3D Darktime 7500us
+Trg=2
+]
+[
+ObjTp=Dp
+H=60
+Tp=2
+DT=1
+FD1=Pulse to set 3D polarity to positive.
+SD=3D Polarity Positive
+Trg=2
+]
+[
+ObjTp=Dp
+H=61
+Tp=2
+DT=1
+FD1=Pulse to set 3D polarity to negative.
+SD=3D Polarity Negative
+Trg=2
+]
+[
+ObjTp=Dp
+H=62
+Tp=2
+DT=1
+FD1=Pulse to set 3D dominance to left.
+SD=3D Dominance Left
+Trg=2
+]
+[
+ObjTp=Dp
+H=63
+Tp=2
+DT=1
+FD1=Pulse to set 3D dominance to right.
+SD=3D Dominance Right
+Trg=2
+]
+[
+ObjTp=Dp
+H=64
+Tp=2
+DT=1
+FD1=Pulse to set SDI stream to 1.
+SD=3D SDI Stream 1
+Trg=2
+]
+[
+ObjTp=Dp
+H=65
+Tp=2
+DT=1
+FD1=Pulse to set SDI stream to 2.
+SD=3D SDI Stream 2
+Trg=2
+]
+[
+ObjTp=Dp
+H=66
+Tp=2
+DT=1
+FD1=Pulse to open shutter.
+SD=Shutter Open
+Trg=2
+Cmd=380
+]
+[
+ObjTp=Dp
+H=67
+Tp=2
+DT=1
+FD1=Pulse to close shutter.
+SD=Shutter Close
+Trg=2
+Cmd=381
+]
+[
+ObjTp=Dp
+H=68
+Tp=2
+DT=1
+FD1=Pulse to open or close shutter.
+SD=Shutter Toggle
+Trg=2
+Cmd=379
+]
+[
+ObjTp=Dp
+H=69
+Tp=2
+DT=1
+FD1=Pulse to turn freeze on.
+SD=Freeze On
+Trg=2
+Cmd=111
+]
+[
+ObjTp=Dp
+H=70
+Tp=2
+DT=1
+FD1=Pulse to turn freeze off.
+SD=Freeze Off
+Trg=2
+Cmd=110
+]
+[
+ObjTp=Dp
+H=71
+Tp=2
+DT=1
+FD1=Pulse to turn freeze on or off.
+SD=Freeze Toggle
+Trg=2
+Cmd=109
+]
+[
+ObjTp=Dp
+H=72
+Tp=2
+DT=1
+FD1=Press to adjust lens position.
+SD=Lens Up
+Trg=2
+Cmd=236
+]
+[
+ObjTp=Dp
+H=73
+Tp=2
+DT=1
+FD1=Press to adjust lens position.
+SD=Lens Down
+Trg=2
+Cmd=96
+]
+[
+ObjTp=Dp
+H=74
+Tp=2
+DT=1
+FD1=Press to adjust lens position.
+SD=Lens Left
+Trg=2
+Cmd=138
+]
+[
+ObjTp=Dp
+H=75
+Tp=2
+DT=1
+FD1=Press to adjust lens position.
+SD=Lens Right
+Trg=2
+Cmd=191
+]
+[
+ObjTp=Dp
+H=76
+Tp=2
+DT=1
+FD1=Pulse to center the lens.
+SD=Lens Center
+Trg=2
+]
+[
+ObjTp=Dp
+H=77
+Tp=2
+DT=1
+FD1=Press to zoom in.
+SD=Zoom In
+Trg=2
+Cmd=246
+]
+[
+ObjTp=Dp
+H=78
+Tp=2
+DT=1
+FD1=Press to zoom out.
+SD=Zoom Out
+Trg=2
+Cmd=245
+]
+[
+ObjTp=Dp
+H=79
+Tp=2
+DT=1
+FD1=Press to focus near.
+SD=Focus Near
+Trg=2
+Cmd=108
+]
+[
+ObjTp=Dp
+H=80
+Tp=2
+DT=1
+FD1=Press to focus far.
+SD=Focus Far
+Trg=2
+Cmd=107
+]
+[
+ObjTp=Dp
+H=81
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 1.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 1.
+SD=Lens Preset 1
+Trg=2
+]
+[
+ObjTp=Dp
+H=82
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 2.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 2.
+SD=Lens Preset 2
+Trg=2
+]
+[
+ObjTp=Dp
+H=83
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 3.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 3.
+SD=Lens Preset 3
+Trg=2
+]
+[
+ObjTp=Dp
+H=84
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 4.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 4.
+SD=Lens Preset 4
+Trg=2
+]
+[
+ObjTp=Dp
+H=85
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 5.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 5.
+SD=Lens Preset 5
+Trg=2
+]
+[
+ObjTp=Dp
+H=86
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 6.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 6.
+SD=Lens Preset 6
+Trg=2
+]
+[
+ObjTp=Dp
+H=87
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 7.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 7.
+SD=Lens Preset 7.
+Trg=2
+]
+[
+ObjTp=Dp
+H=88
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 8.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 8.
+SD=Lens Preset 8
+Trg=2
+]
+[
+ObjTp=Dp
+H=89
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 9.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 9.
+SD=Lens Preset 9
+Trg=2
+]
+[
+ObjTp=Dp
+H=90
+Tp=2
+DT=1
+FD1=Pulse to select lens preset 10.  Press and hold for 5 seconds to||1
+FD2=store current settings to lens preset 10.
+SD=Lens Preset 10
+Trg=2
+]
+[
+ObjTp=Dp
+H=91
+Tp=2
+DT=1
+FD1=Press to adjust brightness.
+SD=Brightness Up
+Trg=2
+Cmd=29
+]
+[
+ObjTp=Dp
+H=92
+Tp=2
+DT=1
+FD1=Press to adjust brightness.
+SD=Brightness Down
+Trg=2
+Cmd=28
+]
+[
+ObjTp=Dp
+H=93
+Tp=2
+DT=1
+FD1=Press to adjust contrast.
+SD=Contrast Up
+Trg=2
+Cmd=38
+]
+[
+ObjTp=Dp
+H=94
+Tp=2
+DT=1
+FD1=Press to adjust contrast.
+SD=Contrast Down
+Trg=2
+Cmd=37
+]
+[
+ObjTp=Dp
+H=95
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode "both" for a dual lamp projector or "all"||1
+FD2=for a quad lamp projector.
+SD=Lamp Mode Both(Dual)/All(Quad)
+Trg=2
+]
+[
+ObjTp=Dp
+H=96
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode "lamp 1" for a dual lamp projector or||1
+FD2="auto 3" for a quad lamp projector.
+SD=Lamp Mode Lamp 1(Dual)/Auto 3(Quad)
+Trg=2
+]
+[
+ObjTp=Dp
+H=97
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode "lamp 2" for a dual lamp projector or||1
+FD2="auto 2" for a quad lamp projector.
+SD=Lamp Mode Lamp 2(Dual)/Auto 2(Quad)
+Trg=2
+]
+[
+ObjTp=Dp
+H=98
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode auto 1.
+SD=Lamp Mode Auto 1
+Trg=2
+]
+[
+ObjTp=Dp
+H=99
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 1, 2 and 3.
+SD=Lamp Mode Lamps 1 2 3
+Trg=2
+]
+[
+ObjTp=Dp
+H=100
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 1, 2 and 4.
+SD=Lamp Mode Lamps 1 2 4
+Trg=2
+]
+[
+ObjTp=Dp
+H=101
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 1, 3 and 4.
+SD=Lamp Mode Lamps 1 3 4
+Trg=2
+]
+[
+ObjTp=Dp
+H=102
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 2, 3 and 4.
+SD=Lamp Mode Lamps 2 3 4
+Trg=2
+]
+[
+ObjTp=Dp
+H=103
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 1 and 2.
+SD=Lamp Mode Lamps 1 2
+Trg=2
+]
+[
+ObjTp=Dp
+H=104
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 1 and 3.
+SD=Lamp Mode Lamps 1 3
+Trg=2
+]
+[
+ObjTp=Dp
+H=105
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 1 and 4.
+SD=Lamp Mode Lamps 1 4
+Trg=2
+]
+[
+ObjTp=Dp
+H=106
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 2 and 3.
+SD=Lamp Mode Lamps 2 3
+Trg=2
+]
+[
+ObjTp=Dp
+H=107
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 2 and 4.
+SD=Lamp Mode Lamps 2 4
+Trg=2
+]
+[
+ObjTp=Dp
+H=108
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamps 3 and 4.
+SD=Lamp Mode Lamps 3 4
+Trg=2
+]
+[
+ObjTp=Dp
+H=109
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamp 1.
+SD=Lamp Mode Lamps 1
+Trg=2
+]
+[
+ObjTp=Dp
+H=110
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamp 2.
+SD=Lamp Mode Lamps 2
+Trg=2
+]
+[
+ObjTp=Dp
+H=111
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamp 3.
+SD=Lamp Mode Lamps 3
+Trg=2
+]
+[
+ObjTp=Dp
+H=112
+Tp=2
+DT=1
+FD1=Pulse to select lamp mode lamp 4.
+SD=Lamp Mode Lamps 4
+Trg=2
+]
+[
+ObjTp=Dp
+H=116
+Tp=3
+DT=1
+FD1=Indicates that the power is on.
+SD=Power Is On
+RE=Power On
+HS=Power Is On
+]
+[
+ObjTp=Dp
+H=117
+Tp=3
+DT=1
+FD1=Indicates that the power is off.
+SD=Power Is Off
+RE=Power Off
+HS=Power Is Off
+]
+[
+ObjTp=Dp
+H=118
+Tp=3
+DT=1
+FD1=Indicates that the input is CVBS1.
+SD=Input Is CVBS1
+RE=Input CVBS1
+HS=Input Is CVBS1
+]
+[
+ObjTp=Dp
+H=119
+Tp=3
+DT=1
+FD1=Indicates that the input is CVBS2.
+SD=Input Is CVBS2
+RE=Input CVBS2
+HS=Input Is CVBS2
+]
+[
+ObjTp=Dp
+H=120
+Tp=3
+DT=1
+FD1=Indicates that the input is s-video.
+SD=Input Is S-Video
+RE=Input S-Video
+HS=Input Is S-Video
+]
+[
+ObjTp=Dp
+H=121
+Tp=3
+DT=1
+FD1=Indicates that the input is component.
+SD=Input Is Component
+RE=Input Component
+HS=Input Is Component
+]
+[
+ObjTp=Dp
+H=122
+Tp=3
+DT=1
+FD1=Indicates that the input is VGA.
+SD=Input Is VGA
+RE=Input VGA
+HS=Input Is VGA
+]
+[
+ObjTp=Dp
+H=123
+Tp=3
+DT=1
+FD1=Indicates that the input is 3G-SDI.
+SD=Input Is 3G-SDI
+RE=Input 3G-SDI
+HS=Input Is 3G-SDI
+]
+[
+ObjTp=Dp
+H=124
+Tp=3
+DT=1
+FD1=Indicates that the input is DVI.
+SD=Input Is DVI
+RE=Input DVI
+HS=Input Is DVI
+]
+[
+ObjTp=Dp
+H=125
+Tp=3
+DT=1
+FD1=Indicates that the input is HDMI.
+SD=Input Is HDMI
+RE=Input HDMI
+HS=Input Is HDMI
+]
+[
+ObjTp=Dp
+H=126
+Tp=3
+DT=1
+FD1=Indicates that the input is test pattern.
+SD=Input Is Test Pattern
+RE=Input Test Pattern
+HS=Input Is Test Pattern
+]
+[
+ObjTp=Dp
+H=127
+Tp=3
+DT=1
+FD1=Indicates that the input is Main/DVI.
+SD=Input Is Main/DVI
+RE=Input Main/DVI
+HS=Input Is Main/DVI
+]
+[
+ObjTp=Dp
+H=128
+Tp=3
+DT=1
+FD1=Indicates that the input is Sub/HDMI.
+SD=Input Is Sub/HDMI
+RE=Input Sub/HDMI
+HS=Input Is Sub/HDMI
+]
+[
+ObjTp=Dp
+H=129
+Tp=3
+DT=1
+FD1=Indicates that the input is dual pipe.
+SD=Input Is Dual Pipe
+RE=Input Dual Pipe
+HS=Input Is Dual Pipe
+]
+[
+ObjTp=Dp
+H=130
+Tp=3
+DT=1
+FD1=Indicates that aspect is set to source.
+SD=Aspect Is Source
+RE=Aspect Source
+HS=Aspect Is Source
+]
+[
+ObjTp=Dp
+H=131
+Tp=3
+DT=1
+FD1=Indicates that aspect is set to fill & display.
+SD=Aspect Is Fill & Display
+RE=Aspect Fill & Display
+HS=Aspect Is Fill & Display
+]
+[
+ObjTp=Dp
+H=132
+Tp=3
+DT=1
+FD1=Indicates that aspect is set to fill & crop.
+SD=Aspect Is Fill & Crop
+RE=Aspect Fill & Crop
+HS=Aspect Is Fill & Crop
+]
+[
+ObjTp=Dp
+H=133
+Tp=3
+DT=1
+FD1=Indicates that aspect is set to anamorphic.
+SD=Aspect Is Anamorphic
+RE=Aspect Anamorphic
+HS=Aspect Is Anamorphic
+]
+[
+ObjTp=Dp
+H=134
+Tp=3
+DT=1
+FD1=Indicates that aspect is set to theaterscope.
+SD=Aspect Is TheaterScope
+RE=Aspect TheaterScope
+HS=Aspect Is TheaterScope
+]
+[
+ObjTp=Dp
+H=135
+Tp=3
+DT=1
+FD1=Indicates that the PIP mode is set to off.
+SD=PIP Mode Is Off
+RE=PIP Mode Off
+HS=PIP Mode Is Off
+]
+[
+ObjTp=Dp
+H=136
+Tp=3
+DT=1
+FD1=Indicates that the PIP mode is set to PIP.
+SD=PIP Mode Is PIP
+RE=PIP Mode PIP
+HS=PIP Mode Is PIP
+]
+[
+ObjTp=Dp
+H=137
+Tp=3
+DT=1
+FD1=Indicates that the PIP mode is set to PAP.
+SD=PIP Mode Is PAP
+RE=PIP Mode PAP
+HS=PIP Mode Is PAP
+]
+[
+ObjTp=Dp
+H=138
+Tp=3
+DT=1
+FD1=Indicates that the PIP mode is set to POP.
+SD=PIP Mode Is POP
+RE=PIP Mode POP
+HS=PIP Mode Is POP
+]
+[
+ObjTp=Dp
+H=139
+Tp=3
+DT=1
+FD1=Indicates that the PIP input is currently CVBS1.
+SD=PIP Input Is CVBS1
+RE=PIP Input CVBS1
+HS=PIP Input Is CVBS1
+]
+[
+ObjTp=Dp
+H=140
+Tp=3
+DT=1
+FD1=Indicates that the PIP input is currently CVBS2.
+SD=PIP Input Is CVBS2
+RE=PIP Input CVBS2
+HS=PIP Input Is CVBS2
+]
+[
+ObjTp=Dp
+H=141
+Tp=3
+DT=1
+FD1=Indicates that the PIP input is currently s-video.
+SD=PIP Input Is S-Video
+RE=PIP Input S-Video
+HS=PIP Input Is S-Video
+]
+[
+ObjTp=Dp
+H=142
+Tp=3
+DT=1
+FD1=Indicates that the PIP input is currently component.
+SD=PIP Input Is Component
+RE=PIP Input Component
+HS=PIP Input Is Component
+]
+[
+ObjTp=Dp
+H=143
+Tp=3
+DT=1
+FD1=Indicates that the PIP input is currently VGA.
+SD=PIP Input Is VGA
+RE=PIP Input VGA
+HS=PIP Input Is VGA
+]
+[
+ObjTp=Dp
+H=144
+Tp=3
+DT=1
+FD1=Indicates that the PIP input is currently 3G-SDI.
+SD=PIP Input Is 3G-SDI
+RE=PIP Input 3G-SDI
+HS=PIP Input Is 3G-SDI
+]
+[
+ObjTp=Dp
+H=145
+Tp=3
+DT=1
+FD1=Indicates that the PIP input is currently DVI.
+SD=PIP Input Is DVI
+RE=PIP Input DVI
+HS=PIP Input Is DVI
+]
+[
+ObjTp=Dp
+H=146
+Tp=3
+DT=1
+FD1=Indicates that the PIP input is currently HDMI.
+SD=PIP Input Is HDMI
+RE=PIP Input HDMI
+HS=PIP Input Is HDMI
+]
+[
+ObjTp=Dp
+H=147
+Tp=3
+DT=1
+FD1=Indicates that the PIP size is currently small.
+SD=PIP Size Is Small
+RE=PIP Size Small
+HS=PIP Size Is Small
+]
+[
+ObjTp=Dp
+H=148
+Tp=3
+DT=1
+FD1=Indicates that the PIP size is currently medium.
+SD=PIP Size Is Medium
+RE=PIP Size Medium
+HS=PIP Size Is Medium
+]
+[
+ObjTp=Dp
+H=149
+Tp=3
+DT=1
+FD1=Indicates that the PIP size is currently large.
+SD=PIP Size Is Large
+RE=PIP Size Large
+HS=PIP Size Is Large
+]
+[
+ObjTp=Dp
+H=150
+Tp=3
+DT=1
+FD1=Indicates that the PIP position is set to top left.
+SD=PIP Position Is Top Left
+RE=PIP Position Top Left
+HS=PIP Position Is Top Left
+]
+[
+ObjTp=Dp
+H=151
+Tp=3
+DT=1
+FD1=Indicates that the PIP position is set to top right.
+SD=PIP Position Is Top Right
+RE=PIP Position Top Right
+HS=PIP Position Is Top Right
+]
+[
+ObjTp=Dp
+H=152
+Tp=3
+DT=1
+FD1=Indicates that the PIP position is set to bottom left.
+SD=PIP Position Is Bottom Left
+RE=PIP Position Bottom Left
+HS=PIP Position Is Bottom Left
+]
+[
+ObjTp=Dp
+H=153
+Tp=3
+DT=1
+FD1=Indicates that the PIP position is set to bottom right.
+SD=PIP Position Is Bottom Right
+RE=PIP Position Bottom Right
+HS=PIP Position Is Bottom Right
+]
+[
+ObjTp=Dp
+H=154
+Tp=3
+DT=1
+FD1=Indicates that the PIP position is set to custom.
+SD=PIP Position Is Custom
+RE=PIP Position Custom
+HS=PIP Position Is Custom
+]
+[
+ObjTp=Dp
+H=155
+Tp=5
+FD1=Indicates the custom PIP horizontal position for a gauge object.
+SD=PIP H Position Gauge
+DNF=1
+]
+[
+ObjTp=Dp
+H=156
+Tp=7
+DT=4
+FD1=Indicates the custom PIP horizontal position for an indirect text||1
+FD2=field.
+SD=PIP H Position Text
+]
+[
+ObjTp=Dp
+H=157
+Tp=5
+FD1=Indicates the custom PIP vertical position for a gauge object.
+SD=PIP V Position Gauge
+DNF=1
+]
+[
+ObjTp=Dp
+H=158
+Tp=7
+DT=4
+FD1=Indicates the custom PIP vertical position for an indirect text||1
+FD2=field.
+SD=PIP V Position Text
+]
+[
+ObjTp=Dp
+H=159
+Tp=3
+DT=1
+FD1=Indicates that 3D is currently on.
+SD=3D Is On
+RE=3D On
+HS=3D Is On
+]
+[
+ObjTp=Dp
+H=160
+Tp=3
+DT=1
+FD1=Indicates that 3D is currently off.
+SD=3D Is Off
+RE=3D Off
+HS=3D Is Off
+]
+[
+ObjTp=Dp
+H=161
+Tp=3
+DT=1
+FD1=Indicates that the 3D multiplier value is set to 1X.
+SD=3D Mult Is 1X
+RE=3D Mult 1X
+HS=3D Mult Is 1X
+]
+[
+ObjTp=Dp
+H=162
+Tp=3
+DT=1
+FD1=Indicates that the 3D multiplier value is set to 2X.
+SD=3D Mult Is 2X
+RE=3D Mult 2X
+HS=3D Mult Is 2X
+]
+[
+ObjTp=Dp
+H=163
+Tp=3
+DT=1
+FD1=Indicates that the 3D multiplier value is set to 3X.
+SD=3D Mult Is 3X
+RE=3D Mult 3X
+HS=3D Mult Is 3X
+]
+[
+ObjTp=Dp
+H=164
+Tp=3
+DT=1
+FD1=Indicates that the 3D format is set to auto.
+SD=3D Format Is Auto
+RE=3D Format Auto
+HS=3D Format Is Auto
+]
+[
+ObjTp=Dp
+H=165
+Tp=3
+DT=1
+FD1=Indicates that the 3D format is set to sequential.
+SD=3D Format Is SEQ
+RE=3D Format SEQ
+HS=3D Format Is SEQ
+]
+[
+ObjTp=Dp
+H=166
+Tp=3
+DT=1
+FD1=Indicates that the 3D format is set to frame packing.
+SD=3D Format Is FPack
+RE=3D Format FPack
+HS=3D Format Is FPack
+]
+[
+ObjTp=Dp
+H=167
+Tp=3
+DT=1
+FD1=Indicates that the 3D format is set to top and bottom.
+SD=3D Format Is TaB
+RE=3D Format TaB
+HS=3D Format Is TaB
+]
+[
+ObjTp=Dp
+H=168
+Tp=3
+DT=1
+FD1=Indicates that the 3D format is set to side by side.
+SD=3D Format Is SBS
+RE=3D Format SBS
+HS=3D Format Is SBS
+]
+[
+ObjTp=Dp
+H=169
+Tp=3
+DT=1
+FD1=Indicates that the 3D darktime is set to 0us.
+SD=3D Darktime Is 0us
+RE=3D Darktime 0us
+HS=3D Darktime Is 0us
+]
+[
+ObjTp=Dp
+H=170
+Tp=3
+DT=1
+FD1=Indicates that the 3D darktime is set to 650us.
+SD=3D Darktime Is 650us
+RE=3D Darktime 650us
+HS=3D Darktime Is 650us
+]
+[
+ObjTp=Dp
+H=171
+Tp=3
+DT=1
+FD1=Indicates that the 3D darktime is set to 1300us.
+SD=3D Darktime Is 1300us
+RE=3D Darktime 1300us
+HS=3D Darktime Is 1300us
+]
+[
+ObjTp=Dp
+H=172
+Tp=3
+DT=1
+FD1=Indicates that the 3D darktime is set to 7500us.
+SD=3D Darktime Is 7500us
+RE=3D Darktime 7500us
+HS=3D Darktime Is 7500us
+]
+[
+ObjTp=Dp
+H=173
+Tp=3
+DT=1
+FD1=Indicates that the 3D polarity is set to positive.
+SD=3D Polarity Is Pos
+RE=3D Polarity Pos
+HS=3D Polarity Is Pos
+]
+[
+ObjTp=Dp
+H=174
+Tp=3
+DT=1
+FD1=Indicates that the 3D polarity is set to negative.
+SD=3D Polarity Is Neg
+RE=3D Polarity Neg
+HS=3D Polarity Is Neg
+]
+[
+ObjTp=Dp
+H=175
+Tp=3
+DT=1
+FD1=Indicates that the 3D dominance is set to left.
+SD=3D Dominance Is  Left
+RE=3D Dominance Left
+HS=3D Dominance Is  Left
+]
+[
+ObjTp=Dp
+H=176
+Tp=3
+DT=1
+FD1=Indicates that the 3D dominance is set to right.
+SD=3D Dominance Is  Right
+RE=3D Dominance Right
+HS=3D Dominance Is  Right
+]
+[
+ObjTp=Dp
+H=177
+Tp=3
+DT=1
+FD1=Indicates that the 3D SDI stream is set to 1.
+SD=3D SDI Stream Is 1
+RE=3D SDI Stream 1
+HS=3D SDI Stream Is 1
+]
+[
+ObjTp=Dp
+H=178
+Tp=3
+DT=1
+FD1=Indicates that the 3D SDI stream is set to 2.
+SD=3D SDI Stream Is 2
+RE=3D SDI Stream 2
+HS=3D SDI Stream Is 2
+]
+[
+ObjTp=Dp
+H=179
+Tp=3
+DT=1
+FD1=Indicates that the shutter is currently open.
+SD=Shutter Is Open
+RE=Shutter Open
+HS=Shutter Is Open
+]
+[
+ObjTp=Dp
+H=180
+Tp=3
+DT=1
+FD1=Indicates that the shutter is currently closed.
+SD=Shutter Is Close
+RE=Shutter Close
+HS=Shutter Is Close
+]
+[
+ObjTp=Dp
+H=181
+Tp=3
+DT=1
+FD1=Indicates that freeze is currently on.
+SD=Freeze Is On
+RE=Freeze On
+HS=Freeze Is On
+]
+[
+ObjTp=Dp
+H=182
+Tp=3
+DT=1
+FD1=Indicates that freeze is currently off.
+SD=Freeze Is Off
+RE=Freeze Off
+HS=Freeze Is Off
+]
+[
+ObjTp=Dp
+H=183
+Tp=3
+DT=1
+FD1=Indicates that lens preset 1 is selected.
+SD=Lens Preset 1 Is Selected
+RE=Lens Preset 1 Selected
+HS=Lens Preset 1 Is Selected
+]
+[
+ObjTp=Dp
+H=184
+Tp=3
+DT=1
+FD1=Indicates that lens preset 2 is selected.
+SD=Lens Preset 2 Is Selected
+RE=Lens Preset 2 Selected
+HS=Lens Preset 2 Is Selected
+]
+[
+ObjTp=Dp
+H=185
+Tp=3
+DT=1
+FD1=Indicates that lens preset 3 is selected.
+SD=Lens Preset 3 Is Selected
+RE=Lens Preset 3 Selected
+HS=Lens Preset 3 Is Selected
+]
+[
+ObjTp=Dp
+H=186
+Tp=3
+DT=1
+FD1=Indicates that lens preset 4 is selected.
+SD=Lens Preset 4 Is Selected
+RE=Lens Preset 4 Selected
+HS=Lens Preset 4 Is Selected
+]
+[
+ObjTp=Dp
+H=187
+Tp=3
+DT=1
+FD1=Indicates that lens preset 5 is selected.
+SD=Lens Preset 5 Is Selected
+RE=Lens Preset 5 Selected
+HS=Lens Preset 5 Is Selected
+]
+[
+ObjTp=Dp
+H=188
+Tp=3
+DT=1
+FD1=Indicates that lens preset 6 is selected.
+SD=Lens Preset 6 Is Selected
+RE=Lens Preset 6 Selected
+HS=Lens Preset 6 Is Selected
+]
+[
+ObjTp=Dp
+H=189
+Tp=3
+DT=1
+FD1=Indicates that lens preset 7 is selected.
+SD=Lens Preset 7 Is Selected
+RE=Lens Preset 7 Selected
+HS=Lens Preset 7 Is Selected
+]
+[
+ObjTp=Dp
+H=190
+Tp=3
+DT=1
+FD1=Indicates that lens preset 8 is selected.
+SD=Lens Preset 8 Is Selected
+RE=Lens Preset 8 Selected
+HS=Lens Preset 8 Is Selected
+]
+[
+ObjTp=Dp
+H=191
+Tp=3
+DT=1
+FD1=Indicates that lens preset 9 is selected.
+SD=Lens Preset 9 Is Selected
+RE=Lens Preset 9 Selected
+HS=Lens Preset 9 Is Selected
+]
+[
+ObjTp=Dp
+H=192
+Tp=3
+DT=1
+FD1=Indicates that lens preset 10 is selected.
+SD=Lens Preset 10 Is Selected
+RE=Lens Preset 10 Selected
+HS=Lens Preset 10 Is Selected
+]
+[
+ObjTp=Dp
+H=193
+Tp=5
+FD1=Indicates the brightness setting for a gauge object.
+SD=Brightness Gauge
+DNF=1
+]
+[
+ObjTp=Dp
+H=194
+Tp=7
+DT=4
+FD1=Indicates the brightness setting for an indirect text field.
+SD=Brightness Text
+]
+[
+ObjTp=Dp
+H=195
+Tp=5
+FD1=Indicates the contrast setting for a gauge object.
+SD=Contrast Gauge
+DNF=1
+]
+[
+ObjTp=Dp
+H=196
+Tp=7
+DT=4
+FD1=Indicates the contrast setting for an indirect text field.
+SD=Contrast Text
+]
+[
+ObjTp=Dp
+H=197
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to "both" for a dual lamp projector||1
+FD2=or "all" for a quad lamp projector.
+SD=Lamp Mode Is Both(Dual)/All(Quad)
+RE=Lamp Mode Both(Dual)/All(Quad)
+HS=Lamp Mode Is Both(Dual)/All(Quad)
+]
+[
+ObjTp=Dp
+H=198
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to "lamp 1" for a dual lamp||1
+FD2=projector or "auto 3" for a quad lamp projector.
+SD=Lamp Mode Is Lamp 1(Dual)/Auto 3(Quad)
+RE=Lamp Mode Lamp 1(Dual)/Auto 3(Quad)
+HS=Lamp Mode Is Lamp 1(Dual)/Auto 3(Quad)
+]
+[
+ObjTp=Dp
+H=199
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to "lamp 2" for a dual lamp||1
+FD2=projector or "auto 2" for a quad lamp projector.
+SD=Lamp Mode Is Lamp 2(Dual)/Auto 2(Quad)
+RE=Lamp Mode Lamp 2(Dual)/Auto 2(Quad)
+HS=Lamp Mode Is Lamp 2(Dual)/Auto 2(Quad)
+]
+[
+ObjTp=Dp
+H=200
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to auto 1.
+SD=Lamp Mode Is Auto 1
+RE=Lamp Mode Auto 1
+HS=Lamp Mode Is Auto 1
+]
+[
+ObjTp=Dp
+H=201
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 1, 2 and 3.
+SD=Lamp Mode Is Lamps 1 2 3
+RE=Lamp Mode Lamps 1 2 3
+HS=Lamp Mode Is Lamps 1 2 3
+]
+[
+ObjTp=Dp
+H=202
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 1, 2 and 4.
+SD=Lamp Mode Is Lamps 1 2 4
+RE=Lamp Mode Lamps 1 2 4
+HS=Lamp Mode Is Lamps 1 2 4
+]
+[
+ObjTp=Dp
+H=203
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 1, 3 and 4.
+SD=Lamp Mode Is Lamps 1 3 4
+RE=Lamp Mode Lamps 1 3 4
+HS=Lamp Mode Is Lamps 1 3 4
+]
+[
+ObjTp=Dp
+H=204
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 2, 3 and 4.
+SD=Lamp Mode Is Lamps 2 3 4
+RE=Lamp Mode Lamps 2 3 4
+HS=Lamp Mode Is Lamps 2 3 4
+]
+[
+ObjTp=Dp
+H=205
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 1 and 2.
+SD=Lamp Mode Is Lamps 1 2
+RE=Lamp Mode Lamps 1 2
+HS=Lamp Mode Is Lamps 1 2
+]
+[
+ObjTp=Dp
+H=206
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 1 and 3.
+SD=Lamp Mode Is Lamps 1 3
+RE=Lamp Mode Lamps 1 3
+HS=Lamp Mode Is Lamps 1 3
+]
+[
+ObjTp=Dp
+H=207
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 1 and 4.
+SD=Lamp Mode Is Lamps 1 4
+RE=Lamp Mode Lamps 1 4
+HS=Lamp Mode Is Lamps 1 4
+]
+[
+ObjTp=Dp
+H=208
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 2 and 3.
+SD=Lamp Mode Is Lamps 2 3
+RE=Lamp Mode Lamps 2 3
+HS=Lamp Mode Is Lamps 2 3
+]
+[
+ObjTp=Dp
+H=209
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 2 and 4.
+SD=Lamp Mode Is Lamps 2 4
+RE=Lamp Mode Lamps 2 4
+HS=Lamp Mode Is Lamps 2 4
+]
+[
+ObjTp=Dp
+H=210
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamps 3 and 4.
+SD=Lamp Mode Is Lamps 3 4
+RE=Lamp Mode Lamps 3 4
+HS=Lamp Mode Is Lamps 3 4
+]
+[
+ObjTp=Dp
+H=211
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamp 1.
+SD=Lamp Mode Is Lamp 1
+RE=Lamp Mode Lamp 1
+HS=Lamp Mode Is Lamp 1
+]
+[
+ObjTp=Dp
+H=212
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamp 2.
+SD=Lamp Mode Is Lamp 2
+RE=Lamp Mode Lamp 2
+HS=Lamp Mode Is Lamp 2
+]
+[
+ObjTp=Dp
+H=213
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamp 3.
+SD=Lamp Mode Is Lamp 3
+RE=Lamp Mode Lamp 3
+HS=Lamp Mode Is Lamp 3
+]
+[
+ObjTp=Dp
+H=214
+Tp=3
+DT=1
+FD1=Indicates that the lamp mode is set to lamp 4.
+SD=Lamp Mode Is Lamp 4
+RE=Lamp Mode Lamp 4
+HS=Lamp Mode Is Lamp 4
+]
+[
+ObjTp=Dp
+H=215
+Tp=7
+DT=4
+FD1=Indicates the current lamp 1 hours.
+SD=Lamp 1 Hours Text
+]
+[
+ObjTp=Dp
+H=216
+Tp=7
+DT=4
+FD1=Indicates the current lamp 2 hours.
+SD=Lamp 2 Hours Text
+]
+[
+ObjTp=Dp
+H=217
+Tp=7
+DT=4
+FD1=Indicates the current lamp 3 hours.
+SD=Lamp 3 Hours Text
+]
+[
+ObjTp=Dp
+H=218
+Tp=7
+DT=4
+FD1=Indicates the current lamp 4 hours.
+SD=Lamp 4 Hours Text
+]
+[
+ObjTp=Dp
+H=219
+Tp=7
+DT=4
+FD1=Indicates the number of lamp 1 strikes.
+SD=Lamp 1 Strikes Text
+]
+[
+ObjTp=Dp
+H=220
+Tp=7
+DT=4
+FD1=Indicates the number of lamp 2 strikes.
+SD=Lamp 2 Strikes Text
+]
+[
+ObjTp=Dp
+H=221
+Tp=7
+DT=4
+FD1=Indicates the number of lamp 3 strikes.
+SD=Lamp 3 Strikes Text
+]
+[
+ObjTp=Dp
+H=222
+Tp=7
+DT=4
+FD1=Indicates the number of lamp 4 strikes.
+SD=Lamp 4 Strikes Text
+]
+[
+ObjTp=Dp
+H=223
+Tp=3
+DT=1
+FD1=Use to display a "Please Wait' subpage.
+SD=Please Wait Indicator
+RE=Please Wait
+HS=Please Wait Indicator
+]
+[
+ObjTp=Dp
+H=224
+Tp=7
+DT=4
+FD1=Indicates that the processor is connected to the projector.
+SD=Is Connected
+]

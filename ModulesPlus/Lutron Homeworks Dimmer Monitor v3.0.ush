@@ -1,0 +1,158 @@
+[BEGIN]
+  Version=1
+[END]
+[BEGIN]
+  ObjTp=FSgntr
+  Sgntr=UserSPlus
+  RelVrs=1
+  IntStrVrs=1
+  SPlusVrs=4.01.01
+  CrossCplrVrs=1.3
+[END]
+[BEGIN]
+  ObjTp=Hd
+  Cmn1=See PDF File "Lutron Homeworks Modules for Crestron User Guide.pdf"
+[END]
+[BEGIN]
+  ObjTp=Symbol
+  Exclusions=1,19,20,21,88,89,167,168,179,213,214,215,216,217,225,226,248,249,266,267,310,718,756,854,
+  Exclusions_CDS=5
+  Inclusions_CDS=6
+  Name=Lutron Homeworks Dimmer Monitor v3.0
+  SmplCName=Lutron Homeworks Dimmer Monitor v3.0.usp
+  Code=1
+  SysRev5=4.000
+  SMWRev=2.02.05
+  OutputCue1=[~UNUSED~]
+  OutputSigType1=Digital
+  OutputCue2=[~UNUSED~]
+  OutputSigType2=Digital
+  OutputCue3=[~UNUSED~]
+  OutputSigType3=Digital
+  OutputCue4=ButtonPress
+  OutputSigType4=Digital
+  OutputCue5=ButtonDoubleTap
+  OutputSigType5=Digital
+  OutputCue6=ButtonHeld
+  OutputSigType6=Digital
+  InputList2Cue1=[~UNUSED~]
+  InputList2SigType1=Serial
+  InputList2Cue2=[~UNUSED~]
+  InputList2SigType2=Serial
+  InputList2Cue3=[~UNUSED~]
+  InputList2SigType3=Serial
+  InputList2Cue4=[~UNUSED~]
+  InputList2SigType4=Serial
+  InputList2Cue5=[~UNUSED~]
+  InputList2SigType5=Serial
+  InputList2Cue6=[~UNUSED~]
+  InputList2SigType6=Serial
+  InputList2Cue7=[~UNUSED~]
+  InputList2SigType7=Serial
+  InputList2Cue8=ToDimmers$
+  InputList2SigType8=Serial
+  OutputList2Cue1=[~UNUSED~]
+  OutputList2SigType1=Serial
+  OutputList2Cue2=FromModules$
+  OutputList2SigType2=Serial
+  ParamCue1=[Reference Name]
+  ParamCue2=DimmerAddress
+  ParamSigType2=String
+  ParamCue3=AllowButtonHeld,0d,1d
+  ParamSigType3=List
+  ParamCue4=AllowButtonDoubleTap,0d,1d
+  ParamSigType4=List
+  MinVariableInputs=0
+  MaxVariableInputs=0
+  MinVariableInputsList2=8
+  MaxVariableInputsList2=8
+  MinVariableOutputs=6
+  MaxVariableOutputs=6
+  MinVariableOutputsList2=2
+  MaxVariableOutputsList2=2
+  MinVariableParams=3
+  MaxVariableParams=3
+  Expand=expand_separately
+  Expand2=expand_separately
+  ProgramTree=Logic
+  SymbolTree=6
+  Hint=This module processes remote button presses and provides feedback for Lutron Dimmers
+  PdfHelp=Lutron Homeworks Modules for Crestron User Guide.pdf
+  HelpID= 
+  Render=4
+  Smpl-C=16
+  CompilerCode=-48
+  CompilerParamCode=27
+  CompilerParamCode5=14
+  NumFixedParams=1
+  Pp1=1
+  Pp2=2
+  Pp3=3
+  Pp4=4
+  MPp=4
+  NVStorage=10
+  ParamSigType1=String
+  SmplCInputCue1=o#
+  SmplCOutputCue1=i#
+  SmplCInputList2Cue1=an#
+  SmplCOutputList2Cue1=ai#
+  SPlus2CompiledName=S2_Lutron_Homeworks_Dimmer_Monitor_v3_0
+  SymJam=NonExclusive
+  FileName=Lutron Homeworks Dimmer Monitor v3.0.ush
+  SIMPLPlusModuleEncoding=0
+  Usl1=LutronHWI_Lib v3.0.usl
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=1
+  Tp=1
+  NoS=False
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=2
+  Tp=1
+  SD=Address of Dimmer (Do not include brackets)
+  HD=True
+  DV=01:06:01
+  NoS=False
+  VVS=0
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=3
+  Tp=1
+  SD=Allow button to perform this event
+  HD=True
+  DV=1d
+  Sgn=0
+  Lng=False
+  NF=1
+  NoS=True
+  DNF=1
+  VVS=2
+  VN=2
+  Val1=0d
+  Lbl1=False
+  Val2=1d
+  Lbl2=True
+[END]
+[BEGIN]
+  ObjTp=Dp
+  H=4
+  Tp=1
+  SD=Allow button to perform this event
+  HD=True
+  DV=1d
+  Sgn=0
+  Lng=False
+  NF=1
+  NoS=True
+  DNF=1
+  VVS=2
+  VN=2
+  Val1=0d
+  Lbl1=False
+  Val2=1d
+  Lbl2=True
+[END]

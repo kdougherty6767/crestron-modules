@@ -1,0 +1,3058 @@
+/*
+Purpose: 	S+ Wrapper for S# Polycom library
+Programmer: Casey Martineau
+Version:	3.0.17
+*/
+
+#SYMBOL_NAME "Polycom Group Series Driver Wrapper 4.0.0"
+#ENCODING_UTF16                    
+// This refers to the maximum entries per page supported by the module. 
+// Changing this to a higher value than 20 will have no effect. 
+// Changing this to a lower value will make directory navigation not work correctly.
+// Use the analog signals for setting the entries if less than 20 are desired.
+#DEFINE_CONSTANT DIRECTORYENTRIESPERPAGE 			20
+// Constants based on the S# library.
+#DEFINE_CONSTANT MAXCONCURRENTCALLS 				5
+#DEFINE_CONSTANT MAXCALENDARMEETINGS 				25
+#DEFINE_CONSTANT MAXCALENDARMEETINGDIALINGMETHODS 	5
+
+#USER_SIMPLSHARP_LIBRARY "PolycomGroupSeriesDriver4.0.0"
+   
+/////////////////////////////////////////////////////////////
+///////////////////////////////// Inputs ////////////////////
+/////////////////////////////////////////////////////////////
+                 
+// AudioVideo
+ANALOG_INPUT 	Set_AudioTransmitLevel;
+ANALOG_INPUT 	Set_LineInLevel;
+ANALOG_INPUT 	Set_Volume;
+DIGITAL_INPUT 	Increase_Volume;
+DIGITAL_INPUT 	Decrease_Volume;
+ANALOG_INPUT 	Set_MediaInLevel;
+DIGITAL_INPUT 	Enable_Mute;
+DIGITAL_INPUT 	Disable_Mute;
+DIGITAL_INPUT 	Mute_Volume;
+DIGITAL_INPUT 	Unmute_Volume;
+DIGITAL_INPUT 	Enable_EchoCanceller;
+DIGITAL_INPUT 	Disable_EchoCanceller;
+DIGITAL_INPUT 	Enable_KeyboardNoiseReduction;
+DIGITAL_INPUT 	Disable_KeyboardNoiseReduction;
+DIGITAL_INPUT 	Enable_LiveMusicMode;
+DIGITAL_INPUT 	Disable_LiveMuseMode;
+DIGITAL_INPUT 	Enable_PolycomMicrophones;
+DIGITAL_INPUT 	Disable_PolycomMicrophones;
+DIGITAL_INPUT 	Enable_Stereo;
+DIGITAL_INPUT 	Disable_Stereo;
+DIGITAL_INPUT 	Enable_AutoShowContent;
+DIGITAL_INPUT 	Disable_AutoShowContent;
+DIGITAL_INPUT 	Enable_ContentAuto;
+DIGITAL_INPUT 	Disable_ContentAuto;
+DIGITAL_INPUT 	Enable_FarControlNearCamera;
+DIGITAL_INPUT 	Disable_FarControlNearCamera;
+DIGITAL_INPUT 	Enable_CameraTracking;
+DIGITAL_INPUT 	Disable_CameraTracking;
+DIGITAL_INPUT 	Enable_SelfView;
+DIGITAL_INPUT 	Disable_SelfView;
+DIGITAL_INPUT 	Auto_Selfview;
+ANALOG_INPUT 	Set_LineOutMode;
+ANALOG_INPUT 	Set_CurrentPlayingSource;
+ANALOG_INPUT 	Set_CurrentMappedSource;
+ANALOG_INPUT 	Set_Camera1Content;
+ANALOG_INPUT 	Set_Camera2Content;
+ANALOG_INPUT 	Set_Camera3Content;
+ANALOG_INPUT 	Set_Camera4Content;
+ANALOG_INPUT 	Set_VgaQualityPreference;
+ANALOG_INPUT 	Set_PrimaryCamera;
+ANALOG_INPUT 	Set_SleepTime;     
+ANALOG_INPUT 	Select_NearEndCamera; 
+DIGITAL_INPUT 	ZoomIn_NearEndCamera;
+DIGITAL_INPUT 	ZoomOut_NearEndCamera;
+DIGITAL_INPUT 	MoveUp_NearEndCamera;
+DIGITAL_INPUT 	MoveDown_NearEndCamera;
+DIGITAL_INPUT 	MoveLeft_NearEndCamera;
+DIGITAL_INPUT 	MoveRight_NearEndCamera;
+ANALOG_INPUT 	SelectPreset_NearEndCamera;
+ANALOG_INPUT 	SetPreset_NearEndCamera;
+ANALOG_INPUT 	Select_FarEndCamera; 
+DIGITAL_INPUT 	ZoomIn_FarEndCamera;
+DIGITAL_INPUT 	ZoomOut_FarEndCamera;
+DIGITAL_INPUT 	MoveUp_FarEndCamera;
+DIGITAL_INPUT 	MoveDown_FarEndCamera;
+DIGITAL_INPUT 	MoveLeft_FarEndCamera;
+DIGITAL_INPUT 	MoveRight_FarEndCamera;
+ANALOG_INPUT 	SelectPreset_FarEndCamera;
+ANALOG_INPUT 	SetPreset_FarEndCamera;
+DIGITAL_INPUT 	StopPlayingSource;
+
+// CallFunction-Dialing
+DIGITAL_INPUT 	PlaceVideoCall;                                     
+DIGITAL_INPUT 	PlaceAudioCall; 
+STRING_INPUT  	CallString[50];
+ANALOG_INPUT    VideoCallRate;
+ANALOG_INPUT	VideoCallProtocol;
+ANALOG_INPUT	AudioCallProtocol;
+DIGITAL_INPUT 	Dtmf_Tone_0;
+DIGITAL_INPUT 	Dtmf_Tone_1;
+DIGITAL_INPUT 	Dtmf_Tone_2;
+DIGITAL_INPUT 	Dtmf_Tone_3;
+DIGITAL_INPUT 	Dtmf_Tone_4;
+DIGITAL_INPUT 	Dtmf_Tone_5;
+DIGITAL_INPUT 	Dtmf_Tone_6;
+DIGITAL_INPUT 	Dtmf_Tone_7;
+DIGITAL_INPUT 	Dtmf_Tone_8;
+DIGITAL_INPUT 	Dtmf_Tone_9;
+DIGITAL_INPUT 	Dtmf_Tone_Pound;
+DIGITAL_INPUT 	Dtmf_Tone_Asterisk;
+
+// CallFunction-IncomingCall
+DIGITAL_INPUT   AnswerIncomingCall;
+DIGITAL_INPUT   IgnoreIncomingCall;                            
+
+// CallFunction-OutgoingCall
+DIGITAL_INPUT   CancelOutgoingCall;
+
+// CallFunction-ConnectedCall
+DIGITAL_INPUT   HangUpAllCalls;
+DIGITAL_INPUT   HangUpCalll_1;
+DIGITAL_INPUT   HangUpCalll_2;
+DIGITAL_INPUT   HangUpCalll_3;
+DIGITAL_INPUT   HangUpCalll_4;
+DIGITAL_INPUT   HangUpCalll_5;
+
+// CallFunction-Settings
+ANALOG_INPUT    Set_ConnectionPreference;
+ANALOG_INPUT    Set_DialingMethod;
+
+// Conference
+ANALOG_INPUT    Set_PointToPointAutoAnswerMode;
+DIGITAL_INPUT  	Enable_DynamicBandwidth;
+DIGITAL_INPUT  	Disable_DynamicBandwidth;
+DIGITAL_INPUT  	Enable_Pvec;
+DIGITAL_INPUT  	Disable_Pvec;
+DIGITAL_INPUT  	Enable_Rsvp;
+DIGITAL_INPUT  	Disable_Rsvp;
+DIGITAL_INPUT  	Enable_H239;
+DIGITAL_INPUT  	Disable_H239;
+DIGITAL_INPUT  	Enable_MuteAutoAnsweredCalls;
+DIGITAL_INPUT  	Disable_MuteAutoAnsweredCalls;
+DIGITAL_INPUT  	Enable_DisplayIconsInCall;
+DIGITAL_INPUT  	Disable_DisplayIconsInCall;
+DIGITAL_INPUT  	Enable_Transcoding;
+DIGITAL_INPUT  	Disable_Transcoding;
+ANALOG_INPUT 	Set_AesEncryptionMode;
+ANALOG_INPUT 	Set_MaxTimeInCall;
+ANALOG_INPUT 	Set_MultiPointAutoAnswerMode;
+ANALOG_INPUT 	Set_MpMode;
+ANALOG_INPUT 	Set_MaxRxBandwidth;
+ANALOG_INPUT 	Set_MaxTxBandwidth;
+
+// Network
+DIGITAL_INPUT   Enable_NatH323Compatible;
+DIGITAL_INPUT   Disable_NatH323Compatible;
+DIGITAL_INPUT  	Enable_H323Gateway;
+DIGITAL_INPUT   Disable_H323Gateway;
+DIGITAL_INPUT   Enable_IpH323;
+DIGITAL_INPUT   Disable_IpH323;
+DIGITAL_INPUT   Enable_Dhcp;
+DIGITAL_INPUT   Disable_Dhcp;
+DIGITAL_INPUT   Enable_SipDebug;
+DIGITAL_INPUT   Disable_SipDebug;
+DIGITAL_INPUT	Enable_Sip;
+DIGITAL_INPUT   Disable_Sip;
+STRING_INPUT  	Set_E164Extension[50];
+STRING_INPUT  	Set_GateKeeperIp[50];
+STRING_INPUT  	Set_H323Name[50];
+ANALOG_INPUT	Set_GatekeeperMode;
+STRING_INPUT  	Set_DefaultGateway[50];
+STRING_INPUT  	Set_DnsServer1[50];
+STRING_INPUT  	Set_DnsServer2[50];
+STRING_INPUT  	Set_DnsServer3[50];
+STRING_INPUT  	Set_DnsServer4[50];
+STRING_INPUT  	Set_Hostname[50];
+STRING_INPUT  	Set_IpAddress[50];
+ANALOG_INPUT	Set_LanPort;
+ANALOG_INPUT	Set_NatConfiguration;
+STRING_INPUT  	Set_SubnetMask[50];
+STRING_INPUT   	Set_WanIpAddress[50];
+STRING_INPUT  	Set_SipAccountName[50];
+STRING_INPUT  	Set_SipPassword[50];
+STRING_INPUT 	Set_SipProxyServer[50];
+STRING_INPUT  	Set_SipRegistrarServer[50];
+ANALOG_INPUT	Set_SipTransportProtocol;
+STRING_INPUT	Set_SipUsername[50];
+
+// GlobalServices 
+DIGITAL_INPUT  	Enable_CalenderPlayTone;
+DIGITAL_INPUT  	Disable_CalenderPlayTone;
+DIGITAL_INPUT  	Enable_CalenderService;
+DIGITAL_INPUT  	Disable_CalenderService;
+DIGITAL_INPUT  	Enable_PrivateMeetingsDisplayed;
+DIGITAL_INPUT  	Disable_PrivateMeetingsDisplayed;
+DIGITAL_INPUT  	Enable_LdapDirectoryServer;
+DIGITAL_INPUT  	Disable_LdapDirectoryServer;
+DIGITAL_INPUT  	Enable_LdapSsl;
+DIGITAL_INPUT  	Disable_LdapSsl;
+DIGITAL_INPUT  	Enable_Snmp;
+DIGITAL_INPUT  	Disable_Snmp;       
+DIGITAL_INPUT  	Update_CalendarMeetings;
+DIGITAL_INPUT  	Clear_SelectedCalendarMeeting;
+DIGITAL_INPUT  	Clear_CallMethodForCalendarMeeting;
+DIGITAL_INPUT  	Dial_SelectedCalendarMeeting;
+STRING_INPUT  	Set_CalenderPassword[50];
+ANALOG_INPUT   	Set_CalenderRemainingTime;
+STRING_INPUT  	Set_MailboxAccountAddress[50];
+STRING_INPUT  	Set_CalenderServer[50];
+STRING_INPUT  	Set_CalenderUser[50];
+ANALOG_INPUT  	Set_LdapAuthenticationType;
+STRING_INPUT   	Set_LdapBaseName[50];
+STRING_INPUT 	Set_LdapBindDn[50];
+STRING_INPUT 	Set_LdapNtlmDomain[50];
+STRING_INPUT 	Set_NtlmLdapPassword[50];
+STRING_INPUT 	Set_BasicLdapPassword[50];
+STRING_INPUT 	Set_LdapServerAddress[50];
+ANALOG_INPUT  	Set_LdapServerPort;
+STRING_INPUT 	Set_LdapUsername[50];
+STRING_INPUT  	Set_SnmpAdminName[50];
+STRING_INPUT 	Set_SnmpCommunityName[50];
+STRING_INPUT 	Set_SnmpConsoleIpAddress[50];
+STRING_INPUT 	Set_SnmpLocationName[50];
+STRING_INPUT  	Set_SnmpSystemDescription[50];
+ANALOG_INPUT	Set_SnmpTrapVersion;  
+ANALOG_INPUT 	Select_CalendarMeeting;
+ANALOG_INPUT 	Select_CallMethodForCalendarMeeting;
+DIGITAL_INPUT	Calendar_EnableInitialPoll;
+ANALOG_INPUT 	Calendar_DateFormat;
+ANALOG_INPUT	Calendar_TimeFormat;
+
+// System
+STRING_INPUT 	SystemUsername[50];
+STRING_INPUT	SystemPassword[50];
+DIGITAL_INPUT	Sleep;
+DIGITAL_INPUT  	Wake;
+DIGITAL_INPUT  	Reboot;
+DIGITAL_INPUT  	Enable_DaylightSavings;
+DIGITAL_INPUT  	Disable_DaylightSavings;
+DIGITAL_INPUT  	Enable_EchoReply;
+DIGITAL_INPUT  	Disable_EchoReply;
+DIGITAL_INPUT  	Enable_RemoteEnable;
+DIGITAL_INPUT  	Disable_RemoteEnable;
+DIGITAL_INPUT  	Enable_BasicMode;
+DIGITAL_INPUT  	Disable_BasicMode;
+STRING_INPUT	Set_SystemName[50];
+
+// LocalDirectory
+DIGITAL_INPUT 	LocalDirectory_EnableInitialPoll;
+DIGITAL_INPUT 	LocalDirectory_DownloadEntries;
+DIGITAL_INPUT 	LocalDirectory_Home;
+DIGITAL_INPUT 	LocalDirectory_FirstPage;
+DIGITAL_INPUT 	LocalDirectory_NextPage;
+DIGITAL_INPUT 	LocalDirecory_PreviousPage;
+DIGITAL_INPUT 	LocalDirectory_PreviousDirectory;
+ANALOG_INPUT	LocalDirectory_SelectEntry;
+DIGITAL_INPUT 	LocalDirectory_ClearSelectedEntry;
+DIGITAL_INPUT 	LocalDirectory_DialSelectedEntry;
+DIGITAL_INPUT 	LocalDirectory_Search;
+DIGITAL_INPUT 	LocalDirectory_SearchAnywhere;
+STRING_INPUT	LocalDirectory_SearchTerm[50];
+ANALOG_INPUT 	LocalDirectory_EntriesPerPage;
+
+// GlobalDirectory
+DIGITAL_INPUT	GlobalDirectory_EnableInitialPoll;
+DIGITAL_INPUT 	GlobalDirectory_DirectoryIsMultiTiered;
+DIGITAL_INPUT 	GlobalDirectory_DownloadEntries;
+DIGITAL_INPUT 	GlobalDirectory_Home;
+DIGITAL_INPUT 	GlobalDirectory_FirstPage;
+DIGITAL_INPUT 	GlobalDirectory_NextPage;
+DIGITAL_INPUT 	GlobalDirecory_PreviousPage;
+DIGITAL_INPUT 	GlobalDirectory_PreviousDirectory;
+ANALOG_INPUT	GlobalDirectory_SelectEntry;
+DIGITAL_INPUT 	GlobalDirectory_ClearSelectedEntry;
+DIGITAL_INPUT 	GlobalDirectory_DialSelectedEntry;
+DIGITAL_INPUT 	GlobalDirectory_Search;
+DIGITAL_INPUT 	GlobalDirectory_SearchAnywhere;
+STRING_INPUT	GlobalDirectory_SearchTerm[50];
+ANALOG_INPUT 	GlobalDirectory_EntriesPerPage;
+
+// GlobalDirectory - Live search 
+DIGITAL_INPUT 	GlobalDirectoryLiveSearch_FirstPage;
+DIGITAL_INPUT 	GlobalDirectoryLiveSearch_NextPage;
+DIGITAL_INPUT 	GlobalDirecoryLiveSearch_PreviousPage;
+ANALOG_INPUT	GlobalDirectoryLiveSearch_SelectEntry;
+DIGITAL_INPUT 	GlobalDirectoryLiveSearch_ClearSelectedEntry;
+DIGITAL_INPUT 	GlobalDirectoryLiveSearch_DialSelectedEntry;
+DIGITAL_INPUT 	GlobalDirectory_LiveSearch;
+DIGITAL_INPUT 	GlobalDirectoryLiveSearch_SearchAnywhere;
+STRING_INPUT	GlobalDirectoryLiveSearch_SearchTerm[50];
+ANALOG_INPUT 	GlobalDirectoryLiveSearch_EntriesPerPage;
+
+
+// Remote Control Buttons
+DIGITAL_INPUT 	Button_Pound;
+DIGITAL_INPUT 	Button_Asterisk;
+DIGITAL_INPUT 	Button_0;
+DIGITAL_INPUT 	Button_1;
+DIGITAL_INPUT 	Button_2;
+DIGITAL_INPUT 	Button_3;
+DIGITAL_INPUT 	Button_4;
+DIGITAL_INPUT 	Button_5;
+DIGITAL_INPUT 	Button_6;
+DIGITAL_INPUT 	Button_7;
+DIGITAL_INPUT 	Button_8;
+DIGITAL_INPUT 	Button_9;
+DIGITAL_INPUT 	Button_Period;
+DIGITAL_INPUT 	Button_Down;
+DIGITAL_INPUT 	Button_Left;
+DIGITAL_INPUT 	Button_Right;
+DIGITAL_INPUT 	Button_Select;
+DIGITAL_INPUT 	Button_Up;
+DIGITAL_INPUT 	Button_Back;
+DIGITAL_INPUT 	Button_Call;
+DIGITAL_INPUT 	Button_Graphics;
+DIGITAL_INPUT 	Button_Hangup;
+DIGITAL_INPUT 	Button_Mute;
+DIGITAL_INPUT 	Button_VolumePlus;
+DIGITAL_INPUT 	Button_VolumeMinus;
+DIGITAL_INPUT 	Button_Camera;
+DIGITAL_INPUT 	Button_Delete;
+DIGITAL_INPUT 	Button_Directory;
+DIGITAL_INPUT 	Button_Home;
+DIGITAL_INPUT 	Button_Keyboard;
+DIGITAL_INPUT 	Button_Menu;
+DIGITAL_INPUT 	Button_Pip;
+DIGITAL_INPUT 	Button_Preset;
+DIGITAL_INPUT 	Button_Info;
+
+// COMTransport
+DIGITAL_INPUT StartCOMTransport;
+DIGITAL_INPUT StopCOMTransport;
+BUFFER_INPUT FromDevice[65534];
+
+// SSHTransport
+STRING_INPUT 	SSHTransportDeviceHostname[50];
+ANALOG_INPUT 	SSHTransportPort;
+DIGITAL_INPUT 	StartSSHTransport;
+DIGITAL_INPUT 	StopSSHTransport;
+DIGITAL_INPUT   SSHAcceptKey;
+DIGITAL_INPUT   SSHRejectKey;
+STRING_INPUT 	SSHTx[65534];
+
+// Logging
+ANALOG_INPUT	LoggingMode;
+
+
+/////////////////////////////////////////////////////////////
+///////////////////////////////// Outputs ///////////////////
+///////////////////////////////////////////////////////////// 
+                      
+// AudioVideo
+ANALOG_OUTPUT AudioTransmitLevel_Value;
+ANALOG_OUTPUT LineInLevel_Value;
+ANALOG_OUTPUT Volume_Value;
+ANALOG_OUTPUT MediaInLevel_Value;
+ANALOG_OUTPUT LineOutMode_Value;
+DIGITAL_OUTPUT Mute_IsEnabled;
+DIGITAL_OUTPUT FarEndMute_IsEnabled;
+DIGITAL_OUTPUT EchoCanceller_IsEnabled;
+DIGITAL_OUTPUT KeyboardNoiseReduction_IsEnabled;
+DIGITAL_OUTPUT LiveMusicMode_IsEnabled;
+DIGITAL_OUTPUT PolycomMicrophones_IsEnabled;
+DIGITAL_OUTPUT Stereo_IsEnabled;
+DIGITAL_OUTPUT SourcePlaying_IsEnabled;
+DIGITAL_OUTPUT AutoShowContent_IsEnabled;
+DIGITAL_OUTPUT ContentAuto_IsEnabled;
+DIGITAL_OUTPUT FarControlNearCamera_IsEnabled;
+DIGITAL_OUTPUT CameraTracking_IsEnabled;
+DIGITAL_OUTPUT SelfView_IsEnabled;
+DIGITAL_OUTPUT SelfView_IsAuto;
+DIGITAL_OUTPUT VolumeMute_IsEnabled;
+ANALOG_OUTPUT Selected_NearEndCamera;
+ANALOG_OUTPUT Selected_FarEndCamera;
+ANALOG_OUTPUT CurrentPlayingSource_Value;
+ANALOG_OUTPUT CurrentMappedSource_Value;
+ANALOG_OUTPUT Camera1Content_Value;
+ANALOG_OUTPUT Camera2Content_Value;
+ANALOG_OUTPUT Camera3Content_Value;
+ANALOG_OUTPUT Camera4Content_Value;
+ANALOG_OUTPUT VgaQualityPreference_Value;
+ANALOG_OUTPUT PrimaryCamera_Value;
+ANALOG_OUTPUT SleepTime_Value;
+                                      
+// CallFunction-IncomingCall
+DIGITAL_OUTPUT IncomingCall_IsAvailable;
+DIGITAL_OUTPUT IncomingCall_IsAudioCall;
+DIGITAL_OUTPUT IncomingCall_IsVideoCall;
+STRING_OUTPUT IncomingCall_Name;
+STRING_OUTPUT IncomingCall_Number;
+STRING_OUTPUT IncomingCall_Type;
+STRING_OUTPUT IncomingCall_Status;
+STRING_OUTPUT IncomingCall_Speed;
+STRING_OUTPUT IncomingCall_CallId;
+
+// CallFunction-OutgoingCall
+DIGITAL_OUTPUT OutgoingCall_IsAvailable;
+STRING_OUTPUT OutgoingCall_Name;
+STRING_OUTPUT OutgoingCall_Number;
+STRING_OUTPUT OutgoingCall_Type;
+STRING_OUTPUT OutgoingCall_Status;
+STRING_OUTPUT OutgoingCall_Speed;
+STRING_OUTPUT OutgoingCall_CallId;
+
+
+// CallFunction-Settings
+ANALOG_OUTPUT ConnectionPreference_Value;
+ANALOG_OUTPUT DialingMethod_Value;                        
+
+// Conference
+ANALOG_OUTPUT PointToPointAutoAnswerMode_Value;
+DIGITAL_OUTPUT DynamicBandwidth_IsEnabled;
+DIGITAL_OUTPUT Pvec_IsEnabled;
+DIGITAL_OUTPUT Rsvp_IsEnabled;
+DIGITAL_OUTPUT MuteAutoAnsweredCalls_IsEnabled;
+DIGITAL_OUTPUT DisplayIconsInCall_IsEnabled;
+DIGITAL_OUTPUT Transcoding_IsEnabled;
+ANALOG_OUTPUT MaxTimeInCall_Value;
+ANALOG_OUTPUT MaxRxBandwidth_Value;
+ANALOG_OUTPUT MaxTxBandwidth_Value;
+ANALOG_OUTPUT AesEncryptionMode_Value;
+ANALOG_OUTPUT MultiPointAutoAnswerMode_Value;
+ANALOG_OUTPUT MpMode_Value;
+
+// Network
+ DIGITAL_OUTPUT NatH323Compatible_IsEnabled;
+DIGITAL_OUTPUT H323Gateway_IsEnabled;
+DIGITAL_OUTPUT IpH323_IsEnabled;
+DIGITAL_OUTPUT Dhcp_IsEnabled;
+DIGITAL_OUTPUT H460FirewallTraversal_IsEnabled;
+DIGITAL_OUTPUT SipDebug_IsEnabled;
+DIGITAL_OUTPUT Sip_IsEnabled;
+ANALOG_OUTPUT GateKeeperMode_Value;
+ANALOG_OUTPUT LanPort_Value;
+ANALOG_OUTPUT NatConfiguration_Value;
+ANALOG_OUTPUT SipTransportProtocol_Value;
+STRING_OUTPUT E164Extension_Value;
+STRING_OUTPUT GateKeeperIp_Value;
+STRING_OUTPUT H323Name_Value;
+STRING_OUTPUT DefaultGateway_Value;
+STRING_OUTPUT DnsServer1_Value;
+STRING_OUTPUT DnsServer2_Value;
+STRING_OUTPUT DnsServer3_Value;
+STRING_OUTPUT DnsServer4_Value;
+STRING_OUTPUT Hostname_Value;
+STRING_OUTPUT IpAddress_Value;
+STRING_OUTPUT SubnetMask_Value;
+STRING_OUTPUT WanIpAddress_Value;
+STRING_OUTPUT SipAccountName_Value;
+STRING_OUTPUT SipPassword_Value;
+STRING_OUTPUT SipProxyServer_Value;
+STRING_OUTPUT SipRegistrarServer_Value;
+STRING_OUTPUT SipUsername_Value;
+
+      
+// GlobalServices
+DIGITAL_OUTPUT CalenderPlayTone_IsEnabled;
+DIGITAL_OUTPUT CalenderService_IsEnabled;
+DIGITAL_OUTPUT Calender_IsConnected;
+ANALOG_OUTPUT CalenderRemainingTime_Value;
+DIGITAL_OUTPUT  PrivateMeetingsDisplay_IsEnabled;
+DIGITAL_OUTPUT LdapDirectoryServer_IsEnabled;
+DIGITAL_OUTPUT LdapSsl_IsEnabled;
+ANALOG_OUTPUT LdapAuthenticationType_Value;
+DIGITAL_OUTPUT Snmp_IsEnabled;
+ANALOG_OUTPUT SnmpTrapVersion_Value;
+STRING_OUTPUT CalenderPassword_Value;
+STRING_OUTPUT MailboxAccountAddress_Value;
+STRING_OUTPUT CalenderServer_Value;
+STRING_OUTPUT CalenderUser_Value;
+STRING_OUTPUT LdapBaseName_Value;
+STRING_OUTPUT LdapBindDn_Value;
+STRING_OUTPUT LdapNtlmDomain_Value;
+STRING_OUTPUT LdapPassword_Value;
+STRING_OUTPUT LdapServerAddress_Value;
+STRING_OUTPUT LdapUsername_Value;
+STRING_OUTPUT SnmpAdminName_Value;
+STRING_OUTPUT SnmpCommunityName_Value;
+STRING_OUTPUT SnmpConsoleIpAddress_Value;
+STRING_OUTPUT SnmpLocationName_Value;
+STRING_OUTPUT SnmpSystemDescription_Value;
+STRING_OUTPUT Selected_CalendarMeetingName;
+STRING_OUTPUT Selected_CalendarMeetingStartTime;
+STRING_OUTPUT Selected_CalendarMeetingEndTime;
+STRING_OUTPUT Selected_CalendarMeetingUID;
+STRING_OUTPUT Selected_CalendarMeetingOrganizer;
+STRING_OUTPUT Selected_CalendarMeetingLocation;
+STRING_OUTPUT Selected_CalendarMeetingSubject;
+DIGITAL_OUTPUT Selected_CalendarMeetingIsPublic;
+DIGITAL_OUTPUT Selected_CalendarMeetingIsDialable;
+STRING_OUTPUT Selected_CalendarMeetingAntendees_XSIG;
+STRING_OUTPUT Selected_CalendarMeetingDialingNumbers_XSIG;
+STRING_OUTPUT Selected_CalendarMeetingPassword;
+STRING_OUTPUT Selected_CalendarMeetingNumberURI;
+ANALOG_OUTPUT Selected_CalendarMeetingNumberType;
+ANALOG_OUTPUT Selected_CalendarMeetingNumberProtocol;
+STRING_OUTPUT Selected_CalendarMeetingDuration;
+ANALOG_OUTPUT CalendarMeetingCount;
+
+// System
+DIGITAL_OUTPUT Sleep_IsActive;
+DIGITAL_OUTPUT DaylightSavingsTime_IsEnabled;
+DIGITAL_OUTPUT EchoReply_IsEnabled;
+DIGITAL_OUTPUT Remote_IsEnabled;
+DIGITAL_OUTPUT BasicMode_IsEnabled;
+STRING_OUTPUT Version_Value;
+STRING_OUTPUT SerialNumber_Value;
+STRING_OUTPUT Model_Value;
+STRING_OUTPUT SystemName_Value;
+DIGITAL_OUTPUT H239_IsEnabled;
+
+// LocalDirectory
+DIGITAL_OUTPUT LocalDirectory_IsSearching;
+STRING_OUTPUT LocalDirectory_SelectedName;
+DIGITAL_OUTPUT LocalDirectory_IsGroup;
+
+// GlobalDirectory
+DIGITAL_OUTPUT GlobalDirectory_IsSearching;
+STRING_OUTPUT GlobalDirectory_SelectedName;
+DIGITAL_OUTPUT GlobalDirectory_IsGroup;
+
+// GlobalDirectory LiveSearch
+DIGITAL_OUTPUT GlobalDirectoryLiveSearch_IsSearching;
+STRING_OUTPUT GlobalDirectoryLiveSearch_SelectedName;
+DIGITAL_OUTPUT GlobalDirectoryLiveSearch_IsGroup;
+
+// COMTransport
+ANALOG_OUTPUT COMTransport_ConnectionState;
+DIGITAL_OUTPUT COMTransport_ProcessingData;
+STRING_OUTPUT ToDevice;
+
+// SSHTransport
+ANALOG_OUTPUT SSHTransport_ConnectionState;
+DIGITAL_OUTPUT SSHTransport_ProcessingData;
+DIGITAL_OUTPUT SSHUnknownKeyReceived;
+STRING_OUTPUT SSHKey;  
+STRING_OUTPUT SSHRx;
+
+/////////////////////////////////////////////////////////////
+///////////////////////////////// Array Inputs/Outputs //////
+///////////////////////////////////////////////////////////// 
+   
+DIGITAL_INPUT SendContentSource[9];
+DIGITAL_OUTPUT ContentSourceAvailable[9];
+
+DIGITAL_OUTPUT ConnectedCall_IsAvailable[MAXCONCURRENTCALLS];
+DIGITAL_OUTPUT ConnectedCall_IsAudioCall[MAXCONCURRENTCALLS];
+DIGITAL_OUTPUT ConnectedCall_IsVideoCall[MAXCONCURRENTCALLS];
+STRING_OUTPUT ConnectedCall_Name[MAXCONCURRENTCALLS]; 
+STRING_OUTPUT ConnectedCall_Number[MAXCONCURRENTCALLS];
+STRING_OUTPUT ConnectedCall_Type[MAXCONCURRENTCALLS];
+STRING_OUTPUT ConnectedCall_Status[MAXCONCURRENTCALLS];
+STRING_OUTPUT ConnectedCall_Speed[MAXCONCURRENTCALLS]; 
+STRING_OUTPUT ConnectedCall_CallId[MAXCONCURRENTCALLS];
+STRING_OUTPUT LocalDirectory_Name[DIRECTORYENTRIESPERPAGE];
+STRING_OUTPUT GlobalDirectory_Name[DIRECTORYENTRIESPERPAGE];
+STRING_OUTPUT GlobalDirectoryLiveSearch_Name[DIRECTORYENTRIESPERPAGE];
+STRING_OUTPUT CalendarMeetingNames[MAXCALENDARMEETINGS];
+STRING_OUTPUT CalendarMeetingStartTimes[MAXCALENDARMEETINGS];
+STRING_OUTPUT CalendarMeetingEndTimes[MAXCALENDARMEETINGS];
+STRING_OUTPUT CalendarMeetingUIDs[MAXCALENDARMEETINGS];
+STRING_OUTPUT CalendarMeetingOrganizers[MAXCALENDARMEETINGS];
+STRING_OUTPUT CalendarMeetingDurations[MAXCALENDARMEETINGS];
+DIGITAL_OUTPUT CalendarMeetingIsDialable[MAXCALENDARMEETINGS];
+STRING_OUTPUT CalendarMeetingNumberURI[MAXCALENDARMEETINGDIALINGMETHODS];
+ANALOG_OUTPUT CalendarMeetingNumberType[MAXCALENDARMEETINGDIALINGMETHODS];
+ANALOG_OUTPUT CalendarMeetingNumberProtocol[MAXCALENDARMEETINGDIALINGMETHODS];
+                          
+/////////////////////////////////////////////////////////////
+///////////////////////////////// Properties ////////////////
+/////////////////////////////////////////////////////////////
+
+INTEGER_PARAMETER CommunicationMode;
+INTEGER_PARAMETER SSHSecureMode;
+INTEGER_PARAMETER LocalDirectoryMaxEntries;
+INTEGER_PARAMETER GlobalDirectoryMaxEntries;
+
+SimplPolycomGroupSeriesDevice simplSharpComponent;
+integer _isInitialized;
+
+/////////////////////////////////////////////////////////////
+///////////////////////////////// S# Event Handlers /////////
+///////////////////////////////////////////////////////////// 
+    
+// AudioVideo
+
+CALLBACK FUNCTION ValidInputs_Updated(integer value)
+{
+	integer i;
+
+	for (i = 1 to value)
+	{
+     	ContentSourceAvailable[i] = 1;
+	}
+
+	for (i = value + 1 to 9)
+	{
+     	ContentSourceAvailable[i] = 0;
+	}
+}
+           
+CALLBACK FUNCTION VolumeMute_IsEnabledValueUpdated(integer value)
+{
+    VolumeMute_IsEnabled = value;
+}
+
+CALLBACK FUNCTION LineOutMode_ValueUpdated(integer value)
+{
+    LineOutMode_Value = value;
+}
+
+CALLBACK FUNCTION AudioTransmitLevel_ValueUpdated(signed_integer value)
+{	
+	AudioTransmitLevel_Value = value;
+}
+
+CALLBACK FUNCTION LineInLevel_ValueUpdated(integer value)
+{
+	LineInLevel_Value = value;
+}
+
+CALLBACK FUNCTION Volume_ValueUpdated(integer value)
+{
+	Volume_Value = value;
+}
+
+CALLBACK FUNCTION MediaInLevel_ValueUpdated(integer value)
+{
+	MediaInLevel_Value = value;
+}
+
+CALLBACK FUNCTION Mute_IsEnabledUpdated(integer value)
+{
+	Mute_IsEnabled = value;
+}
+
+CALLBACK FUNCTION FarEndMute_IsEnabledUpdated(integer value)
+{
+	FarEndMute_IsEnabled = value;
+}
+
+CALLBACK FUNCTION EchoCanceller_IsEnabledUpdated(integer value)
+{
+	EchoCanceller_IsEnabled = value;
+}
+
+CALLBACK FUNCTION KeyboardNoiseReduction_IsEnabledUpdated(integer value)
+{
+	KeyboardNoiseReduction_IsEnabled = value;
+}
+
+CALLBACK FUNCTION LiveMusicMode_IsEnabledUpdated(integer value)
+{
+	LiveMusicMode_IsEnabled = value;
+}
+
+CALLBACK FUNCTION PolycomMicrophones_IsEnabledUpdated(integer value)
+{
+	PolycomMicrophones_IsEnabled = value;
+}
+
+CALLBACK FUNCTION Stereo_IsEnabledUpdated(integer value)
+{
+	Stereo_IsEnabled = value;
+}
+
+CALLBACK FUNCTION SourcePlaying_IsEnabledUpdated(integer value)
+{
+	SourcePlaying_IsEnabled = value;
+}
+
+CALLBACK FUNCTION AutoShowContent_IsEnabledUpdated(integer value)
+{
+	AutoShowContent_IsEnabled = value;
+}
+
+CALLBACK FUNCTION ContentAuto_IsEnabledUpdated(integer value)
+{
+	ContentAuto_IsEnabled = value;
+}
+
+CALLBACK FUNCTION FarControlNearCamera_IsEnabledUpdated(integer value)
+{
+	FarControlNearCamera_IsEnabled = value;
+}
+
+CALLBACK FUNCTION CameraTracking_IsEnabledUpdated(integer value)
+{
+	CameraTracking_IsEnabled = value;
+}
+
+CALLBACK FUNCTION SelfView_IsEnabledUpdated(integer value)
+{
+	SelfView_IsEnabled = value;
+}
+
+CALLBACK FUNCTION SelfView_IsAutoUpdated(integer value)
+{
+	SelfView_IsAuto = value;
+}
+
+CALLBACK FUNCTION Selected_NearEndCameraUpdated(integer value)
+{
+	Selected_NearEndCamera = value;
+}
+
+CALLBACK FUNCTION Selected_FarEndCameraUpdated(integer value)
+{
+	Selected_FarEndCamera = value;
+}
+
+CALLBACK FUNCTION CurrentPlayingSourceUpdated(integer value)
+{
+	CurrentPlayingSource_Value = value;
+}
+
+CALLBACK FUNCTION CurrentMappedSourceUpdated(integer value)
+{
+	CurrentMappedSource_Value = value;
+}
+
+CALLBACK FUNCTION Camera1ContentUpdated(integer value)
+{
+	Camera1Content_Value = value;
+}
+
+CALLBACK FUNCTION Camera2ContentUpdated(integer value)
+{
+	Camera2Content_Value = value;
+}
+
+CALLBACK FUNCTION Camera3ContentUpdated(integer value)
+{
+	Camera3Content_Value = value;
+}
+
+CALLBACK FUNCTION Camera4ContentUpdated(integer value)
+{
+	Camera4Content_Value = value;
+}
+
+CALLBACK FUNCTION VgaQualityPreferenceUpdated(integer value)
+{
+	VgaQualityPreference_Value = value;
+}
+
+CALLBACK FUNCTION PrimaryCameraUpdated(integer value)
+{
+	PrimaryCamera_Value = value;
+}
+
+CALLBACK FUNCTION SleepTimeUpdated(integer value)
+{
+	SleepTime_Value = value;
+}
+
+// CallFunction-ConnectedCall
+CALLBACK FUNCTION ConnectedCallUpdated(integer value)
+{
+	integer index;
+	for (index = 1 to value)
+	{
+		ConnectedCall_IsAvailable[index] = 1;        
+ 		ConnectedCall_Type[index] = simplSharpComponent.ConnectedCalls[index - 1].CallType;
+ 		ConnectedCall_Status[index] = simplSharpComponent.ConnectedCalls[index - 1].ConnectionStatus;
+ 		ConnectedCall_Speed[index]  = simplSharpComponent.ConnectedCalls[index - 1].Speed;
+ 		ConnectedCall_CallId[index] = simplSharpComponent.ConnectedCalls[index - 1].Id;  
+		ConnectedCall_IsAudioCall[index] = simplSharpComponent.ConnectedCalls[index - 1].SimplIsAudioCall;
+		ConnectedCall_IsVideoCall[index] = simplSharpComponent.ConnectedCalls[index - 1].SimplIsVideoCall;			
+	}
+	value = value + 1;
+	for (index = value to MAXCONCURRENTCALLS)
+	{
+     	ConnectedCall_IsAvailable[index] = 0;
+        ConnectedCall_Name[index] = "";
+		ConnectedCall_Number[index] = "";
+ 		ConnectedCall_Type[index] = "";
+ 		ConnectedCall_Status[index] = "";
+ 		ConnectedCall_Speed[index]  = "";
+ 		ConnectedCall_CallId[index] = ""; 
+		ConnectedCall_IsAudioCall[index] = 0;
+		ConnectedCall_IsVideoCall[index] = 0;
+	}
+}
+
+CALLBACK FUNCTION ConnectedCallNameUpdated(integer index, string farSiteName, string farSiteNumber)
+{
+	ConnectedCall_Name[index + 1] = farSiteName;
+	ConnectedCall_Number[index + 1] = farSiteNumber; 	
+}
+ 
+// CallFunction-IncomingCall   
+CALLBACK FUNCTION IncomingCallUpdated(integer value)
+{    
+    IncomingCall_Type = simplSharpComponent.IncomingCall.CallType;
+	IncomingCall_Status = simplSharpComponent.IncomingCall.ConnectionStatus;
+    IncomingCall_Speed = simplSharpComponent.IncomingCall.Speed;
+    IncomingCall_CallId = simplSharpComponent.IncomingCall.Id;
+	IncomingCall_IsAudioCall = simplSharpComponent.IncomingCall.SimplIsAudioCall;
+	IncomingCall_IsVideoCall = simplSharpComponent.IncomingCall.SimplIsVideoCall;
+
+    if (simplSharpComponent.IncomingCall.Id <> "")
+	{
+     	IncomingCall_IsAvailable = 1;
+	}	
+	else
+	{
+     	IncomingCall_IsAvailable = 0;
+	}
+}
+
+CALLBACK FUNCTION IncomingCallStringsUpdated(string farSiteName, string farSiteNumber)
+{
+	IncomingCall_Name = farSiteName; 
+	IncomingCall_Number = farSiteNumber;
+}
+ 
+// CallFunction-OutgoingCall
+CALLBACK FUNCTION OutgoingCallUpdated(integer value)
+{    
+	OutgoingCall_Type = simplSharpComponent.OutgoingCall.CallType;
+	OutgoingCall_Status = simplSharpComponent.OutgoingCall.ConnectionStatus;
+	OutgoingCall_Speed = simplSharpComponent.OutgoingCall.Speed;
+	OutgoingCall_CallId = simplSharpComponent.OutgoingCall.Id;
+
+    if (simplSharpComponent.OutgoingCall.Id <> "")
+	{
+     	OutgoingCall_IsAvailable = 1;
+	}	
+	else
+	{
+     	OutgoingCall_IsAvailable = 0;
+	}
+}
+
+CALLBACK FUNCTION OutgoingCallStringsUpdated(string farSiteName, string farSiteNumber)
+{
+	OutgoingCall_Name = farSiteName; 
+	OutgoingCall_Number = farSiteNumber;
+}
+
+// CallFunction-Settings
+CALLBACK FUNCTION ConnectionPreference_ValueUpdated(integer value)
+{
+	ConnectionPreference_Value = value;
+}
+
+CALLBACK FUNCTION DialingMethod_ValueUpdated(integer value)
+{
+	DialingMethod_Value = value;
+}                        
+
+// Conference
+CALLBACK FUNCTION PointToPointAutoAnswer_ModeUpdated(integer value)
+{
+ 	PointToPointAutoAnswerMode_Value = value;
+}
+
+CALLBACK FUNCTION DynamicBandwidth_IsEnabledUpdated(integer value)
+{
+     DynamicBandwidth_IsEnabled = value;
+}
+
+CALLBACK FUNCTION Pvec_IsEnabledUpdated(integer value)
+{
+     Pvec_IsEnabled = value;
+}
+
+CALLBACK FUNCTION Rsvp_IsEnabledUpdated(integer value)
+{
+     Rsvp_IsEnabled = value;
+}
+
+CALLBACK FUNCTION H239_IsEnabledUpdated(integer value)
+{
+     H239_IsEnabled = value;
+}
+
+CALLBACK FUNCTION MuteAutoAnsweredCalls_IsEnabledUpdated(integer value)
+{
+     MuteAutoAnsweredCalls_IsEnabled = value;
+}
+
+CALLBACK FUNCTION DisplayIconsInCall_IsEnabledUpdated(integer value)
+{
+     DisplayIconsInCall_IsEnabled = value;
+}
+
+CALLBACK FUNCTION Transcoding_IsEnabledUpdated(integer value)
+{
+     Transcoding_IsEnabled = value;
+}
+
+CALLBACK FUNCTION MaxTimeInCall_ValueUpdated(integer value)
+{
+     MaxTimeInCall_Value = value;
+}
+
+CALLBACK FUNCTION MaxRxBandwidth_ValueUpdated(integer value)
+{
+     MaxRxBandwidth_Value = value;
+}
+
+CALLBACK FUNCTION MaxTxBandwidth_ValueUpdated(integer value)
+{
+     MaxTxBandwidth_Value = value;
+}
+
+CALLBACK FUNCTION AesEncryptionMode_ValueUpdated(integer value)
+{
+     AesEncryptionMode_Value = value;
+}
+
+CALLBACK FUNCTION MultiPointAutoAnswerMode_ValueUpdated(integer value)
+{
+     MultiPointAutoAnswerMode_Value = value;
+}
+
+CALLBACK FUNCTION MpMode_ValueUpdated(integer value)
+{
+     MpMode_Value = value;
+}
+
+
+// Network
+ CALLBACK FUNCTION NatH323Compatible_IsEnabledUpdated(integer value)
+{
+     NatH323Compatible_IsEnabled = value;
+}
+
+CALLBACK FUNCTION H323Gateway_IsEnabledUpdated(integer value)
+{
+     H323Gateway_IsEnabled = value;
+}
+
+CALLBACK FUNCTION IpH323_IsEnabledUpdated(integer value)
+{
+     IpH323_IsEnabled = value;
+}
+
+CALLBACK FUNCTION Dhcp_IsEnabledUpdated(integer value)
+{
+     Dhcp_IsEnabled = value;
+}
+
+CALLBACK FUNCTION H460FirewallTraversal_IsEnabledUpdated(integer value)
+{
+     H460FirewallTraversal_IsEnabled = value;
+}
+
+CALLBACK FUNCTION SipDebug_IsEnabledUpdated(integer value)
+{
+     SipDebug_IsEnabled = value;
+}
+
+CALLBACK FUNCTION Sip_IsEnabledUpdated(integer value)
+{
+     Sip_IsEnabled = value;
+}
+
+CALLBACK FUNCTION GateKeeperMode_ValueUpdated(integer value)
+{
+     GateKeeperMode_Value = value;
+}
+
+CALLBACK FUNCTION LanPort_ValueUpdated(integer value)
+{
+     LanPort_Value = value;
+}
+
+CALLBACK FUNCTION NatConfiguration_ValueUpdated(integer value)
+{
+     NatConfiguration_Value = value;
+}
+
+CALLBACK FUNCTION SipTransportProtocol_ValueUpdated(integer value)
+{
+     SipTransportProtocol_Value = value;
+}
+ 
+CALLBACK FUNCTION E164Extension_ValueUpdated(string value)
+{
+     E164Extension_Value = value;
+}
+
+CALLBACK FUNCTION GateKeeperIp_ValueUpdated(string value)
+{
+     GateKeeperIp_Value = value;
+}
+
+CALLBACK FUNCTION H323Name_ValueUpdated(string value)
+{
+     H323Name_Value = value;
+}
+
+CALLBACK FUNCTION DefaultGateway_ValueUpdated(string value)
+{
+     DefaultGateway_Value = value;
+}
+
+CALLBACK FUNCTION DnsServer1_ValueUpdated(string value)
+{
+     DnsServer1_Value = value;
+}
+
+CALLBACK FUNCTION DnsServer2_ValueUpdated(string value)
+{
+     DnsServer2_Value = value;
+}
+
+CALLBACK FUNCTION DnsServer3_ValueUpdated(string value)
+{
+     DnsServer3_Value = value;
+}
+
+CALLBACK FUNCTION DnsServer4_ValueUpdated(string value)
+{
+     DnsServer4_Value = value;
+}
+
+CALLBACK FUNCTION Hostname_ValueUpdated(string value)
+{
+     Hostname_Value = value;
+}
+
+CALLBACK FUNCTION IpAddress_ValueUpdated(string value)
+{
+     IpAddress_Value = value;
+}
+
+CALLBACK FUNCTION SubnetMask_ValueUpdated(string value)
+{
+     SubnetMask_Value = value;
+}
+
+CALLBACK FUNCTION WanIpAddress_ValueUpdated(string value)
+{
+     WanIpAddress_Value = value;
+}
+
+CALLBACK FUNCTION SipAccountName_ValueUpdated(string value)
+{
+     SipAccountName_Value = value;
+}
+
+CALLBACK FUNCTION SipPassword_ValueUpdated(string value)
+{
+     SipPassword_Value = value;
+}
+
+CALLBACK FUNCTION SipProxyServer_ValueUpdated(string value)
+{
+     SipProxyServer_Value = value;
+}
+
+CALLBACK FUNCTION SipRegistrarServer_ValueUpdated(string value)
+{
+     SipRegistrarServer_Value = value;
+}
+
+CALLBACK FUNCTION SipUsername_ValueUpdated(string value)
+{
+     SipUsername_Value = value;
+}
+
+// GlobalServices
+CALLBACK FUNCTION CalendarMeetingStringsUpdated(integer index, string name, string organizer)
+{
+	CalendarMeetingNames[index + 1] = name;
+	CalendarMeetingOrganizers[index + 1] = organizer; 		
+}
+
+CALLBACK FUNCTION CalendarMeetingsUpdated(integer value)
+{
+ 	integer i;
+	for (i = 1 to value)
+	{        
+		CalendarMeetingStartTimes[i] 	= simplSharpComponent.CalendarMeetings[i - 1].StartTimeString;
+		CalendarMeetingEndTimes[i] 		= simplSharpComponent.CalendarMeetings[i - 1].EndTimeString;
+		CalendarMeetingUIDs[i] 			= simplSharpComponent.CalendarMeetings[i - 1].UniqueId;
+		CalendarMeetingDurations[i]		= simplSharpComponent.CalendarMeetings[i - 1].DurationString;
+		CalendarMeetingIsDialable[i]	= simplSharpComponent.CalendarMeetings[i - 1].SimplIsDialable;
+	}
+	for (i = value + 1 to MAXCALENDARMEETINGS)
+	{
+    	CalendarMeetingNames[i] 		= "";
+        CalendarMeetingStartTimes[i] 	= "";
+		CalendarMeetingEndTimes[i] 		= "";
+		CalendarMeetingUIDs[i] 			= ""; 
+		CalendarMeetingOrganizers[i] 	= "";  
+		CalendarMeetingDurations[i]		= "";
+		CalendarMeetingIsDialable[i]	= 0;  	
+	}
+	CalendarMeetingCount = value;
+}
+ 
+CALLBACK FUNCTION SelectedCalendarMeeintgStringsUpdated(string name, string organizer, string location, string subject, string password)
+{ 
+	Selected_CalendarMeetingName 			= name;
+   	Selected_CalendarMeetingOrganizer 		= organizer;
+	Selected_CalendarMeetingLocation 		= location;
+	Selected_CalendarMeetingSubject 		= subject;	
+	Selected_CalendarMeetingPassword 		= password;
+}
+
+CALLBACK FUNCTION CalendarMeetingInfoUpdated(integer dialingNumberCount)
+{
+	integer i;
+
+    if (simplSharpComponent.SelectedCalendarMeeting.Name <> "")
+	{
+		Selected_CalendarMeetingStartTime 		= simplSharpComponent.SelectedCalendarMeeting.StartTimeString;
+		Selected_CalendarMeetingEndTime 		= simplSharpComponent.SelectedCalendarMeeting.EndTimeString;
+	}
+
+	Selected_CalendarMeetingUID 			= simplSharpComponent.SelectedCalendarMeeting.UniqueId;
+	Selected_CalendarMeetingDuration		= simplSharpComponent.SelectedCalendarMeeting.DurationString;
+   	Selected_CalendarMeetingIsPublic 		= simplSharpComponent.SelectedCalendarMeeting.SimplIsPublic;
+	Selected_CalendarMeetingIsDialable 		= simplSharpComponent.SelectedCalendarMeeting.SimplIsDialable;
+
+	if (dialingNumberCount = 0)
+	{
+		Selected_CalendarMeetingNumberURI = "";
+        Selected_CalendarMeetingNumberType = 0;
+        Selected_CalendarMeetingNumberProtocol = 0;
+
+		for (i = 1 to MAXCALENDARMEETINGDIALINGMETHODS)
+		{
+        	CalendarMeetingNumberURI[i] 			= "";
+     		CalendarMeetingNumberType[i] 			= 0;
+     		CalendarMeetingNumberProtocol[i] 		= 0;         	
+		}
+	}
+	else
+	{
+		Selected_CalendarMeetingNumberURI		= simplSharpComponent.SelectedCalendarMeeting.SimplDialingNumbers[0].Uri;
+		Selected_CalendarMeetingNumberType		= simplSharpComponent.SelectedCalendarMeeting.SimplDialingNumbers[0].SimplCallType;
+		Selected_CalendarMeetingNumberProtocol	= simplSharpComponent.SelectedCalendarMeeting.SimplDialingNumbers[0].SimplCallProtocol;
+	}
+
+	for (i = 1 to dialingNumberCount)
+	{
+     	CalendarMeetingNumberURI[i] 			= simplSharpComponent.SelectedCalendarMeeting.SimplDialingNumbers[i - 1].Uri;
+     	CalendarMeetingNumberType[i] 			= simplSharpComponent.SelectedCalendarMeeting.SimplDialingNumbers[i - 1].SimplCallType;
+     	CalendarMeetingNumberProtocol[i] 		= simplSharpComponent.SelectedCalendarMeeting.SimplDialingNumbers[i - 1].SimplCallProtocol;
+	}
+		
+    for (i = dialingNumberCount + 1 to MAXCALENDARMEETINGDIALINGMETHODS)
+	{
+        CalendarMeetingNumberURI[i] 			= "";
+     	CalendarMeetingNumberType[i] 			= 0;
+     	CalendarMeetingNumberProtocol[i] 		= 0;
+	}
+}
+
+CALLBACK FUNCTION CalendarMeetingCallMethodUpdated(integer value)
+{
+	Selected_CalendarMeetingNumberURI		= simplSharpComponent.SelectedCalendarDialingNumber.Uri;
+	Selected_CalendarMeetingNumberType		= simplSharpComponent.SelectedCalendarDialingNumber.SimplCallType;
+	Selected_CalendarMeetingNumberProtocol	= simplSharpComponent.SelectedCalendarDialingNumber.SimplCallProtocol; 	
+}
+
+CALLBACK FUNCTION CalenderPlayTone_IsEnabledUpdated(integer value)
+{
+     CalenderPlayTone_IsEnabled = value;
+}
+
+CALLBACK FUNCTION CalenderService_IsEnabledUpdated(integer value)
+{
+     CalenderService_IsEnabled = value;
+}
+
+CALLBACK FUNCTION Calender_IsConnectedUpdated(integer value)
+{
+     Calender_IsConnected = value;
+}
+
+CALLBACK FUNCTION CalenderRemainingTime_ValueUpdated(integer value)
+{
+     CalenderRemainingTime_Value = value;
+}
+
+CALLBACK FUNCTION  PrivateMeetingsDisplay_IsEnabledUpdated(integer value)
+{
+     PrivateMeetingsDisplay_IsEnabled = value;
+}
+
+CALLBACK FUNCTION LdapDirectoryServer_IsEnabledUpdated(integer value)
+{
+     LdapDirectoryServer_IsEnabled = value;
+}
+
+CALLBACK FUNCTION LdapSsl_IsEnabledUpdated(integer value)
+{
+     LdapSsl_IsEnabled = value;
+}
+
+CALLBACK FUNCTION LdapAuthenticationType_ValueUpdated(integer value)
+{
+     LdapAuthenticationType_Value = value;
+}
+
+CALLBACK FUNCTION Snmp_IsEnabledUpdated(integer value)
+{
+     Snmp_IsEnabled = value;
+}
+
+CALLBACK FUNCTION SnmpTrapVersion_ValueUpdated(integer value)
+{
+     SnmpTrapVersion_Value = value;
+}
+
+CALLBACK FUNCTION CalenderPassword_ValueUpdated(string value)
+{
+     	CalenderPassword_Value = value;
+}
+
+CALLBACK FUNCTION MailboxAccountAddress_ValueUpdated(string value)
+{
+     	MailboxAccountAddress_Value = value;
+}
+
+CALLBACK FUNCTION CalenderServer_ValueUpdated(string value)
+{
+     	CalenderServer_Value = value;
+}
+
+CALLBACK FUNCTION CalenderUser_ValueUpdated(string value)
+{
+     	CalenderUser_Value = value;
+}
+
+CALLBACK FUNCTION LdapBaseName_ValueUpdated(string value)
+{
+     	LdapBaseName_Value = value;
+}
+
+CALLBACK FUNCTION LdapBindDn_ValueUpdated(string value)
+{
+     	LdapBindDn_Value = value;
+}
+
+CALLBACK FUNCTION LdapNtlmDomain_ValueUpdated(string value)
+{
+     	LdapNtlmDomain_Value = value;
+}
+
+CALLBACK FUNCTION LdapPassword_ValueUpdated(string value)
+{
+     	LdapPassword_Value = value;
+}
+
+CALLBACK FUNCTION LdapServerAddress_ValueUpdated(string value)
+{
+     	LdapServerAddress_Value = value;
+}
+
+CALLBACK FUNCTION LdapUsername_ValueUpdated(string value)
+{
+     	LdapUsername_Value = value;
+}
+
+CALLBACK FUNCTION SnmpAdminName_ValueUpdated(string value)
+{
+     	SnmpAdminName_Value = value;
+}
+
+CALLBACK FUNCTION SnmpCommunityName_ValueUpdated(string value)
+{
+     	SnmpCommunityName_Value = value;
+}
+
+CALLBACK FUNCTION SnmpConsoleIpAddress_ValueUpdated(string value)
+{
+     	SnmpConsoleIpAddress_Value = value;
+}
+
+CALLBACK FUNCTION SnmpLocationName_ValueUpdated(string value)
+{
+     	SnmpLocationName_Value = value;
+}
+
+CALLBACK FUNCTION SnmpSystemDescription_ValueUpdated(string value)
+{
+     	SnmpSystemDescription_Value = value;
+}
+
+// System
+CALLBACK FUNCTION Sleep_IsActiveUpdated(integer value)
+{
+     Sleep_IsActive = value;
+}
+
+CALLBACK FUNCTION DaylightSavingsTime_IsEnabledUpdated(integer value)
+{
+     DaylightSavingsTime_IsEnabled = value;
+}
+
+CALLBACK FUNCTION EchoReply_IsEnabledUpdated(integer value)
+{
+     EchoReply_IsEnabled = value;
+}
+
+CALLBACK FUNCTION Remote_IsEnabledUpdated(integer value)
+{
+     Remote_IsEnabled = value;
+}
+
+CALLBACK FUNCTION BasicMode_IsEnabledUpdated(integer value)
+{
+     BasicMode_IsEnabled = value;
+}
+
+CALLBACK FUNCTION Version_ValueUpdated(string value)
+{
+     Version_Value = value;
+}
+
+CALLBACK FUNCTION SerialNumber_ValueUpdated(string value)
+{
+     SerialNumber_Value = value;
+}
+
+CALLBACK FUNCTION Model_ValueUpdated(string value)
+{
+     Model_Value = value;
+}
+
+CALLBACK FUNCTION SystemName_ValueUpdated(string value)
+{
+     SystemName_Value = value;
+}
+
+
+// LocalDirectory
+CALLBACK FUNCTION LocalDirectory_IsSearchingUpdated(integer value)
+{
+     LocalDirectory_IsSearching = value;
+}
+
+CALLBACK FUNCTION LocalDirectory_SelectedNameUpdated(string value)
+{
+     LocalDirectory_SelectedName = value;
+}
+
+CALLBACK FUNCTION LocalDirectory_SelectedItemIsGroup(integer value)
+{
+ 	LocalDirectory_IsGroup = value;
+}
+    
+CALLBACK FUNCTION LocalDirectoryNameUpdated(integer index, string value)
+{
+	LocalDirectory_Name[index + 1] = value;
+}
+
+// GlobalDirectory LiveSearch
+CALLBACK FUNCTION GlobalDirectoryLiveSearch_IsSearchingUpdated(integer value)
+{
+     GlobalDirectoryLiveSearch_IsSearching = value;
+}
+
+CALLBACK FUNCTION GlobalDirectoryLiveSearch_SelectedNameUpdated(string value)
+{
+     GlobalDirectoryLiveSearch_SelectedName = value;
+}
+
+CALLBACK FUNCTION GlobalDirectoryLiveSearchNameUpdated(integer index, string value)
+{
+	GlobalDirectoryLiveSearch_Name[index + 1] = value;
+}
+
+CALLBACK FUNCTION GlobalDirectoryLiveSearch_SelectedItemIsGroup(integer value)
+{
+ 	GlobalDirectoryLiveSearch_IsGroup = value;
+}
+       
+
+// GlobalDirectory
+CALLBACK FUNCTION GlobalDirectory_IsSearchingUpdated(integer value)
+{
+     GlobalDirectory_IsSearching = value;
+}
+
+CALLBACK FUNCTION GlobalDirectory_SelectedNameUpdated(string value)
+{
+     GlobalDirectory_SelectedName = value;
+}
+
+CALLBACK FUNCTION GlobalDirectoryNameUpdated(integer index, string value)
+{
+	GlobalDirectory_Name[index + 1] = value;
+}
+
+CALLBACK FUNCTION GlobalDirectory_SelectedItemIsGroup(integer value)
+{
+ 	GlobalDirectory_IsGroup = value;
+}
+
+    
+// COMTransport
+CALLBACK FUNCTION COMTransport_ConnectionStateUpdated(integer value)
+{
+     COMTransport_ConnectionState = value;
+}
+
+CALLBACK FUNCTION COMTransport_ProcessingDataUpdated(integer value)
+{
+     COMTransport_ProcessingData = value;
+}
+
+CALLBACK FUNCTION SendToDevice(string value)
+{
+     ToDevice = value;
+}
+
+
+// SSHTransport
+CALLBACK FUNCTION SshTransport_ConnectionStateUpdated(integer value)
+{
+     SshTransport_ConnectionState = value;
+}
+
+CALLBACK FUNCTION SshTransport_ProcessingDataUpdated(integer value)
+{
+     SshTransport_ProcessingData = value;
+}
+ 
+CALLBACK FUNCTION SshUnknownKeyReceivedUpdated(string keyFingerprint)
+{
+	if (SSHUnknownKeyReceived <> 1)
+	{
+		SSHUnknownKeyReceived = 1;
+	}
+	SSHKey = keyFingerprint;
+}
+
+CALLBACK FUNCTION RxDataReceived(string data)
+{
+ 	SSHRx = data;
+}
+
+/////////////////////////////////////////////////////////////
+///////////////////////////////// Change Events /////////////
+///////////////////////////////////////////////////////////// 
+                  
+PUSH SendContentSource
+{
+	simplSharpComponent.SendContentSource(GetLastModifiedArrayIndex());
+}
+      
+PUSH Mute_Volume
+{
+    simplSharpComponent.Mute_Volume();
+}
+
+PUSH Unmute_Volume
+{
+    simplSharpComponent.Unmute_Volume();
+}
+
+CHANGE Set_AudioTransmitLevel
+{
+	simplSharpComponent.Set_AudioTransmitLevel(Set_AudioTransmitLevel);
+}
+
+CHANGE Set_LineInLevel
+{
+	simplSharpComponent.Set_LineInLevel(Set_LineInLevel);
+}
+
+CHANGE Set_Volume
+{
+	simplSharpComponent.Set_Volume(Set_Volume);
+}
+
+PUSH Increase_Volume
+{
+	simplSharpComponent.Increase_Volume();
+}
+
+PUSH Decrease_Volume
+{
+	simplSharpComponent.Decrease_Volume();
+}
+
+RELEASE Increase_Volume
+{
+	simplSharpComponent.Release_Volume();
+}
+
+RELEASE Decrease_Volume
+{
+	simplSharpComponent.Release_Volume();
+}
+
+
+CHANGE Set_MediaInLevel
+{
+	simplSharpComponent.Set_MediaInLevel(Set_MediaInLevel);
+}
+
+PUSH Enable_Mute
+{
+	simplSharpComponent.Enable_Mute();
+}
+
+PUSH Disable_Mute
+{
+	simplSharpComponent.Disable_Mute();
+}
+
+PUSH Enable_EchoCanceller
+{
+	simplSharpComponent.Enable_EchoCanceller();
+}
+
+PUSH Disable_EchoCanceller
+{
+	simplSharpComponent.Disable_EchoCanceller();
+}
+
+PUSH Enable_KeyboardNoiseReduction
+{
+	simplSharpComponent.Enable_KeyboardNoiseReduction();
+}
+
+PUSH Disable_KeyboardNoiseReduction
+{
+	simplSharpComponent.Disable_KeyboardNoiseReduction();
+}
+
+PUSH Enable_LiveMusicMode
+{
+	simplSharpComponent.Enable_LiveMusicMode();
+}
+
+PUSH Disable_LiveMuseMode
+{
+	simplSharpComponent.Disable_LiveMuseMode();
+}
+
+PUSH Enable_PolycomMicrophones
+{
+	simplSharpComponent.Enable_PolycomMicrophones();
+}
+
+PUSH Disable_PolycomMicrophones
+{
+	simplSharpComponent.Disable_PolycomMicrophones();
+}
+
+PUSH Enable_Stereo
+{
+	simplSharpComponent.Enable_Stereo();
+} 
+
+
+PUSH Disable_Stereo
+{
+	simplSharpComponent.Disable_Stereo();
+}
+
+PUSH Enable_AutoShowContent
+{
+	simplSharpComponent.Enable_AutoShowContent();
+}
+
+PUSH Disable_AutoShowContent
+{
+	simplSharpComponent.Disable_AutoShowContent();
+}
+
+PUSH Enable_ContentAuto
+{
+	simplSharpComponent.Enable_ContentAuto();
+}
+
+PUSH Disable_ContentAuto
+{
+	simplSharpComponent.Disable_ContentAuto();
+}
+
+PUSH Enable_FarControlNearCamera
+{
+	simplSharpComponent.Enable_FarControlNearCamera();
+}
+
+PUSH Disable_FarControlNearCamera
+{
+	simplSharpComponent.Disable_FarControlNearCamera();
+}
+
+PUSH Enable_CameraTracking
+{
+	simplSharpComponent.Enable_CameraTracking();
+}
+
+PUSH Disable_CameraTracking
+{
+	simplSharpComponent.Disable_CameraTracking();
+}
+
+PUSH Enable_SelfView
+{
+	simplSharpComponent.Enable_SelfView();
+}
+
+PUSH Disable_SelfView
+{
+	simplSharpComponent.Disable_SelfView();
+}
+
+PUSH Auto_Selfview
+{
+	simplSharpComponent.Auto_Selfview();
+}
+
+CHANGE Set_LineOutMode
+{
+	simplSharpComponent.Set_LineOutMode(Set_LineOutMode);
+}
+
+CHANGE Set_CurrentPlayingSource
+{
+	simplSharpComponent.Set_CurrentPlayingSource(Set_CurrentPlayingSource);
+}
+
+CHANGE Set_CurrentMappedSource
+{
+	simplSharpComponent.Set_CurrentMappedSource(Set_CurrentMappedSource);
+}
+
+CHANGE Set_Camera1Content
+{
+	simplSharpComponent.Set_Camera1Content(Set_Camera1Content);
+}
+
+CHANGE Set_Camera2Content
+{
+	simplSharpComponent.Set_Camera2Content(Set_Camera2Content);
+}
+
+CHANGE Set_Camera3Content
+{
+	simplSharpComponent.Set_Camera3Content(Set_Camera3Content);
+}
+
+CHANGE Set_Camera4Content
+{
+	simplSharpComponent.Set_Camera4Content(Set_Camera4Content);
+}
+
+CHANGE Set_VgaQualityPreference
+{
+	simplSharpComponent.Set_VgaQualityPreference(Set_VgaQualityPreference);
+}
+
+CHANGE Set_PrimaryCamera
+{
+	simplSharpComponent.Set_PrimaryCamera(Set_PrimaryCamera);
+}
+
+CHANGE Set_SleepTime     
+{
+	simplSharpComponent.Set_SleepTime(Set_SleepTime);
+}
+
+CHANGE Select_NearEndCamera 
+{
+	simplSharpComponent.Select_NearEndCamera(Select_NearEndCamera);
+}
+
+PUSH ZoomIn_NearEndCamera
+{
+	simplSharpComponent.ZoomIn_NearEndCamera();
+}
+
+PUSH ZoomOut_NearEndCamera
+{
+	simplSharpComponent.ZoomOut_NearEndCamera();
+}
+
+PUSH MoveUp_NearEndCamera
+{
+	simplSharpComponent.MoveUp_NearEndCamera();
+}
+
+PUSH MoveDown_NearEndCamera
+{
+	simplSharpComponent.MoveDown_NearEndCamera();
+}
+
+PUSH MoveLeft_NearEndCamera
+{
+	simplSharpComponent.MoveLeft_NearEndCamera();
+}
+
+PUSH MoveRight_NearEndCamera
+{
+	simplSharpComponent.MoveRight_NearEndCamera();
+}
+
+RELEASE MoveRight_NearEndCamera, MoveLeft_NearEndCamera, MoveDown_NearEndCamera, MoveUp_NearEndCamera, ZoomOut_NearEndCamera, ZoomIn_NearEndCamera
+{
+ 	simplSharpComponent.ReleaseMovement_NearEndCamera();
+}
+
+CHANGE SelectPreset_NearEndCamera
+{
+	simplSharpComponent.SelectPreset_NearEndCamera(SelectPreset_NearEndCamera);
+}
+
+CHANGE SetPreset_NearEndCamera
+{
+	simplSharpComponent.SetPreset_NearEndCamera(SetPreset_NearEndCamera);
+}
+
+CHANGE Select_FarEndCamera 
+{
+	simplSharpComponent.Select_FarEndCamera(Select_FarEndCamera);
+}
+
+PUSH ZoomIn_FarEndCamera
+{
+	simplSharpComponent.ZoomIn_FarEndCamera();
+}
+
+PUSH ZoomOut_FarEndCamera
+{
+	simplSharpComponent.ZoomOut_FarEndCamera();
+}
+
+PUSH MoveUp_FarEndCamera
+{
+	simplSharpComponent.MoveUp_FarEndCamera();
+}
+
+PUSH MoveDown_FarEndCamera
+{
+	simplSharpComponent.MoveDown_FarEndCamera();
+}
+
+PUSH MoveLeft_FarEndCamera
+{
+	simplSharpComponent.MoveLeft_FarEndCamera();
+}
+
+PUSH MoveRight_FarEndCamera
+{
+	simplSharpComponent.MoveRight_FarEndCamera();
+}
+
+RELEASE MoveRight_FarEndCamera, MoveLeft_FarEndCamera, MoveDown_FarEndCamera, MoveUp_FarEndCamera, ZoomOut_FarEndCamera, ZoomIn_FarEndCamera
+{
+	simplSharpComponent.ReleaseMovement_FarEndCamera();
+}
+
+CHANGE SelectPreset_FarEndCamera
+{
+	simplSharpComponent.SelectPreset_FarEndCamera(SelectPreset_FarEndCamera);
+}
+
+CHANGE SetPreset_FarEndCamera
+{
+	simplSharpComponent.SetPreset_FarEndCamera(SetPreset_FarEndCamera);
+}
+
+PUSH StopPlayingSource
+{
+ 	simplSharpComponent.StopPlayingSource();
+}
+
+
+// CallFunction-Dialing
+PUSH PlaceVideoCall      
+{
+	simplSharpComponent.PlaceVideoCall(CallString, VideoCallRate, VideoCallProtocol);
+}
+
+PUSH PlaceAudioCall      
+{
+	simplSharpComponent.PlaceAudioCall(CallString, AudioCallProtocol);
+}
+
+PUSH Dtmf_Tone_0
+{
+	simplSharpComponent.Dtmf_Tone_0();
+}
+
+PUSH Dtmf_Tone_1
+{
+	simplSharpComponent.Dtmf_Tone_1();
+}
+
+PUSH Dtmf_Tone_2
+{
+	simplSharpComponent.Dtmf_Tone_2();
+}
+
+PUSH Dtmf_Tone_3
+{
+	simplSharpComponent.Dtmf_Tone_3();
+}
+
+PUSH Dtmf_Tone_4
+{
+	simplSharpComponent.Dtmf_Tone_4();
+}
+
+PUSH Dtmf_Tone_5
+{
+	simplSharpComponent.Dtmf_Tone_5();
+}
+
+PUSH Dtmf_Tone_6
+{
+	simplSharpComponent.Dtmf_Tone_6();
+}
+
+PUSH Dtmf_Tone_7
+{
+	simplSharpComponent.Dtmf_Tone_7();
+}
+
+PUSH Dtmf_Tone_8
+{
+	simplSharpComponent.Dtmf_Tone_8();
+}
+
+PUSH Dtmf_Tone_9
+{
+	simplSharpComponent.Dtmf_Tone_9();
+}
+
+PUSH Dtmf_Tone_Pound
+{
+	simplSharpComponent.Dtmf_Tone_Pound();
+}
+
+PUSH Dtmf_Tone_Asterisk
+{
+	simplSharpComponent.Dtmf_Tone_Asterisk();
+}
+
+// CallFunction-IncomingCall
+PUSH AnswerIncomingCall
+{
+	simplSharpComponent.AnswerIncomingCall();
+}
+
+PUSH IgnoreIncomingCall 
+{
+	simplSharpComponent.IgnoreIncomingCall();
+}
+                           
+
+// CallFunction-OutgoingCall
+PUSH CancelOutgoingCall
+{
+	simplSharpComponent.CancelOutgoingCall();
+}
+
+
+// CallFunction-ConnectedCall
+PUSH HangUpAllCalls
+{
+	simplSharpComponent.HangUpAllCalls();
+}
+
+PUSH HangUpCalll_1
+{
+	simplSharpComponent.HangUpCall1();
+}
+
+PUSH HangUpCalll_2
+{
+	simplSharpComponent.HangUpCall2();
+}
+
+PUSH HangUpCalll_3
+{
+	simplSharpComponent.HangUpCall3();
+}
+
+PUSH HangUpCalll_4
+{
+	simplSharpComponent.HangUpCall4();
+}
+
+PUSH HangUpCalll_5
+{
+	simplSharpComponent.HangUpCall5();
+}
+
+
+// CallFunction-Settings
+CHANGE Set_ConnectionPreference
+{
+	simplSharpComponent.Set_ConnectionPreference(Set_ConnectionPreference);
+}
+
+CHANGE Set_DialingMethod
+{
+	simplSharpComponent.Set_DialingMethod(Set_DialingMethod);
+}
+
+
+// Conference
+
+CHANGE Set_PointToPointAutoAnswerMode
+{
+	simplSharpComponent.Set_PointToPointAutoAnswerMode(Set_PointToPointAutoAnswerMode);
+}
+
+PUSH Enable_DynamicBandwidth
+{
+	simplSharpComponent.Enable_DynamicBandwidth();
+}
+
+PUSH Disable_DynamicBandwidth
+{
+	simplSharpComponent.Disable_DynamicBandwidth();
+}
+
+PUSH Enable_Pvec
+{
+ 	simplSharpComponent.Enable_Pvec();
+}
+
+PUSH Disable_Pvec
+{
+	simplSharpComponent.Disable_Pvec();
+}
+
+PUSH Enable_Rsvp
+{
+	simplSharpComponent.Enable_Rsvp();
+}
+
+PUSH Disable_Rsvp
+{
+	simplSharpComponent.Disable_Rsvp();
+}
+
+PUSH Enable_H239
+{
+	simplSharpComponent.Enable_H329();
+}
+
+PUSH Disable_H239
+{
+	simplSharpComponent.Disable_H329();
+}
+
+PUSH Enable_MuteAutoAnsweredCalls
+{
+	simplSharpComponent.Enable_MuteAutoAnsweredCalls();
+}
+
+PUSH Disable_MuteAutoAnsweredCalls
+{
+	simplSharpComponent.Disable_MuteAutoAnsweredCalls();
+}
+
+PUSH Enable_DisplayIconsInCall
+{
+	simplSharpComponent.Enable_DisplayIconsInCall();
+}
+
+PUSH Disable_DisplayIconsInCall
+{
+	simplSharpComponent.Disable_DisplayIconsInCall();
+}
+
+PUSH Enable_Transcoding
+{
+	simplSharpComponent.Enable_Transcoding();
+}
+
+PUSH Disable_Transcoding
+{
+	simplSharpComponent.Disable_Transcoding();
+}
+
+CHANGE Set_AesEncryptionMode
+{
+	simplSharpComponent.Set_AesEncryptionMode(Set_AesEncryptionMode);
+}
+
+CHANGE Set_MaxTimeInCall
+{
+	simplSharpComponent.Set_MaxTimeInCall(Set_MaxTimeInCall);
+}
+
+CHANGE Set_MultiPointAutoAnswerMode
+{
+	simplSharpComponent.Set_MultiPointAutoAnswerMode(Set_MultiPointAutoAnswerMode);
+}
+
+CHANGE Set_MpMode
+{
+	simplSharpComponent.Set_MpMode(Set_MpMode);
+}
+
+CHANGE Set_MaxRxBandwidth
+{
+	simplSharpComponent.Set_MaxRxBandwidth(Set_MaxRxBandwidth);
+}
+
+CHANGE Set_MaxTxBandwidth
+{
+	simplSharpComponent.Set_MaxTxBandwidth(Set_MaxTxBandwidth);
+}
+
+
+// Network
+PUSH Enable_NatH323Compatible
+{
+	simplSharpComponent.Enable_NatH323Compatible();
+}
+
+PUSH Disable_NatH323Compatible
+{
+	simplSharpComponent.Disable_NatH323Compatible();
+}
+
+PUSH Enable_H323Gateway
+{
+	simplSharpComponent.Enable_H323Gateway();
+}
+
+PUSH Disable_H323Gateway
+{
+	simplSharpComponent.Disable_H323Gateway();
+}
+
+PUSH Enable_IpH323
+{
+	simplSharpComponent.Enable_IpH323();
+}
+
+PUSH Disable_IpH323
+{
+	simplSharpComponent.Disable_IpH323();
+}
+
+PUSH Enable_Dhcp
+{
+	simplSharpComponent.Enable_Dhcp();
+}
+
+PUSH Disable_Dhcp
+{
+	simplSharpComponent.Disable_Dhcp();
+}
+
+PUSH Enable_SipDebug
+{
+	simplSharpComponent.Enable_SipDebug();
+}
+
+PUSH Disable_SipDebug
+{
+	simplSharpComponent.Disable_SipDebug();
+}
+
+PUSH Enable_Sip
+{
+	simplSharpComponent.Enable_Sip();
+}
+
+PUSH Disable_Sip
+{
+	simplSharpComponent.Disable_Sip();
+}
+
+CHANGE Set_E164Extension
+{
+	simplSharpComponent.Set_E164Extension(Set_E164Extension);
+}
+
+CHANGE Set_GateKeeperIp
+{
+	simplSharpComponent.Set_GateKeeperIp(Set_GateKeeperIp);
+}
+
+CHANGE Set_H323Name
+{
+	simplSharpComponent.Set_H323Name(Set_H323Name);
+}
+
+CHANGE Set_GatekeeperMode
+{
+	simplSharpComponent.Set_GatekeeperMode(Set_GatekeeperMode);
+}
+
+CHANGE Set_DefaultGateway
+{
+	simplSharpComponent.Set_DefaultGateway(Set_DefaultGateway);
+}
+
+CHANGE Set_DnsServer1
+{
+	simplSharpComponent.Set_DnsServer(1, Set_DnsServer1);
+}
+
+CHANGE Set_DnsServer2
+{
+	simplSharpComponent.Set_DnsServer(2, Set_DnsServer2);
+}
+
+CHANGE Set_DnsServer3
+{
+	simplSharpComponent.Set_DnsServer(3, Set_DnsServer3);
+}
+
+
+CHANGE Set_DnsServer4
+{
+	simplSharpComponent.Set_DnsServer(4, Set_DnsServer4);
+}
+
+CHANGE Set_Hostname
+{
+	simplSharpComponent.Set_Hostname(Set_Hostname);
+}
+
+CHANGE Set_IpAddress
+{
+	simplSharpComponent.Set_IpAddress(Set_IpAddress);
+}
+
+CHANGE Set_LanPort
+{
+	simplSharpComponent.Set_LanPort(Set_LanPort);
+}
+
+CHANGE Set_NatConfiguration
+{
+	simplSharpComponent.Set_NatConfiguration(Set_NatConfiguration);
+}
+
+CHANGE Set_SubnetMask
+{
+	simplSharpComponent.Set_SubnetMask(Set_SubnetMask);
+}
+
+CHANGE Set_WanIpAddress
+{
+	simplSharpComponent.Set_WanIpAddress(Set_WanIpAddress);
+}
+
+CHANGE Set_SipAccountName
+{
+	simplSharpComponent.Set_SipAccountName(Set_SipAccountName);
+}
+
+CHANGE Set_SipPassword
+{
+	simplSharpComponent.Set_SipPassword(Set_SipPassword);
+}
+
+CHANGE Set_SipProxyServer
+{
+	simplSharpComponent.Set_SipProxyServer(Set_SipProxyServer);
+}
+
+CHANGE Set_SipRegistrarServer
+{
+	simplSharpComponent.Set_SipRegistrarServer(Set_SipRegistrarServer);
+}
+
+CHANGE Set_SipTransportProtocol
+{
+	simplSharpComponent.Set_SipTransportProtocol(Set_SipTransportProtocol);
+}
+
+CHANGE Set_SipUsername
+{
+	simplSharpComponent.Set_SipUsername(Set_SipUsername);
+}
+
+// GlobalServices 
+CHANGE Calendar_DateFormat
+{
+	simplSharpComponent.SetCalendarDateFormat(Calendar_DateFormat);
+}
+
+CHANGE Calendar_TimeFormat
+{
+	simplSharpComponent.SetCalendarTimeFormat(Calendar_TimeFormat);
+}
+
+PUSH Calendar_EnableInitialPoll
+{
+	simplSharpComponent.Calendar_EnableInitialPoll(1);	
+} 
+
+RELEASE Calendar_EnableInitialPoll
+{
+	simplSharpComponent.Calendar_EnableInitialPoll(0);	
+}
+
+PUSH Update_CalendarMeetings
+{
+	simplSharpComponent.UpdateCalendarMeetings();
+}
+
+PUSH Clear_SelectedCalendarMeeting
+{
+	simplSharpComponent.SelectCalendarMeeting(0);
+	simplSharpComponent.SelectCalendarDialingMethod(0);
+}
+
+PUSH Clear_CallMethodForCalendarMeeting
+{
+	simplSharpComponent.SelectCalendarDialingMethod(0);
+}
+
+PUSH Dial_SelectedCalendarMeeting
+{
+//	simplSharpComponent.DialSelectedCalendarMeeting(_calendarMeetingUids[Select_CalendarMeeting - 1]);
+	simplSharpComponent.DialSelectedCalendarMeeting(Select_CalendarMeeting, Select_CallMethodForCalendarMeeting);
+}
+
+CHANGE Select_CalendarMeeting
+{
+	simplSharpComponent.SelectCalendarMeeting(Select_CalendarMeeting);
+}
+
+CHANGE Select_CallMethodForCalendarMeeting
+{
+ 	simplSharpComponent.SelectCalendarDialingMethod(Select_CallMethodForCalendarMeeting);
+}
+
+PUSH  Enable_CalenderPlayTone
+{
+	simplSharpComponent.Enable_CalenderPlayTone();
+}
+
+PUSH  Disable_CalenderPlayTone
+{
+	simplSharpComponent.Disable_CalenderPlayTone();
+}
+
+PUSH  Enable_CalenderService
+{
+	simplSharpComponent.Enable_CalenderService();
+}
+
+PUSH  Disable_CalenderService
+{
+	simplSharpComponent.Disable_CalenderService();
+}
+
+PUSH  Enable_PrivateMeetingsDisplayed
+{
+	simplSharpComponent.Enable_PrivateMeetingsDisplayed();
+}
+
+PUSH  Disable_PrivateMeetingsDisplayed
+{
+	simplSharpComponent.Disable_PrivateMeetingsDisplayed();
+}
+
+PUSH  Enable_LdapDirectoryServer
+{
+	simplSharpComponent.Enable_LdapDirectoryServer();
+}
+
+PUSH  Disable_LdapDirectoryServer
+{
+	simplSharpComponent.Disable_LdapDirectoryServer();
+}
+
+PUSH  Enable_LdapSsl
+{
+	simplSharpComponent.Enable_LdapSsl();
+}
+
+PUSH  Disable_LdapSsl
+{
+	simplSharpComponent.Disable_LdapSsl();
+}
+
+PUSH  Enable_Snmp
+{
+	simplSharpComponent.Enable_Snmp();
+}
+
+PUSH  Disable_Snmp
+{
+	simplSharpComponent.Disable_Snmp();
+}
+
+CHANGE  Set_CalenderPassword
+{
+	simplSharpComponent.Set_CalenderPassword(Set_CalenderPassword);
+}
+
+CHANGE   Set_CalenderRemainingTime
+{
+	simplSharpComponent.Set_CalenderRemainingTime(Set_CalenderRemainingTime);
+}
+
+CHANGE  Set_MailboxAccountAddress
+{
+	simplSharpComponent.Set_MailboxAccountAddress(Set_MailboxAccountAddress);
+}
+
+CHANGE  Set_CalenderServer
+{
+	simplSharpComponent.Set_CalenderServer(Set_CalenderServer);
+}
+
+CHANGE  Set_CalenderUser
+{
+	simplSharpComponent.Set_CalenderUser(Set_CalenderUser);
+}
+
+CHANGE  Set_LdapAuthenticationType
+{
+	simplSharpComponent.Set_LdapAuthenticationType(Set_LdapAuthenticationType);
+}
+
+CHANGE   Set_LdapBaseName
+{
+	simplSharpComponent.Set_LdapBaseName(Set_LdapBaseName);
+}
+
+CHANGE Set_LdapBindDn
+{
+	simplSharpComponent.Set_LdapBindDn(Set_LdapBindDn);
+}  
+
+CHANGE Set_LdapNtlmDomain
+{
+	simplSharpComponent.Set_LdapNtlmDomain(Set_LdapNtlmDomain);
+}
+
+CHANGE Set_NtlmLdapPassword
+{
+	simplSharpComponent.Set_NtlmLdapPassword(Set_NtlmLdapPassword);
+}
+
+CHANGE Set_BasicLdapPassword
+{
+	simplSharpComponent.Set_BasicLdapPassword(Set_BasicLdapPassword);
+}
+
+
+CHANGE Set_LdapServerAddress
+{
+	simplSharpComponent.Set_LdapServerAddress(Set_LdapServerAddress);
+} 
+
+CHANGE  Set_LdapServerPort
+{
+	simplSharpComponent.Set_LdapServerPort(Set_LdapServerPort);
+}
+
+CHANGE Set_LdapUsername
+{
+	simplSharpComponent.Set_LdapUsername(Set_LdapUsername);
+}
+
+CHANGE  Set_SnmpAdminName
+{
+	simplSharpComponent.Set_SnmpAdminName(Set_SnmpAdminName);
+}
+
+CHANGE Set_SnmpCommunityName
+{
+	simplSharpComponent.Set_SnmpCommunityName(Set_SnmpCommunityName);
+}
+
+CHANGE Set_SnmpConsoleIpAddress
+{
+	simplSharpComponent.Set_SnmpConsoleIpAddress(Set_SnmpConsoleIpAddress);
+}
+
+CHANGE Set_SnmpLocationName
+{
+	simplSharpComponent.Set_SnmpLocationName(Set_SnmpLocationName);
+}
+
+CHANGE  Set_SnmpSystemDescription
+{
+	simplSharpComponent.Set_SnmpSystemDescription(Set_SnmpSystemDescription);
+}
+
+
+CHANGE Set_SnmpTrapVersion
+{
+	simplSharpComponent.Set_SnmpTrapVersion(Set_SnmpTrapVersion);
+}
+
+
+// System
+CHANGE SystemUsername
+{
+	simplSharpComponent.SystemUsername(SystemUsername);
+}
+
+CHANGE SystemPassword
+{
+	simplSharpComponent.SystemPassword(SystemPassword);
+}
+
+PUSH Sleep
+{
+	simplSharpComponent.Sleep();
+}
+
+PUSH  Wake
+{
+	simplSharpComponent.Wake();
+}
+
+PUSH  Reboot
+{
+	simplSharpComponent.Reboot();
+}
+
+PUSH  Enable_DaylightSavings
+{
+	simplSharpComponent.Enable_DaylightSavings();
+}
+
+PUSH  Disable_DaylightSavings
+{
+	simplSharpComponent.Disable_DaylightSavings();
+}
+
+PUSH  Enable_EchoReply
+{
+	simplSharpComponent.Enable_EchoReply();
+}
+
+PUSH  Disable_EchoReply
+{
+	simplSharpComponent.Disable_EchoReply();
+}
+
+PUSH  Enable_RemoteEnable
+{
+	simplSharpComponent.Enable_RemoteEnable();
+}
+
+PUSH  Disable_RemoteEnable
+{
+	simplSharpComponent.Disable_RemoteEnable();
+}
+
+PUSH  Enable_BasicMode
+{
+	simplSharpComponent.Enable_BasicMode();
+}
+
+PUSH  Disable_BasicMode
+{
+	simplSharpComponent.Disable_BasicMode();
+}
+
+CHANGE	Set_SystemName
+{
+	simplSharpComponent.Set_SystemName(Set_SystemName);
+}
+
+// LocalDirectory
+PUSH LocalDirectory_EnableInitialPoll
+{
+	simplSharpComponent.SetInitialLocalDirectoryDownload(1);
+}
+
+RELEASE LocalDirectory_EnableInitialPoll
+{
+	simplSharpComponent.SetInitialLocalDirectoryDownload(0);
+}
+
+PUSH LocalDirectory_Home
+{
+	simplSharpComponent.LocalDirectory_Home(); 	
+}
+
+PUSH LocalDirectory_DownloadEntries
+{
+	simplSharpComponent.LocalDirectory_DownloadEntries();
+}
+
+PUSH LocalDirectory_FirstPage
+{
+	simplSharpComponent.LocalDirectory_FirstPage();
+}
+
+PUSH LocalDirectory_NextPage
+{
+	simplSharpComponent.LocalDirectory_NextPage();
+}
+
+PUSH LocalDirecory_PreviousPage
+{
+	simplSharpComponent.LocalDirecory_PreviousPage();
+}
+
+PUSH LocalDirectory_PreviousDirectory
+{
+	simplSharpComponent.LocalDirectory_PreviousDirectory();
+}
+
+CHANGE LocalDirectory_SelectEntry
+{
+	simplSharpComponent.LocalDirectory_SelectEntry(LocalDirectory_SelectEntry);
+}
+
+PUSH LocalDirectory_ClearSelectedEntry
+{
+	simplSharpComponent.LocalDirectory_ClearSelectedEntry();
+}
+
+PUSH LocalDirectory_DialSelectedEntry
+{
+	simplSharpComponent.LocalDirectory_DialSelectedEntry(LocalDirectory_SelectEntry);
+}
+
+PUSH LocalDirectory_Search
+{
+	simplSharpComponent.LocalDirectory_Search(LocalDirectory_SearchTerm, LocalDirectory_SearchAnywhere);
+}
+
+CHANGE LocalDirectory_EntriesPerPage
+{
+ 	simplSharpComponent.SetLocalEntriesPerPage(LocalDirectory_EntriesPerPage);
+}
+
+// GlobalDirectory
+PUSH GlobalDirectory_EnableInitialPoll
+{
+	simplSharpComponent.SetInitialGlobalDirectoryDownload(1);
+}
+
+RELEASE GlobalDirectory_EnableInitialPoll
+{
+	simplSharpComponent.SetInitialGlobalDirectoryDownload(0);
+}
+
+PUSH GlobalDirectory_Home
+{
+	simplSharpComponent.GlobalDirectory_Home(); 	
+}
+
+PUSH GlobalDirectory_DownloadEntries
+{
+	simplSharpComponent.GlobalDirectory_DownloadEntries();
+}
+
+PUSH GlobalDirectory_FirstPage
+{
+	simplSharpComponent.GlobalDirectory_FirstPage();
+}
+
+PUSH GlobalDirectory_NextPage
+{
+	simplSharpComponent.GlobalDirectory_NextPage();
+}
+
+PUSH GlobalDirecory_PreviousPage
+{
+	simplSharpComponent.GlobalDirecory_PreviousPage();
+}
+
+PUSH GlobalDirectory_PreviousDirectory
+{
+	simplSharpComponent.GlobalDirectory_PreviousDirectory();
+}  
+
+
+CHANGE GlobalDirectory_SelectEntry
+{
+	simplSharpComponent.GlobalDirectory_SelectEntry(GlobalDirectory_SelectEntry);
+}
+
+PUSH GlobalDirectory_ClearSelectedEntry
+{
+	simplSharpComponent.GlobalDirectory_ClearSelectedEntry();
+}
+
+PUSH GlobalDirectory_DialSelectedEntry
+{
+	simplSharpComponent.GlobalDirectory_DialSelectedEntry(GlobalDirectory_SelectEntry);
+}
+
+PUSH GlobalDirectory_Search
+{
+	simplSharpComponent.GlobalDirectory_Search(GlobalDirectory_SearchTerm, GlobalDirectory_SearchAnywhere);
+}
+
+CHANGE GlobalDirectory_EntriesPerPage
+{
+ 	simplSharpComponent.SetGlobalEntriesPerPage(GlobalDirectory_EntriesPerPage);
+}
+
+// Global directory live search
+
+PUSH 	GlobalDirectoryLiveSearch_FirstPage
+{
+	simplSharpComponent.GlobalDirectoryLiveSearch_FirstPage();
+}
+
+PUSH 	GlobalDirectoryLiveSearch_NextPage
+{
+	simplSharpComponent.GlobalDirectoryLiveSearch_NextPage();
+}
+
+PUSH 	GlobalDirecoryLiveSearch_PreviousPage
+{
+	simplSharpComponent.GlobalDirecoryLiveSearch_PreviousPage();
+}
+
+CHANGE	GlobalDirectoryLiveSearch_SelectEntry
+{
+	simplSharpComponent.GlobalDirectoryLiveSearch_SelectEntry(GlobalDirectoryLiveSearch_SelectEntry);
+}
+
+PUSH 	GlobalDirectoryLiveSearch_ClearSelectedEntry
+{
+ 	simplSharpComponent.GlobalDirectoryLiveSearch_ClearSelectedEntry();
+}
+
+PUSH 	GlobalDirectoryLiveSearch_DialSelectedEntry
+{
+	simplSharpComponent.GlobalDirectoryLiveSearch_DialSelectedEntry(GlobalDirectoryLiveSearch_SelectEntry);
+}
+
+PUSH 	GlobalDirectory_LiveSearch
+{
+		simplSharpComponent.GlobalDirectory_LiveSearch(GlobalDirectoryLiveSearch_SearchTerm, GlobalDirectoryLiveSearch_SearchAnywhere);
+}
+
+CHANGE GlobalDirectoryLiveSearch_EntriesPerPage
+{
+ 	simplSharpComponent.SetGlobalLiveSearchEntriesPerPage(GlobalDirectoryLiveSearch_EntriesPerPage);
+}
+
+
+// Remote Control Buttons
+PUSH Button_Pound
+{
+	simplSharpComponent.Button_Pound();
+}
+
+PUSH Button_Asterisk
+{
+    simplSharpComponent.Button_Asterisk();
+}
+
+PUSH Button_0
+{
+	simplSharpComponent.Button_0();
+}
+
+PUSH Button_1
+{
+	simplSharpComponent.Button_1();
+}
+
+PUSH Button_2
+{
+	simplSharpComponent.Button_2();
+}
+
+PUSH Button_3
+{
+	simplSharpComponent.Button_3();
+}
+
+PUSH Button_4
+{
+	simplSharpComponent.Button_4();
+}
+
+PUSH Button_5
+{
+	simplSharpComponent.Button_5();
+}
+
+PUSH Button_6
+{
+ 	simplSharpComponent.Button_6();
+}
+
+PUSH Button_7
+{
+	simplSharpComponent.Button_7();
+}
+
+PUSH Button_8
+{
+ 	simplSharpComponent.Button_8();
+}
+
+PUSH Button_9
+{
+	simplSharpComponent.Button_9();
+}
+
+PUSH Button_Period
+{
+ 	simplSharpComponent.Button_Period();
+}
+
+PUSH Button_Down
+{
+ 	simplSharpComponent.Button_Down();
+}
+
+PUSH Button_Left
+{
+ 	simplSharpComponent.Button_Left();
+}
+
+PUSH Button_Right
+{
+	simplSharpComponent.Button_Right();
+}
+
+PUSH Button_Select
+{
+	simplSharpComponent.Button_Select();
+}
+
+PUSH Button_Up
+{
+	simplSharpComponent.Button_Up();
+}
+
+PUSH Button_Back
+{
+ 	simplSharpComponent.Button_Back();
+}
+
+PUSH Button_Call
+{
+	simplSharpComponent.Button_Call();
+}
+
+PUSH Button_Graphics
+{
+	simplSharpComponent.Button_Graphics();
+}
+
+PUSH Button_Hangup
+{
+ 	simplSharpComponent.Button_Hangup();
+}
+
+PUSH Button_Mute
+{
+ 	simplSharpComponent.Button_Mute();
+}
+
+PUSH Button_VolumePlus
+{
+ 	simplSharpComponent.Button_VolumePlus();
+}
+
+PUSH Button_VolumeMinus
+{
+ 	simplSharpComponent.Button_VolumeMinus();
+}
+
+PUSH Button_Camera
+{
+ 	simplSharpComponent.Button_Camera();
+}
+
+PUSH Button_Delete
+{
+  	simplSharpComponent.Button_Delete();
+}
+
+PUSH Button_Directory
+{
+  	simplSharpComponent.Button_Directory();
+}
+
+PUSH Button_Home
+{
+  	simplSharpComponent.Button_Home();
+}
+
+PUSH Button_Keyboard
+{
+ 	simplSharpComponent.Button_Keyboard();
+}
+
+PUSH Button_Menu
+{
+ 	simplSharpComponent.Button_Menu();
+}
+
+PUSH Button_Pip
+{
+	simplSharpComponent.Button_Pip();
+}
+
+PUSH Button_Preset
+{
+	simplSharpComponent.Button_Preset();
+}
+
+PUSH Button_Info
+{
+	simplSharpComponent.Button_Info();
+}
+
+// COMTransport
+PUSH StartCOMTransport
+{
+	if (CommunicationMode = 1)
+	{
+		while (_isInitialized = 0)
+		{
+         	delay(100);
+		}
+		simplSharpComponent.StartCOMTransport(SystemUsername, SystemPassword);
+	}
+}
+
+PUSH StopCOMTransport
+{
+	if (CommunicationMode = 1)
+	{
+		simplSharpComponent.StopCOMTransport();
+	}
+}
+             
+// SSHTransport
+CHANGE SSHTx
+{
+	simplSharpComponent.SendSSHData(SSHTx);	
+}
+
+PUSH StartSSHTransport
+{
+	if (CommunicationMode = 2)
+	{
+		while (_isInitialized = 0)
+		{
+         	delay(100);
+		}
+		simplSharpComponent.StartSshTransport(SSHTransportDeviceHostname, SSHTransportPort, SSHSecureMode, SystemUsername, SystemPassword);
+	}
+}
+
+PUSH StopSSHTransport
+{
+	if (CommunicationMode = 2)
+	{
+		simplSharpComponent.StopSshTransport();
+	}
+}	
+
+PUSH SSHAcceptKey
+{
+	simplSharpComponent.AcceptSshKey(SSHKey);
+	
+	if (SSHUnknownKeyReceived <> 0)
+	{
+		SSHUnknownKeyReceived = 0;
+	}
+	SSHKey = "";
+}
+
+PUSH SSHRejectKey
+{
+ 	simplSharpComponent.RejectSshKey();
+
+	if (SSHUnknownKeyReceived <> 0)
+	{
+		SSHUnknownKeyReceived = 0;
+	}
+	SSHKey = "";
+}
+
+// Logging
+CHANGE LoggingMode
+{
+    simplSharpComponent.SetLoggingMode(LoggingMode);
+}
+
+FUNCTION SetupDirectoryManagers()
+{
+	simplSharpComponent.SetMaxLocalEntries(LocalDirectoryMaxEntries);
+	simplSharpComponent.SetMaxGlobalEntries(GlobalDirectoryMaxEntries);	
+	simplSharpComponent.SetGlobalMultiTieredDirectory(GlobalDirectory_DirectoryIsMultiTiered);
+}
+
+THREADSAFE CHANGE FromDevice
+{
+	while (1)
+	{
+     	simplSharpComponent.ReceiveData(Gather("\x0D\x0A", FromDevice));
+	}
+} 
+	           
+FUNCTION RegisterForEvents()
+{
+        RegisterDelegate(simplSharpComponent, AudioTransmitLevel_ValueUpdate, AudioTransmitLevel_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, LineInLevel_ValueUpdate, LineInLevel_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, Volume_ValueUpdate, Volume_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, MediaInLevel_ValueUpdate, MediaInLevel_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, Mute_IsEnabledUpdate, Mute_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, FarEndMute_IsEnabledUpdate, FarEndMute_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, EchoCanceller_IsEnabledUpdate, EchoCanceller_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, KeyboardNoiseReduction_IsEnabledUpdate, KeyboardNoiseReduction_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, LiveMusicMode_IsEnabledUpdate, LiveMusicMode_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, LineOutMode_ValueUpdate, LineOutMode_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, PolycomMicrophones_IsEnabledUpdate, PolycomMicrophones_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, Stereo_IsEnabledUpdate, Stereo_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, SourcePlaying_IsEnabledUpdate, SourcePlaying_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, AutoShowContent_IsEnabledUpdate, AutoShowContent_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, ContentAuto_IsEnabledUpdate, ContentAuto_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, FarControlNearCamera_IsEnabledUpdate, FarControlNearCamera_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, CameraTracking_IsEnabledUpdate, CameraTracking_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, SelfView_IsEnabledUpdate, SelfView_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, SelfView_IsAutoUpdate, SelfView_IsAutoUpdated);
+        RegisterDelegate(simplSharpComponent, Selected_NearEndCameraUpdate, Selected_NearEndCameraUpdated);
+        RegisterDelegate(simplSharpComponent, Selected_FarEndCameraUpdate, Selected_FarEndCameraUpdated);
+        RegisterDelegate(simplSharpComponent, DynamicBandwidth_IsEnabledUpdate, DynamicBandwidth_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, Pvec_IsEnabledUpdate, Pvec_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, Rsvp_IsEnabledUpdate, Rsvp_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, MuteAutoAnsweredCalls_IsEnabledUpdate, MuteAutoAnsweredCalls_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, DisplayIconsInCall_IsEnabledUpdate, DisplayIconsInCall_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, Transcoding_IsEnabledUpdate, Transcoding_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, MaxTimeInCall_ValueUpdate, MaxTimeInCall_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, MaxRxBandwidth_ValueUpdate, MaxRxBandwidth_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, MaxTxBandwidth_ValueUpdate, MaxTxBandwidth_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, AesEncryptionMode_ValueUpdate, AesEncryptionMode_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, MultiPointAutoAnswerMode_ValueUpdate, MultiPointAutoAnswerMode_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, MpMode_ValueUpdate, MpMode_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, NatH323Compatible_IsEnabledUpdate, NatH323Compatible_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, H323Gateway_IsEnabledUpdate, H323Gateway_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, IpH323_IsEnabledUpdate, IpH323_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, Dhcp_IsEnabledUpdate, Dhcp_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, H460FirewallTraversal_IsEnabledUpdate, H460FirewallTraversal_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, SipDebug_IsEnabledUpdate, SipDebug_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, Sip_IsEnabledUpdate, Sip_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, GateKeeperMode_ValueUpdate, GateKeeperMode_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, LanPort_ValueUpdate, LanPort_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, NatConfiguration_ValueUpdate, NatConfiguration_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SipTransportProtocol_ValueUpdate, SipTransportProtocol_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, CalenderPlayTone_IsEnabledUpdate, CalenderPlayTone_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, CalenderService_IsEnabledUpdate, CalenderService_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, Calender_IsConnectedUpdate, Calender_IsConnectedUpdated);
+        RegisterDelegate(simplSharpComponent, CalenderRemainingTime_ValueUpdate, CalenderRemainingTime_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, PrivateMeetingsDisplay_IsEnabledUpdate, PrivateMeetingsDisplay_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, LdapDirectoryServer_IsEnabledUpdate, LdapDirectoryServer_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, LdapSsl_IsEnabledUpdate, LdapSsl_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, LdapAuthenticationType_ValueUpdate, LdapAuthenticationType_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, Snmp_IsEnabledUpdate, Snmp_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, SnmpTrapVersion_ValueUpdate, SnmpTrapVersion_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, Sleep_IsActiveUpdate, Sleep_IsActiveUpdated);
+        RegisterDelegate(simplSharpComponent, DaylightSavingsTime_IsEnabledUpdate, DaylightSavingsTime_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, EchoReply_IsEnabledUpdate, EchoReply_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, Remote_IsEnabledUpdate, Remote_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, BasicMode_IsEnabledUpdate, BasicMode_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, Version_ValueUpdate, Version_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SerialNumber_ValueUpdate, SerialNumber_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, Model_ValueUpdate, Model_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SystemName_ValueUpdate, SystemName_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, LocalDirectory_IsSearchingUpdate, LocalDirectory_IsSearchingUpdated);
+        RegisterDelegate(simplSharpComponent, LocalDirectory_SelectedNameUpdate, LocalDirectory_SelectedNameUpdated);
+        RegisterDelegate(simplSharpComponent, GlobalDirectory_IsSearchingUpdate, GlobalDirectory_IsSearchingUpdated);
+        RegisterDelegate(simplSharpComponent, GlobalDirectory_SelectedNameUpdate, GlobalDirectory_SelectedNameUpdated);
+        RegisterDelegate(simplSharpComponent, COMTransport_ConnectionStateUpdate, COMTransport_ConnectionStateUpdated);
+        RegisterDelegate(simplSharpComponent, COMTransport_ProcessingDataUpdate, COMTransport_ProcessingDataUpdated);
+        RegisterDelegate(simplSharpComponent, SshTransport_ConnectionStateUpdate, SshTransport_ConnectionStateUpdated);
+        RegisterDelegate(simplSharpComponent, SshTransport_ProcessingDataUpdate, SshTransport_ProcessingDataUpdated);
+      //  RegisterDelegate(simplSharpComponent, LdapServerPort, LdapServerMode_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, MailboxAccountAddressUpdate, MailboxAccountAddress_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, CalenderServerUpdate, CalenderServer_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, CalenderUserUpdate, CalenderUser_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, LdapBaseNameUpdate, LdapBaseName_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, LdapBindDnUpdate, LdapBindDn_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, LdapNtlmDomainUpdate, LdapNtlmDomain_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, LdapPasswordUpdate, LdapPassword_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, LdapServerAddressUpdate, LdapServerAddress_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, LdapUsernameUpdate, LdapUsername_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SnmpAdminNameUpdate, SnmpAdminName_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SnmpCommunityNameUpdate, SnmpCommunityName_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SnmpConsoleIpAddressUpdate, SnmpConsoleIpAddress_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SnmpLocationNameUpdate, SnmpLocationName_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SnmpSystemDescriptionUpdate, SnmpSystemDescription_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, E164ExtensionUpdate, E164Extension_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, GateKeeperIpUpdate, GateKeeperIp_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, H323NameUpdate, H323Name_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, DefaultGatewayUpdate, DefaultGateway_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, DnsServer1Update, DnsServer1_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, DnsServer2Update, DnsServer2_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, DnsServer3Update, DnsServer3_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, DnsServer4Update, DnsServer4_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, HostnameUpdate, Hostname_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, IpAddressUpdate, IpAddress_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SubnetMaskUpdate, SubnetMask_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, WanIpAddressUpdate, WanIpAddress_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SipAccountNameUpdate, SipAccountName_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SipPasswordUpdate, SipPassword_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SipProxyServerUpdate, SipProxyServer_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SipRegistrarServerUpdate, SipRegistrarServer_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, SipUsernameUpdate, SipUsername_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, ConnectionPreference_ValueUpdate, ConnectionPreference_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, DialingMethod_ValueUpdate, DialingMethod_ValueUpdated);
+        RegisterDelegate(simplSharpComponent, TransmitData, SendToDevice);
+        RegisterDelegate(simplSharpComponent, IncomingCallUpdate, IncomingCallUpdated);
+        RegisterDelegate(simplSharpComponent, OutgoingCallUpdate, OutgoingCallUpdated);
+        RegisterDelegate(simplSharpComponent, ConnectedCallUpdate, ConnectedCallUpdated);
+        RegisterDelegate(simplSharpComponent, CurrentPlayingSourceUpdate, CurrentPlayingSourceUpdated);
+        RegisterDelegate(simplSharpComponent, CurrentMappedSourceUpdate, CurrentMappedSourceUpdated);
+        RegisterDelegate(simplSharpComponent, Camera1ContentUpdate, Camera1ContentUpdated);
+        RegisterDelegate(simplSharpComponent, Camera2ContentUpdate, Camera2ContentUpdated);
+        RegisterDelegate(simplSharpComponent, Camera3ContentUpdate, Camera3ContentUpdated);
+        RegisterDelegate(simplSharpComponent, Camera4ContentUpdate, Camera4ContentUpdated);
+        RegisterDelegate(simplSharpComponent, VgaQualityPreferenceUpdate, VgaQualityPreferenceUpdated);
+        RegisterDelegate(simplSharpComponent, PrimaryCameraUpdate, PrimaryCameraUpdated);
+        RegisterDelegate(simplSharpComponent, SleepTimeUpdate, SleepTimeUpdated);
+        RegisterDelegate(simplSharpComponent, H239_IsEnabledUpdate, H239_IsEnabledUpdated);
+        RegisterDelegate(simplSharpComponent, SshUnknownKeyReceivedUpdate, SshUnknownKeyReceivedUpdated);
+        RegisterDelegate(simplSharpComponent, LocalDirectory_SelectedItemIsGroupUpdate, LocalDirectory_SelectedItemIsGroup);
+        RegisterDelegate(simplSharpComponent, GlobalDirectory_SelectedItemIsGroupUpdate, GlobalDirectory_SelectedItemIsGroup);
+        RegisterDelegate(simplSharpComponent, VolumeMute_IsEnabledValueUpdate, VolumeMute_IsEnabledValueUpdated);
+        RegisterDelegate(simplSharpComponent, CalendarMeetingsUpdate, CalendarMeetingsUpdated);
+        RegisterDelegate(simplSharpComponent, CalendarMeetingInfoUpdate, CalendarMeetingInfoUpdated);
+        RegisterDelegate(simplSharpComponent, CalendarContactMethodUpdate, CalendarMeetingCallMethodUpdated);
+        RegisterDelegate(simplSharpComponent, SSHRxData, RxDataReceived);
+        RegisterDelegate(simplSharpComponent, ValidInputs_Update, ValidInputs_Updated);
+        // 3.0.15
+        RegisterDelegate(simplSharpComponent, GlobalDirectoryLiveSearch_IsSearchingUpdate, GlobalDirectoryLiveSearch_IsSearchingUpdated);
+        RegisterDelegate(simplSharpComponent, GlobalDirectoryLiveSearch_SelectedNameUpdate, GlobalDirectoryLiveSearch_SelectedNameUpdated);
+		// 3.0.16
+		RegisterDelegate(simplSharpComponent, PointToPointAutoAnswerModeUpdate, PointToPointAutoAnswer_ModeUpdated);
+        RegisterDelegate(simplSharpComponent, LocalPhonebookNameUpdate, LocalDirectoryNameUpdated);
+		RegisterDelegate(simplSharpComponent, GlobalPhonebookNameUpdate, GlobalDirectoryNameUpdated);
+		RegisterDelegate(simplSharpComponent, GlobalLiveSearchPhonebookNameUpdate, GlobalDirectoryLiveSearchNameUpdated);
+		RegisterDelegate(simplSharpComponent, CalendarNameUpdate, CalendarMeetingStringsUpdated);
+		RegisterDelegate(simplSharpComponent, SelectedCalendarMeetingStringsUpdate, SelectedCalendarMeeintgStringsUpdated);
+		RegisterDelegate(simplSharpComponent, IncomingCallNameUpdate, IncomingCallStringsUpdated);
+		RegisterDelegate(simplSharpComponent, OutgoingCallNameUpdate, OutgoingCallStringsUpdated);
+		RegisterDelegate(simplSharpComponent, ConnectedCallsNameUpdate, ConnectedCallNameUpdated);
+}                   
+
+FUNCTION Main()
+{
+	_isInitialized = 0;
+
+ 	WaitForInitializationComplete();
+	
+    RegisterForEvents();
+	SetupDirectoryManagers();
+
+	_isInitialized = 1;
+}
+

@@ -1,0 +1,3962 @@
+/*******************************************************************************************
+ * SIMPL+ Module Information
+ ******************************************************************************************/
+
+/*
+ * Programmer: Kaleidescape
+ * 
+ *  	(c) 2006-2011 Kaleidescape Inc. This Source Code is the intellectual 
+ * property of Kaleidescape, Inc. Kaleidescape grants authorized Dealers 
+ * and Partners the non-exclusive right to modify and/or compile and/or 
+ * compress the Source Code, and upload such modified and/or compiled 
+ * and/or compressed Source Code to control systems that control at least 
+ * one licensed Kaleidescape System. No right is granted to otherwise 
+ * copy, reproduce, modify, upload, download, transmit, or distribute the 
+ * Source Code, or derivative works, in any way. The Source Code, and 
+ * derivative works, are protected by copyright, trade secret, and other 
+ * intellectual property laws and by international treaties, which 
+ * provide rights and obligations in addition to the rights and 
+ * obligations set forth here.
+ * 
+ */
+
+/*******************************************************************************************
+ * Compiler Directives
+ ******************************************************************************************/
+#HINT "This processor is for use within the Kaleidescape SATP Module." 
+#CATEGORY "4" // Device Interface         
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#PRINT_TO_TRACE
+#ENABLE_TRACE
+#DEFINE_CONSTANT LIBRARY_VERSION "2.1" //Kaleidescape library version.
+
+//Useful characters that we'll use in the parsing code
+#DEFINE_CONSTANT CR 0x0D		 	// Carriage return
+#DEFINE_CONSTANT LF 0x0A		 	// Linefeed
+#DEFINE_CONSTANT TAB 0x09		 	// Tab
+#DEFINE_CONSTANT BACKSLASH '/'   	// /
+#DEFINE_CONSTANT ESCSLASH  '\\'	 	// \
+#DEFINE_CONSTANT DOUBLE_QUOTE "\""	// "  
+
+#DEFINE_CONSTANT NULLSTRING ""
+#DEFINE_CONSTANT TPNULLSTRING " "
+
+#DEFINE_CONSTANT MAX_INT 65535
+
+#DEFINE_CONSTANT MAX_MESSAGE_LENGTH	2048	//Used to initialize various arrays
+#DEFINE_CONSTANT INPUT_BUFFER_LENGTH 8192	//8K
+#DEFINE_CONSTANT MAX_RESPONSE_ARGS  15		//Number or arguments to account for in the player 
+											//response
+#DEFINE_CONSTANT MAX_RESPONSE_ARG_LEN 200  	//Maximum length of a single argument
+
+#DEFINE_CONSTANT APPEND_TEXT_1 "\xFE\x01"	//Used to append text displayed on a TP, with a newline
+#DEFINE_CONSTANT APPEND_TEXT_2 "\xFE\x02"	//Same as 1, but without a newline
+											//Note these only work on TPS panels and later
+
+
+//Function to return the library version.
+STRING_FUNCTION getLibraryVersion()
+{
+	return(LIBRARY_VERSION);
+}
+
+// Function to determine if a given integer is an upper case letter
+INTEGER_FUNCTION isUpperLetter(INTEGER character)
+{
+	return (character >= 'A' && character <= 'Z');
+}
+
+// Function to determine if a given integer is an lower case letter
+INTEGER_FUNCTION isLowerLetter(INTEGER character)
+{
+	return (character >= 'a' && character <= 'z');
+}
+
+// Function to determine if a given integer is a valid letter
+INTEGER_FUNCTION isLetter(INTEGER character)
+{
+	return (isUpperLetter(character) || isLowerLetter(character));
+}
+
+// Function to determine if a given integer is a valid digit
+INTEGER_FUNCTION isDigit(INTEGER character)
+{
+    return (character >= '0' && character <='9');
+}
+
+// Function to determine if a given integer is a valid Hex digit
+INTEGER_FUNCTION isHex(INTEGER character)	
+{
+    return(  isDigit(character) || ( character >= 'A' && character <= 'F' )  );
+}
+
+// Function to determine if a given integer is a valid sequence number
+INTEGER_FUNCTION isSequence(INTEGER character)
+{
+    return( isDigit(character) || character = '!' || character = '?' );
+}
+
+// Function to convert a single char to upper
+INTEGER_FUNCTION toUpper(INTEGER character)
+{
+	if( isLowerLetter(character) ) return(character + 'A' - 'a');
+	return(character); //if not a lower case letter, return unchanged
+}
+
+// Function to convert a single char to lower
+INTEGER_FUNCTION toLower(INTEGER character)	
+{
+	if( isUpperLetter(character) ) return(character + 'a' - 'A');
+	return(character); //if not an upper case letter, return unchanged
+}
+
+// General purpose function to remove the right-most characters from a string
+STRING_FUNCTION shaveRightCharacter(STRING inputString, INTEGER numToRemove)
+{
+	if(len(inputString) > numToRemove) return(left(inputString, len(inputString) - numToRemove));
+	return(NULLSTRING);
+}
+
+
+STRING_FUNCTION getSymbolInstanceUMC()
+{
+	string UMC[50];
+	UMC = GetSymbolInstanceName();  //will return "S-?:S-3", and the :S-3 is noise (location of the symbol in the umc file
+	if( find(":", UMC) )
+		UMC = left(UMC, ( find(":", UMC) - 1 ) );
+	return(UMC);
+}
+
+// Function to convert a string to title caps
+STRING_FUNCTION toTitleCaps(STRING inputString)
+{
+	INTEGER loop;
+	INTEGER character;
+	INTEGER inWord;
+	STRING 	outputString[MAX_MESSAGE_LENGTH];
+	
+	inWord = OFF;
+	
+	for(loop = 1 to len(inputString)) //step through every character of inputString
+	{
+		character = byte(inputString, loop); //extract it
+		if(isLetter(character)) //check if it's a letter
+		{
+			if(inWord) //if we're already in a word
+			{
+				//set the letter to lower case
+				outputString = outputString + chr(toLower(character));
+			}
+			else //if we're not (beginning of the word)
+			{
+				//set the letter to upper case (beginning of word)
+				outputString=outputString+chr(toUpper(character));
+			}
+			inWord = ON;
+		}
+		else //if it's not a letter
+		{
+			outputString = outputString + chr(character); //just copy verbatum
+			inWord = OFF; //note that we're no longer in a word
+		}
+	}
+	return(outputString);
+}
+
+// Much less expensive way to append a char with title caps
+STRING_FUNCTION appendTitleCaps(STRING inputString, STRING appendString)
+{
+	INTEGER stringLength;
+	STRING 	outputString[MAX_MESSAGE_LENGTH];
+
+	stringLength = len(inputString);
+	
+	//if there is a previous char and the previous char is a letter...
+	if( stringLength > 0 &&	isLetter(byte(inputString, stringLength)) )
+	{
+		outputString = inputString + lower(appendString); //make new char lower case			
+	}
+	else //if no previous char, or previous is not a char
+	{
+		outputString = inputString + upper(appendString); //make new char upper case
+	}
+		
+	return(outputString);
+}
+
+// function to properly escape an arbritrary string
+STRING_FUNCTION escape(STRING inputString)
+{						
+	INTEGER loop;
+	INTEGER character;
+	STRING 	outputString[MAX_MESSAGE_LENGTH];
+	
+	for(loop = 1 to len(inputString)) //step through every character of inputString
+	{
+		character = byte(inputString, loop); //extract it
+		cSwitch(character) //examine it
+		{
+			case (':')		: 
+			case (BACKSLASH): 
+			//escape all of the above
+			case (ESCSLASH)	: outputString = outputString + chr(ESCSLASH);  
+			default			: outputString = outputString + chr(character); //append the character
+		}
+	}
+	return(outputString);
+}
+
+//function to substitute any char for any other
+STRING_FUNCTION substitute(STRING inputString, INTEGER characterToReplace, 
+							  STRING replacementString)
+{
+	INTEGER loop;
+	INTEGER character;
+	INTEGER inputLength;
+	INTEGER replacementLength;
+	INTEGER outputPosition;
+	STRING 	outputString[MAX_MESSAGE_LENGTH];
+	
+	outputString = NULLSTRING;
+	inputLength = len(inputString);
+	replacementLength = len(replacementString);
+	outputPosition = 1;
+	for(loop = 1 to inputLength) //step through every character of inputString
+	{
+		character = byte(inputString, loop); //extract it
+		switch(character) //examine it
+		{
+			case (characterToReplace):
+			{
+				setString(replacementString, outputPosition, outputString);
+				outputPosition = outputPosition + replacementLength;
+			}
+			default:
+			{
+				setString(chr(character), outputPosition, outputString);//append the character
+				outputPosition = outputPosition + 1;
+			}
+		}
+	}
+	return(outputString);	
+}
+
+// function to provide a space if the given string is null (for proper TP display)
+STRING_FUNCTION nullToSpace(STRING inputString)
+{
+	if(inputString != NULLSTRING) return (inputString); //if the string isn't null, just return it.
+	return(TPNULLSTRING); //otherwise, return a space
+}
+
+//This function is used to handle operations that require NAT.
+STRING_FUNCTION processNAT(STRING givenURL, STRING hostIP)
+{
+	STRING URI[500];
+	STRING host[50];
+	STRING junk[10];
+
+	URI = givenURL;
+
+	junk = remove("//", URI, 1); //remove the http://
+    host = remove("/", URI, 1); //pull out the host name   
+    
+    URI = "http://" + hostIP + "/" + URI;
+    
+    return(URI);
+}
+
+// This function turns an integer into a string with a properly pluraized label.  int=0 returns null.
+// assumes that the label can be pluralized by adding an "s" - will work well enough for our labels.
+STRING_FUNCTION itoLabel(INTEGER int, STRING label)
+{
+	STRING result[20];
+	switch(int)
+	{
+		case (0):	//none
+		{
+			result = NULLSTRING;
+		}
+		case (1):	//singular
+		{
+			makeString(result, "%d %s", int, label);
+		}
+		default:	//plural
+		{
+			makeString(result, "%d %ss", int, label);
+		}
+	}
+	return(result);
+}
+
+// This function creates a proper English text snippet for display
+STRING_FUNCTION makeTimeString(INTEGER hours, INTEGER minutes)
+{
+	STRING result[42];
+	STRING hourStr[20];
+	STRING minuteStr[20];
+	
+	hourStr = itoLabel(hours, "hour");
+	minuteStr = itoLabel(minutes, "minute");
+    
+    if( hours > 0 && minutes > 0 )	//if both hours and minutes 
+    {
+    	result = hourStr + " " + minuteStr;
+    }
+    else
+    {
+    	result = hourStr + minuteStr;		// return either hours or minutes or nothing
+    }
+    
+    return(result);
+}
+
+/*
+ * Error codes that may be returned by the messageError function
+ */
+#DEFINE_CONSTANT MESSAGE_GOOD							0
+#DEFINE_CONSTANT MESSAGEERROR_RESPONSE_TOO_SHORT		1
+#DEFINE_CONSTANT MESSAGEERROR_GARBLED_MESSAGE			2
+#DEFINE_CONSTANT MESSAGEERROR_SN_MESSAGE				3
+#DEFINE_CONSTANT MESSAGEERROR_BAD_CHECKSUM				4
+#DEFINE_CONSTANT MESSAGEERROR_BAD_ADDRESS				5
+#DEFINE_CONSTANT MESSAGEERROR_BAD_ZONE					6
+#DEFINE_CONSTANT MESSAGEERROR_BAD_SEQUENCE				7
+
+/*
+ * Making this a seperate function will improve the processing speed when debuggging is off
+ * (Crestron puts all declared string "constants" into temporary memory whether they're used or not)
+ * Also, this allows the recieve routine to not throw an error for something it may expect (SN message)
+ */
+FUNCTION printMessageError(STRING message, INTEGER errorCode)
+{
+	string instanceName[50];
+	
+	instanceName = getSymbolInstanceUMC();
+	
+	switch(errorCode)
+	{
+		case (MESSAGE_GOOD):
+			return;
+			
+		case (MESSAGEERROR_RESPONSE_TOO_SHORT):
+			print("Kaleidescape (%s):  Response too short.\n  message is: %s\n", instanceName, message);
+			
+		case (MESSAGEERROR_GARBLED_MESSAGE):
+			print("Kaleidescape (%s):  Received garbled message.\n    message is: %s\n",
+    			instanceName, message);		
+    			
+    	case (MESSAGEERROR_SN_MESSAGE):
+    		print("Kaleidescape (%s):  Serial Number device IDs are not supported.  Ignoring Address: %s\n", 
+    			instanceName, left(message,13));
+    		
+		case (MESSAGEERROR_BAD_CHECKSUM):
+			print("Kaleidescape (%s):  Bad checksum.\n", instanceName);
+		
+		case (MESSAGEERROR_BAD_ZONE):
+			print("Kaleidescape (%s): Ignoring message with zone ID %s\n", instanceName, message);	
+			
+		case (MESSAGEERROR_BAD_ADDRESS):		      
+			print("Kaleidescape (%s): Ignoring message with address %s\n", instanceName, message);
+
+		case (MESSAGEERROR_BAD_SEQUENCE):
+			print("Kaleidescape (%s): Ignoring message with sequence %s\n", instanceName, message);
+					
+		default:
+			print("Kaleidescape (%s):  Unknown parsing error %d", instanceName, errorCode);
+	}
+}
+
+/*
+ * This function verifies that the incoming message is for the specified device.
+ * Returns non-zero error code if invalid message, 0 for a good message
+ */
+
+INTEGER_FUNCTION messageTargetError(INTEGER messageDeviceId, INTEGER messageZoneId, INTEGER messageSequence,
+								INTEGER targetDeviceId, INTEGER targetZoneId, INTEGER targetSequence,
+								INTEGER directConnect, INTEGER debug)
+{
+    // Check that this response is from the device we want to talk to.
+   	if(messageDeviceId != targetDeviceId)
+   	{
+   		if(directConnect = OFF || (directConnect = ON && messageDeviceId != 1))
+   		{
+	    	if(debug) printMessageError(itoa(messageDeviceId), MESSAGEERROR_BAD_ADDRESS);
+	    	//print("Ignoring Address: %d   (My Address is %d.)\n", messageDeviceId, targetDeviceId);
+    		return(MESSAGEERROR_BAD_ADDRESS); //indicate that the message is not OK (not addressed to us)
+    	}
+    }	
+      
+    if(messageZoneId != targetZoneId && messageZoneId > 0)
+    {
+    	if(debug) printMessageError(itoa(messageZoneId), MESSAGEERROR_BAD_ZONE);
+    	//print("Ignoring Zone ID: %d   (My Zone ID is %d)\n", messageZoneId, targetZoneId);
+		return(MESSAGEERROR_BAD_ZONE);
+    }    
+   		   		    
+    if(messageSequence != '!' && messageSequence != '?') //if the message sequence is a digit
+    {
+    	if(messageSequence - '0' != targetSequence) //if the sequence doesn't match
+    	{
+    		if(debug)
+    		{     
+    			printMessageError(chr(messageSequence), MESSAGEERROR_BAD_SEQUENCE);
+    			//print("Bad Sequence: %c  Looking for: %d\n", messageSequence, targetSequence);
+    		}
+    		return(MESSAGEERROR_BAD_SEQUENCE);
+    	}
+    }
+	
+	return(MESSAGE_GOOD);
+}
+
+/*
+ * This function verifies that the incoming message is for the specified device.  Kept for backwards compatability.
+ * Returns 0 if invalid message, 1 otherwise
+ */
+INTEGER_FUNCTION isTargetMessage(INTEGER messageDeviceId, INTEGER messageZoneId, INTEGER messageSequence,
+								INTEGER targetDeviceId, INTEGER targetZoneId, INTEGER targetSequence,
+								INTEGER directConnect, INTEGER debug)
+{		         
+    return(!messageTargetError(messageDeviceId, messageZoneId, messageSequence, targetDeviceId, targetZoneId, targetSequence, directConnect, debug));
+}
+
+
+/*
+ * Determine if there's any problems with this message, returns an error code if not valid, otherwise returns 0
+ * used by the parseMessage function
+ * Returns 0 if invalid message, 1 otherwise
+ *
+ * If we're using the OSD, the deviceZoneId should be 0.
+ */
+INTEGER_FUNCTION messageError(STRING message, BYREF INTEGER messageDeviceId, BYREF INTEGER messageZoneId, 
+								BYREF INTEGER messageSequence, INTEGER messageEnd)								
+{
+	INTEGER calculatedChecksum;
+	INTEGER responseChecksum;
+	INTEGER index;
+	INTEGER segmentDelimiter;
+	
+	/*
+     * The shortest response is "01/1/000:" (binary delimited), so if we have something
+     * shorter than that, then we can just ignore it since we know it's
+     * corrupted.
+     */
+    if (messageEnd < 9)
+    {
+        return(MESSAGEERROR_RESPONSE_TOO_SHORT);
+    }
+    
+    /*
+     * If using serial number device ID messages, the message will be longer
+     * #00000000FFFF/1/000:/xx
+     */
+    if (byte(message, 1) = '#' && messageEnd < 22) //shortest len for a sn device ID type message
+    {
+        return(MESSAGEERROR_RESPONSE_TOO_SHORT);    	
+    }
+    
+    /*
+     * Determine the message format - binary or printable
+     * The byte \x02 delimits fields in binary mode, and checksums aren't used
+     */
+    if (byte(message, messageEnd) = 2)
+    {
+    	segmentDelimiter = 1;
+    }
+    else	//if not in binary mode, then it's a printable message
+    {
+    	segmentDelimiter = BACKSLASH;
+    }
+    
+
+	//If using serial number with a zone, Message format should be: #00000000FFFF.01/1/
+    if (byte(message, 1) = '#' && byte(message, 14) = '.') //device ID with zone
+    {
+    	if(!isHex(byte(message, 2)) 					||
+    	   !isHex(byte(message, 3)) 					||
+    	   !isHex(byte(message, 4)) 					||
+    	   !isHex(byte(message, 5)) 					||
+    	   !isHex(byte(message, 6)) 					||
+    	   !isHex(byte(message, 7)) 					||
+    	   !isHex(byte(message, 8)) 					||
+    	   !isHex(byte(message, 9)) 					||
+    	   !isHex(byte(message, 10)) 					||
+    	   !isHex(byte(message, 11)) 					||
+    	   !isHex(byte(message, 12)) 					||
+    	   !isHex(byte(message, 13)) 					||
+    	   !isDigit(byte(message, 15)) 					||
+    	   !isDigit(byte(message, 16)) 					||
+    	   byte(message, 17) != segmentDelimiter		||
+    	   !isSequence(byte(message, 18)) 				||
+    	   byte(message, 19) != segmentDelimiter		)
+        {           
+        	return(MESSAGEERROR_GARBLED_MESSAGE);
+        }
+        
+        messageDeviceId = 0;
+        messageZoneId = atoi(mid(message, 15, 2));
+        
+        //This message has a serial number header, not handled by this code.
+        return(MESSAGEERROR_SN_MESSAGE);
+    }
+    //If using serial number without a zone, message format should be: #00000000FFFF/1/
+    else if (byte(message,1) = '#')
+    {
+    	if(!isHex(byte(message, 2)) 					||
+    	   !isHex(byte(message, 3)) 					||
+    	   !isHex(byte(message, 4)) 					||
+    	   !isHex(byte(message, 5)) 					||
+    	   !isHex(byte(message, 6)) 					||
+    	   !isHex(byte(message, 7)) 					||
+    	   !isHex(byte(message, 8)) 					||
+    	   !isHex(byte(message, 9)) 					||
+    	   !isHex(byte(message, 10)) 					||
+    	   !isHex(byte(message, 11)) 					||
+    	   !isHex(byte(message, 12)) 					||
+    	   !isHex(byte(message, 13)) 					||
+    	   byte(message, 14) != segmentDelimiter 		||
+    	   !isSequence(byte(message, 15)) 				||
+    	   byte(message, 16) != segmentDelimiter		)
+        {          
+        	return(MESSAGEERROR_GARBLED_MESSAGE);
+        }
+        
+        messageDeviceId = 0;
+        messageZoneId = 0;
+        
+        //This message has a serial number header, not handled by this code.
+        return(MESSAGEERROR_SN_MESSAGE);
+    }
+    //If using a zone ID, message format should be 01.01/1/
+	else if (byte(message,3) = '.') //contains a zone ID
+	{
+    	if(!isDigit(byte(message, 1)) 					||
+    	   !isDigit(byte(message, 2)) 					||
+    	   !isDigit(byte(message, 4)) 					||
+    	   !isDigit(byte(message, 5)) 					||
+    	   byte(message, 6) != segmentDelimiter 		||
+    	   !isSequence(byte(message, 7)) 				||
+    	   byte(message, 8) != segmentDelimiter 		)
+        {           
+        	return(MESSAGEERROR_GARBLED_MESSAGE);     
+        }    	
+
+	    messageDeviceId = atoi(left(message, 2));
+   		messageZoneId  = atoi(mid(message, 4, 2));
+   		messageSequence = byte(message,7);
+   	}
+	//If using a CPDID only, message format should be 01/1/
+	else
+	{
+		if(!isDigit(byte(message, 1)) 					||
+    	   !isDigit(byte(message, 2)) 					||
+    	   byte(message, 3) != segmentDelimiter			||
+    	   !isSequence(byte(message, 4)) 				||
+    	   byte(message, 5) != segmentDelimiter			)
+		{           
+        	return(MESSAGEERROR_GARBLED_MESSAGE);        	
+        }
+	    messageDeviceId = atoi(left(message, 2));
+	    messageSequence = byte(message, 4);
+	    messageZoneId  = 0;
+    }
+    
+    if(segmentDelimiter = BACKSLASH)	   // if using printable delimiters, calculate the checksum and verify it.
+    {
+	    calculatedChecksum = 0;
+	    for(index = 1 to (messageEnd - 2) ) // skip last two characters, that's the checksum itself.
+	    {
+	        calculatedChecksum = (calculatedChecksum + byte(message, index)) mod 100;
+	    }
+	    
+	    responseChecksum = atoi(right(message, len(message) - messageEnd + 2));
+	    if (calculatedChecksum != responseChecksum)
+	    {
+	        return(MESSAGEERROR_BAD_CHECKSUM);
+	    }
+	}
+    return(MESSAGE_GOOD);   //no error
+}
+
+INTEGER_FUNCTION checkMessage(STRING message, INTEGER deviceId, INTEGER deviceZoneId, 
+								INTEGER sequenceSent, INTEGER messageEnd, INTEGER directConnect, INTEGER debug)
+{
+	INTEGER messageDeviceId;
+	INTEGER messageZoneId;
+	INTEGER messageSequence;
+	INTEGER messageErrorCode;
+	
+	messageErrorCode =  messageError(message, messageDeviceId, messageZoneId, messageSequence, messageEnd);
+	if(debug) printMessageError(message, messageErrorCode);
+    
+    if(messageErrorCode = MESSAGE_GOOD)
+    	return(messageTargetError(messageDeviceId, messageZoneId, messageSequence,
+								deviceId, deviceZoneId, sequenceSent,
+								directConnect, debug));
+	else
+		return(messageErrorCode); 
+	 /*
+	if(validateMessage(message, messageDeviceId, messageZoneId, messageSequence, 
+					   messageEnd, playerID, debug))
+	{
+		return (isTargetMessage(messageDeviceId, messageZoneId, messageSequence,
+								deviceId, deviceZoneId, sequenceSent,
+								directConnect, debug));
+	}
+	else
+	{
+		return(0);
+	}   */
+}
+
+								
+/*
+ * Validate that the message is valid.  Provided for backwards compatability; updated functions should use messageError
+ * used by the parseMessage function
+ * Returns 0 if invalid message, 1 otherwise
+ *
+ * If we're using the OSD, the deviceZoneId should be 0.
+ */
+INTEGER_FUNCTION validateMessage(STRING message, BYREF INTEGER messageDeviceId, BYREF INTEGER messageZoneId, 
+								BYREF INTEGER messageSequence, INTEGER messageEnd, INTEGER playerID, 
+								INTEGER debug)
+{
+	INTEGER errorCode;
+	
+	errorCode = messageError(message, messageDeviceId, messageZoneId, messageSequence, messageEnd);
+	
+	if(!errorCode) return(1);	//no error
+	
+	if(debug) printMessageError(message, errorCode);
+	return (0);
+}
+
+//Provided for backwards compatibility.
+INTEGER_FUNCTION isValidMessage(STRING message, INTEGER deviceId, INTEGER deviceZoneId, 
+								INTEGER sequenceSent, INTEGER messageEnd, INTEGER playerID, 
+								INTEGER directConnect, INTEGER debug)
+{
+	INTEGER messageDeviceId;
+	INTEGER messageZoneId;
+	INTEGER messageSequence;
+	
+	if(validateMessage(message, messageDeviceId, messageZoneId, messageSequence, 
+					   messageEnd, playerID, debug))
+	{
+		return (isTargetMessage(messageDeviceId, messageZoneId, messageSequence,
+								deviceId, deviceZoneId, sequenceSent,
+								directConnect, debug));
+	}
+	else
+	{
+		return(0);
+	}
+}								
+
+//Parses the arguments used by parseMessage() and parseInit2Message() in printable delimiter format
+FUNCTION getNArgumentsPrintable(STRING arguments[], BYREF INTEGER numArgs, 
+					   INTEGER newTotalArgs, STRING message, 
+					   BYREF INTEGER messagePosition, BYREF INTEGER messageEnd)
+{
+	INTEGER	character;
+	INTEGER escaped;
+	INTEGER argumentLength;
+		             
+	//Initialize our variables
+	escaped = 0;
+	argumentLength = 0;
+	
+	while (messagePosition <= messageEnd && numArgs < newTotalArgs)
+	{        	
+        //get the character being examined 
+        character = byte(message, messagePosition);
+        messagePosition = messagePosition + 1;
+        
+        if (escaped = 1)
+        {
+        	// The previous character was a backslash, treat this character specially.
+            switch (character)
+            {
+                case ('d'):
+                {
+                    // The following three digits make up the character.                    
+                    character = (byte(message, messagePosition) - '0') * 100;
+                    character = character + (byte(message, messagePosition + 1) - '0') * 10;
+                    character = character + (byte(message, messagePosition + 2) - '0');
+                    messagePosition = messagePosition + 3;
+                }
+                case ('t'):
+                {
+                    character = TAB;
+                }
+                case ('n'):
+                {
+                    character = LF;
+                }
+                case ('r'):
+                {
+                    character = CR;
+                }
+                default:
+                {
+                    // All other characters are simply themselves, nothing to do here.
+                }
+            }
+            if(argumentLength = 0) arguments[numArgs] = NULLSTRING; //Clear the argument.
+            
+            // Append character to the response                        
+            if(argumentLength < MAX_RESPONSE_ARG_LEN)
+            {
+            	setString(chr(character), argumentLength + 1, arguments[numArgs]);            	
+            	argumentLength = argumentLength + 1;
+            }
+
+            // The escape only applies to the next character.  After that we're back to normal.
+            escaped = 0;
+        }
+        else  // here if escaped is 0
+        {
+            switch (character)
+            {
+            	case (ESCSLASH): // Treat the next character specially.
+            	{                    
+                    escaped = 1;
+                }
+                case (':'): // Colons separate arguments, so prep the next argument
+                {
+                	numArgs = numArgs + 1;
+                	argumentLength = 0;
+                }
+                default:
+                {
+                	if(argumentLength = 0) arguments[numArgs] = NULLSTRING; //Clear the argument.
+                	
+                    // Normal character, append it.
+    		        if(argumentLength < MAX_RESPONSE_ARG_LEN)
+    		        {
+    		        	setString(chr(character), argumentLength + 1, arguments[numArgs]);
+    		        	argumentLength = argumentLength + 1;
+    		        }
+                }
+            }
+        }
+    }
+}
+
+
+//Parses the arguments used by parseMessage() and parseInit2Message() in binary delimiter format
+FUNCTION getNArgumentsBinary(STRING arguments[], BYREF INTEGER numArgs, 
+					   INTEGER newTotalArgs, STRING message, 
+					   BYREF INTEGER messagePosition, BYREF INTEGER messageEnd)
+{
+	INTEGER	delimiterPosition;
+	INTEGER argLength;
+	
+	while (messagePosition <= messageEnd && numArgs < newTotalArgs)
+	{
+		delimiterPosition = find("\x02", message, messagePosition);
+		
+		//if no delimiter is found, move the position to the end and quit the loop
+		if(delimiterPosition = 0)
+		{
+			messagePosition = messageEnd + 1;	
+			break;
+		}
+		
+		argLength = delimiterPosition - messagePosition;
+		if (argLength >= MAX_RESPONSE_ARG_LEN) argLength = MAX_RESPONSE_ARG_LEN;
+		
+		arguments[numArgs] = mid( message, messagePosition, argLength );
+		
+		numArgs = numArgs + 1;
+		messagePosition = delimiterPosition + 1;
+		}
+}
+
+//Parses the arguments used by parseMessage() and parseInit2Message()
+FUNCTION getNArguments(STRING arguments[], BYREF INTEGER numArgs, 
+					   INTEGER newTotalArgs, STRING message, 
+					   BYREF INTEGER messagePosition, BYREF INTEGER messageEnd)
+{   
+	integer loop;
+	if(byte(message,messageEnd) = 2)	//if the message is terminated with a binary delimiter
+	{
+		getNArgumentsBinary(arguments, numArgs, newTotalArgs, message, messagePosition, messageEnd);
+	}
+	else		//otherwise, assume it's in the printable delimiter format
+	{
+		getNArgumentsPrintable(arguments, numArgs, newTotalArgs, message, messagePosition, messageEnd);
+	}
+	
+	if(numArgs < newTotalArgs) //may happen if requested more args than available in the message
+	{                              
+		//step through all remaining args expected and clear
+		for(loop = numArgs to newTotalArgs)   
+		{
+			arguments[loop] = NULLSTRING;
+		}
+	}
+}
+
+// Decode and display the error code & message
+FUNCTION printPlayerError(INTEGER errorCode, STRING details, INTEGER playerId)
+{
+	string description[30];
+	string instanceName[50];
+	
+	instanceName = getSymbolInstanceUMC();
+	
+	switch(errorCode)  {
+		case(1):
+		{
+			description =  "Message too long";
+		}
+		case(2):
+		{
+			description =  "Message contains invalid character";
+		}
+		case(3):
+		{
+			description =  "Checksum error";
+		}
+		case(4):
+		{
+			description =  "Invalid device or device is offline";
+		}
+		case(5):
+		{
+			description =  "Device unavailable";
+		}
+		case(10):
+		{
+			description =  "Invalid request";
+		}
+		case(11):
+		{
+			description =  "Invalid number of parameters";
+		}
+		case(12):
+		{
+			description =  "Invalid parameter";
+		}
+		case(13):
+		{
+			description =  "Device identifier conflict";
+		}
+		case(14):
+		{
+			description =  "Invalid sequence number";
+		}
+		case(15):
+		{
+			description =  "Disallowed due to parental control";
+		}
+		case(16):
+		{
+			description =  "Invalid passcode";
+		}
+		case(17):
+		{
+			description =  "Invalid content handle";
+		}
+		case(20):
+		{
+			description =  "Command not processed";
+		}
+		case(999):
+		{
+			description =  "Undetermined error";
+		}
+		default:
+		{
+			description =  "Unknown error.";
+		}
+	}
+	
+	//send error text to console
+	print("Kaleidescape (%s):  K device responded with error %03d (%s)  %s\n", 
+		instanceName, errorCode, description, details);
+}      
+
+// Decrypt the device type, and ensure that the device is a valid one that can be controlled
+INTEGER_FUNCTION checkDeviceType(INTEGER deviceType, INTEGER playerId)
+{
+	STRING typeText[30];
+	STRING UMCName[50];
+	
+	switch(deviceType)	{
+		case(1):
+		{
+			typeText = "a Server";
+		}
+		
+		case(2):
+		{
+			typeText = "a Player";
+			return(1); //halt execution of this function with a success result
+		}
+		
+		case(3):
+		{
+			typeText = "a Bulk Loader";
+		}
+		
+		case(5):
+		{
+			typeText = "a DVD Reader";
+		}
+		
+		case(7):
+		{
+			typeText = NULLSTRING;
+			return(1); //halt execution of this function with a success result
+		}
+		
+		case(8):
+		{
+			typeText = "a Music Player";
+			return(1); //halt execution of this function with a success result
+		}
+		
+		default:
+		{
+			typeText = "an unknown device";
+		}
+	}
+	
+	//if control falls here, we are not talking to a player.
+	UMCName = getSymbolInstanceUMC();
+	print("\nKaleidescape (%s) is controlling %s, not a Player.\n", UMCName, typeText);
+	print("The Kaleidescape module only controls a Kaleidescape player.\n\n");
+	return(0); //indicate failure
+} 
+
+FUNCTION refactorConnectionSettings(INTEGER statedPlayerID, STRING playerSN, BYREF INTEGER playerID, STRING connectedDeviceSN, INTEGER connectedDeviceID, BYREF INTEGER directConnect, INTEGER debug)
+{
+	STRING UMCName[50];
+	
+	//if the serial number of the controlled player is the same as the connected dev
+	if(playerSN = connectedDeviceSN)
+	{
+		directConnect = ON; //we are directly connected
+	}
+	else
+	{
+		directConnect = OFF; //otherwise, we are not
+	}
+
+		
+	if(statedPlayerID = 1) //if the given player id is 1 (implying a direct connection)
+	{
+		//then use the ID of the connected device, no matter what it is
+		playerId = connectedDeviceID;
+		if(playerId = 0) playerId = 1;
+		directConnect = ON;
+	}
+		
+	/*
+	 * This solves problems where the installer direct connects the player
+	 * but the player's ID is actually something other than 01.
+	 */
+	if(debug)
+	{
+		UMCName = getSymbolInstanceUMC();			
+		print("K module %s refactored interface.\n", UMCName);
+		print("          Player SN = %s\n", playerSN);
+		print("Connected Device SN = %s\n", connectedDeviceSN);
+		print("Direct connect = %d\n\n", directConnect);
+		print("Stated ID = %u, Connected ID = %u, Player ID = %u.\n\n",
+			statedPlayerID, connectedDeviceID, playerID);
+	}
+	
+}
+
+
+INTEGER_FUNCTION validateDevice(STRING moduleName, INTEGER CPDID, STRING deviceName, INTEGER numVidZones, INTEGER numAudZones, INTEGER myZone)
+{
+	STRING errorText[255];
+	string instanceName[50];
+	
+	instanceName = getSymbolInstanceUMC();
+	if(deviceName = NULLSTRING) deviceName = "device";
+	
+	if(myZone > 0)		//this will be true if myZone is a music zone
+	{
+		if(myZone <= numAudZones)
+			return(1);
+			
+	    if(numAudZones = 0)
+	    {
+	    	makeString(errorText, "Kaleidescape (%s) Config ERROR! %s is set to control CPDID %02d, zone %02d; a %s with no audio zones.", instanceName, moduleName, CPDID, myZone, deviceName);
+		}
+	    else
+	    {
+	    	makeString(errorText, "Kaleidescape (%s) Config ERROR! %s is set to control CPDID %02d, zone %02d; a %s with only %d audio zone(s).", instanceName, moduleName, CPDID, myZone, deviceName, numAudZones);
+	    }
+	}
+	else
+	{
+		if(numVidZones > 0)
+			return(1);
+			
+    	makeString(errorText, "Kaleidescape (%s) Config ERROR! %s is set to control CPDID %02d; a %s which has no video zones.", instanceName, moduleName, CPDID, deviceName);			
+	}
+	
+	GenerateUserError("%s", errorText);
+	Print("\n\n%s\n\n", errorText);
+	
+	return(0);
+}
+
+/*
+ * The following functions manage the connection state
+ */
+#DEFINE_CONSTANT MAX_CONNECTION_COMMANDS 5
+ 
+//different states
+#DEFINE_CONSTANT STATE_PORT_CLOSED		0		//port is closed
+#DEFINE_CONSTANT STATE_PORT_OPENED		1		//port is open, no traffic yet (or not traffic)
+#DEFINE_CONSTANT STATE_K_CONNECTION		2		//port is returning valid K responses, but not sending traffic to device
+#DEFINE_CONSTANT STATE_PASSING_TRAFFIC	3		//port is passing traffic to connected devices, but our device is offline
+#DEFINE_CONSTANT STATE_DEVICE_ONLINE	4		//device is online and communicating normally
+#DEFINE_CONSTANT STATE_DEVICE_ON		5		//device is on
+#DEFINE_CONSTANT STATE_CONFIG_VALID		6		//the configuration is good (proper zones, etc.)
+#DEFINE_CONSTANT STATE_UNDEF			999
+
+#DEFINE_CONSTANT POWER_OFF				0
+#DEFINE_CONSTANT POWER_ON				1
+#DEFINE_CONSTANT POWER_UNKNOWN			254
+
+//various reponses
+#DEFINE_CONSTANT RESPONSE_NO_ACTION		0
+#DEFINE_CONSTANT RESPONSE_SEND_COMMAND	1
+#DEFINE_CONSTANT RESPONSE_DIRECT_SEND	2
+#DEFINE_CONSTANT RESPONSE_INITIALIZE	3
+#DEFINE_CONSTANT RESPONSE_CLEAR_INIT	4
+#DEFINE_CONSTANT RESPONSE_INIT_CONN		5
+#DEFINE_CONSTANT RESPONSE_POWERED_OFF	6
+
+//various connection state events
+#DEFINE_CONSTANT EVENT_VALID_MESSAGE 	1		//when a valid K message is received
+#DEFINE_CONSTANT EVENT_DEVICE_INFO 		2		//when we've received a dev info from the target device
+#DEFINE_CONSTANT EVENT_POWER_STATE_ON	3		//received DEVICE_POWER_STATE, and this zone is on
+#DEFINE_CONSTANT EVENT_POWER_STATE_OFF	4		//received DEVICE_POWER_STATE, and this zone is off
+#DEFINE_CONSTANT EVENT_VALIDATED_CONFIG 5		//the configuration is valid
+#DEFINE_CONSTANT EVENT_01_DEVICE_INFO	10		//received dev info from device 01
+#DEFINE_CONSTANT EVENT_01_POWER_STATE_OFF 11	//received DEVICE_POWER_STATE, and 01 is on
+#DEFINE_CONSTANT EVENT_01_POWER_STATE_ON  12	//received DEVICE_POWER_STATE, and 01 is off
+#DEFINE_CONSTANT EVENT_01_BANG_020		13		//received 01/!/020:
+#DEFINE_CONSTANT EVENT_DEVICE_ONLINE	14		//called in response to finding our CPDID in AVAILABLE_DEVICES
+#DEFINE_CONSTANT EVENT_DEVICE_OFFLINE	15		//called in response to not finding our CPDID in AVAILABLE_DEVICES
+#DEFINE_CONSTANT EVENT_PLAYER_RESTART	16		//received PLAYER_RESTART
+
+#DEFINE_CONSTANT EVENT_MODULE_START		100		//startup
+#DEFINE_CONSTANT EVENT_PORT_OPEN 		101		//the port is open
+#DEFINE_CONSTANT EVENT_PORT_CLOSED 		102		//the port is closed
+#DEFINE_CONSTANT EVENT_SEND_TIMEOUT		103		//a send message got no reponse
+#DEFINE_CONSTANT EVENT_MIDNIGHT			104		//midnight has passed
+#DEFINE_CONSTANT EVENT_10_SECONDS		105		//triggers every 10 seconds
+#DEFINE_CONSTANT EVERY_30_SECONDS		106
+#DEFINE_CONSTANT EVENT_POWER_ON_PUSH	107		//power on was pressed on the module
+#DEFINE_CONSTANT EVENT_POWER_ON_RELEASE 108		//power on was released on the module
+#DEFINE_CONSTANT EVENT_POWER_OFF_PUSH	109		//power off was pressed on the module
+
+#DEFINE_CONSTANT EVENT_ERROR_OFFSET		1000
+
+ 
+INTEGER_FUNCTION connectionHandler(INTEGER stateEvent, BYREF INTEGER state, BYREF STRING commands[], BYREF INTEGER commandCount, BYREF INTEGER powerState, BYREF INTEGER powerStateStatus, BYREF STRING moduleDescription, INTEGER directConnection, INTEGER debug)
+{
+	INTEGER newState;
+	INTEGER oldState;
+	oldState = state;
+	newState = STATE_UNDEF;
+	
+ 	if(debug) print("connectionHandler called with state event %d.  State=%d, Power state=%d\n", stateEvent, state, powerState);
+ 	switch(stateEvent)
+ 	{
+ 		//connection step 2
+ 		case (EVENT_VALID_MESSAGE):
+ 		{
+ 			//This first event must normally exit fast as it's checked on every incoming message
+ 			if(state >= STATE_K_CONNECTION) 
+ 				return(RESPONSE_NO_ACTION);	//if we're already at this state, do nothing
+ 			
+ 			newState = STATE_K_CONNECTION;
+ 			
+ 			if(debug) print("ConnectionHandler - Connection step 2\n");
+ 		}
+
+		case (EVENT_10_SECONDS):
+		{
+			//this is a failsafe event for when a 232 connection is set up without any other indication
+			//will also keep track of the power status
+			if(state = STATE_PORT_OPENED)
+				newState = STATE_PORT_OPENED;
+	
+			//if the device in online but the power state is unknown, check it			
+			if( state <> STATE_UNDEF && state >= STATE_DEVICE_ONLINE && powerState = POWER_UNKNOWN )
+			{
+	 			makeString(commands[1], "GET_DEVICE_POWER_STATE:");
+	 			commandCount = 1;
+	 			return(RESPONSE_SEND_COMMAND);
+			}
+		}
+ 		
+ 		//connection step 0 - clear any states
+ 		case (EVENT_MODULE_START):
+ 		{
+ 			newState = STATE_PORT_CLOSED;
+ 		}
+ 		
+		//connection step 1  - check if the connected device is on.  Might be called twice during startup.		
+ 		case (EVENT_PORT_OPEN):
+ 		{
+ 			if(state < STATE_PORT_OPENED)
+	 			newState = STATE_PORT_OPENED;
+ 		}
+ 		
+ 		case (EVENT_PORT_CLOSED):
+ 		{
+ 			newState = STATE_PORT_CLOSED;
+ 		}
+
+ 		case (EVENT_PLAYER_RESTART):
+ 		{
+ 			newState = STATE_K_CONNECTION;
+ 		}
+ 		
+ 		
+ 		//connection step 3
+ 		case (EVENT_01_DEVICE_INFO):
+ 		{
+ 			if(state < STATE_PASSING_TRAFFIC)
+	 			newState = STATE_PASSING_TRAFFIC;
+ 		}
+        
+        //connection step 4
+ 		case (EVENT_DEVICE_INFO):
+ 		{
+ 			if(state < STATE_DEVICE_ONLINE)
+	 			newState = STATE_DEVICE_ONLINE;
+ 		} 		
+ 		
+ 		case (EVENT_DEVICE_ONLINE):
+ 		{
+ 			if(state < STATE_DEVICE_ONLINE)
+	 			newState = STATE_DEVICE_ONLINE;
+ 		}
+ 		
+ 		//connection step 5
+ 		case (EVENT_POWER_STATE_ON):
+ 		{
+ 			if(state < STATE_DEVICE_ON)
+				newState = STATE_DEVICE_ON;	//we're online
+			else
+	 			powerState = POWER_ON;
+ 		}
+ 		
+ 		case (EVENT_POWER_STATE_OFF):
+ 		{
+ 			powerState = POWER_OFF;			//we're off 
+ 			
+ 			if(state != STATE_DEVICE_ONLINE)			
+	 			newState = STATE_DEVICE_ONLINE;	//we're online
+ 		}
+ 		
+ 		//connection step 7
+ 		case (EVENT_VALIDATED_CONFIG):
+ 		{
+ 			if(state < STATE_CONFIG_VALID)
+	 			newState = STATE_CONFIG_VALID;
+ 		}
+ 		
+ 		case (EVENT_01_POWER_STATE_OFF):
+ 		{
+ 			if(state < STATE_K_CONNECTION)
+ 			{
+ 				newState = STATE_K_CONNECTION;
+ 			}
+ 			if(directConnection)
+ 			{
+ 				powerState = POWER_OFF;			//we're powered off
+ 			}
+ 			
+ 		}
+ 		
+ 		case (EVENT_01_POWER_STATE_ON):
+ 		{
+ 			if(state < STATE_K_CONNECTION)
+ 			{
+ 				newState = STATE_K_CONNECTION;
+ 			}
+ 			if(directConnection)
+ 			{
+ 				powerState = POWER_ON;			//but powered on
+			}
+ 		}
+ 		
+ 		//we should always at least receive error 004 or 020.  If not, something is not good
+ 		case (EVENT_SEND_TIMEOUT):
+ 		{
+ 			if(state > STATE_PORT_OPENED)
+				newState = STATE_PORT_OPENED;
+ 		}
+ 		
+ 		//received the "I can't pass traffic" error.  Port is open but not passing traffic
+ 		case (EVENT_01_BANG_020):
+ 		{
+ 			if(directConnection)		//if we're directly connected
+ 			{
+ 				if(state != STATE_DEVICE_ONLINE)
+	 				newState = STATE_DEVICE_ONLINE;	//we're online
+	 				
+ 				powerState = POWER_OFF;			//but powered off
+ 			}
+ 			else						//if we're not directly connected
+ 			{
+ 				if(state != STATE_K_CONNECTION)
+	 				newState = STATE_K_CONNECTION;
+ 			}
+ 		}
+ 		
+ 		//our device not found in available devices.  
+ 		case (EVENT_DEVICE_OFFLINE):
+ 		{
+ 			if(!directConnection)		//if we're not directly connected
+ 			{
+ 				if(state != STATE_PASSING_TRAFFIC)
+	 				newState = STATE_PASSING_TRAFFIC;
+ 			}
+ 		}
+ 		
+ 		
+ 		//received the "device offline" error.  Port is open and passing traffic, device offline
+ 		case (EVENT_ERROR_OFFSET + 004):
+ 		{
+ 			if(!directConnection)		//if we're not directly connected
+ 			{
+ 				if(state != STATE_PASSING_TRAFFIC)
+	 				newState = STATE_PASSING_TRAFFIC;
+ 			}
+ 		}
+ 		
+ 		//we'll only get this error if we're online but in standby
+ 		case (EVENT_ERROR_OFFSET + 020):
+ 		{
+ 			if(state > STATE_DEVICE_ONLINE)
+	 			newState = STATE_DEVICE_ONLINE;
+	 			
+ 			powerState = POWER_OFF;
+ 		}
+ 		
+ 		case (EVERY_30_SECONDS):
+ 		{
+ 			makeString(commands[5], "\n");	//send just a CR to make sure the port is still open
+ 			return(RESPONSE_DIRECT_SEND); 			
+ 		}
+ 		
+ 		case (EVENT_MIDNIGHT):
+ 		{
+ 			if(state = STATE_DEVICE_ONLINE)
+ 			{
+	 			makeString(commands[1], "SEND_TO_SYSLOG:INFORMATION:%s:", escape(moduleDescription));
+ 				commandCount = 1;
+ 				return(RESPONSE_SEND_COMMAND);
+ 			}
+ 			else return(RESPONSE_NO_ACTION);
+ 		}
+ 		
+ 		case (EVENT_POWER_ON_PUSH):
+ 		{
+ 			powerStateStatus = ON;
+ 			
+ 			//if the power is off, set the state to unknown in anticipation of an ON event
+ 			if(powerState = POWER_OFF)
+ 			{
+ 				powerState = POWER_UNKNOWN;
+ 				commandCount = 0;
+ 				return(RESPONSE_SEND_COMMAND);	//return with no commands to evaluate the power state
+ 			}
+ 			
+ 			//edge case for devices that improperly respond to power state changes
+ 			if(powerState = POWER_UNKNOWN && state >= STATE_DEVICE_ON)
+ 			{
+ 				powerState = POWER_ON;
+ 				commandCount = 0;
+ 				return(RESPONSE_SEND_COMMAND);	//return with no commands to evaluate the power state
+ 			}
+
+ 		}
+ 		
+ 		case (EVENT_POWER_ON_RELEASE):
+ 		{
+ 			powerStateStatus = OFF;
+ 		}
+ 		
+ 		case (EVENT_POWER_OFF_PUSH):
+ 		{	
+ 			powerStateStatus = OFF;
+ 			
+ 			//if the power is on, set the state to unknown in anticipation of an OFF event
+ 			if(powerState = POWER_ON)
+ 			{
+ 				powerState = POWER_UNKNOWN;
+ 				commandCount = 0;
+ 				return(RESPONSE_SEND_COMMAND);	//return with no commands to evaluate the power state
+ 			}
+ 		}
+ 		
+ 		default:
+ 		{
+ 			if(debug) print("Kaleidescape connectionHandler unknown event: %d\n", stateEvent);
+ 		}
+ 	}
+ 	
+ 	if(newState != STATE_UNDEF) 
+ 	{
+ 		//if the newState is higher, only go up by one step to not miss anything
+ 		if(newState > state) newState = state + 1;
+ 		state = newState;
+ 	}
+ 	
+ 	//take action depending on the new state
+ 	switch (newState)
+ 	{
+ 		case (STATE_PORT_CLOSED):
+ 		{
+ 			powerState = POWER_UNKNOWN;
+ 			return(RESPONSE_CLEAR_INIT);
+ 		}
+ 		case (STATE_PORT_OPENED): 
+ 		{
+ 			powerState = POWER_UNKNOWN;
+ 			makeString(commands[5], "01/0/GET_DEVICE_POWER_STATE:\n");
+ 			return(RESPONSE_DIRECT_SEND);
+ 		}
+ 		case (STATE_K_CONNECTION): 
+ 		{
+ 			if(!directConnection)
+ 				powerState = POWER_UNKNOWN;
+ 				
+ 			makeString(commands[5], "01/0/GET_DEVICE_INFO:\n"); 			
+ 			return(RESPONSE_DIRECT_SEND);
+ 		}
+ 		case (STATE_PASSING_TRAFFIC): 
+ 		{
+ 			if(!directConnection)
+ 				powerState = POWER_UNKNOWN;
+ 			
+ 			makeString(commands[1], "GET_DEVICE_INFO:");
+ 			commandCount = 1; 			
+ 			return(RESPONSE_INIT_CONN);
+ 		}
+ 		case (STATE_DEVICE_ONLINE): 
+ 		{
+ 			if(oldState < newState)	//only reinit the connection if it's a new connection
+ 			{
+	 			makeString(commands[1], "SEND_TO_SYSLOG:INFORMATION:%s:", escape(moduleDescription));
+	 			makeString(commands[2], "GET_DEVICE_POWER_STATE:");
+	 			commandCount = 2;
+	 			return(RESPONSE_SEND_COMMAND);
+	 		}
+	 		else
+	 		{
+	 			//indicate that the device has been powered off (was on)
+	 			return(RESPONSE_POWERED_OFF);
+	 		}
+	 	}
+ 		case (STATE_DEVICE_ON):
+ 		{
+ 			powerState = POWER_ON;
+			makeString(commands[1], "GET_DEVICE_TYPE_NAME:");
+			makeString(commands[2], "GET_NUM_ZONES:");
+			commandCount = 2;
+			return(RESPONSE_SEND_COMMAND);
+ 		}
+ 		case (STATE_CONFIG_VALID): 
+ 		{
+			return(RESPONSE_INITIALIZE);	//init 	
+ 		}
+ 	}
+ 	
+ 	//check the power state, status and connection state
+	if(powerStateStatus && powerState = POWER_OFF)
+	{
+	    if(state = STATE_DEVICE_ONLINE || ( directConnection && state >= STATE_K_CONNECTION ) )
+		{	
+			//turn on immediately
+			makeString(commands[1], "LEAVE_STANDBY:");
+			commandCount = 1;
+			
+			return(RESPONSE_SEND_COMMAND);
+		}
+	}
+	
+	return(RESPONSE_NO_ACTION);
+}
+
+// Small parser to get messages addressed to id 01, zone 0 (initialization messages)
+INTEGER_FUNCTION parse010MessageEvent(STRING message, INTEGER messageEnd, INTEGER playerID, INTEGER directConnect, BYREF STRING connectedDeviceSN, BYREF INTEGER connectedDeviceID, INTEGER debug)
+{
+	INTEGER numArgs;	// the number of args
+	INTEGER messagePosition;
+	STRING  args[MAX_RESPONSE_ARGS][MAX_RESPONSE_ARG_LEN];	// the args within the message
+	STRING  UMCName[50];
+	
+	if(debug) UMCName = getSymbolInstanceUMC();
+	if(debug) print("Kaleidescape (%s) Parsing 01/0 message\n", UMCName);
+
+	//ensure the message isn't garbled
+	if(!isValidMessage(message, 1, 0, 0, messageEnd, playerID, directConnect, debug)) return(OFF);
+	
+    //Initialize our parsing variables.
+    messagePosition = 6; //End after the header.
+    if(byte(message, messageEnd) != 2)	//if this doesn't end in a binary field delimiter
+    {
+	    messageEnd = MessageEnd - 3; //start after the checksum.
+	}
+    numArgs = 0;
+	//Parse the necessary arguments.
+	getNArguments(args, numArgs, 5, message, messagePosition, messageEnd);
+	
+  	if(args[1] = "DEVICE_INFO") //what type of device are we talking to
+  	{
+  		connectedDeviceSN = args[3];
+  		connectedDeviceID = atoi(args[4]);
+		if(debug) print("Kaleidescape (%s) Found DEVICE_INFO message.  args[3]=%s\n", UMCName, args[3]);
+		return(EVENT_01_DEVICE_INFO);
+  	}
+  	else if(args[1] = "DEVICE_POWER_STATE")
+  	{
+  		if(debug) print("Kaleidescape (%s) Found DEVICE_POWER_STATE.  args[2]=%s\n", UMCName, args[2]);
+  		if(atoi(args[2]) > 0)
+  			return(EVENT_01_POWER_STATE_ON);
+  		else
+  			return(EVENT_01_POWER_STATE_OFF);  			
+  	}
+  	
+  	return(EVENT_VALID_MESSAGE);
+}
+
+
+											
+#DEFINE_CONSTANT TP_MAX_FIELDS		20
+#DEFINE_CONSTANT MAX_SCROLL_BAR_SIZE 9		//Size is adjusted by using the button mode.  
+											//Maximum of 9 modes (0 = no bar)
+#DEFINE_CONSTANT HANDLE_MAX_LENGTH  100
+#DEFINE_CONSTANT MAX_BROWSE_NODES	20		//number of times the user can press the "back" button 
+											//and get useful Info
+#DEFINE_CONSTANT LIST_MAX_LENGTH  20
+#DEFINE_CONSTANT LIST_NUM_BUTTONS  4
+#DEFINE_CONSTANT LIST_BUTTONS_ARRAY_SIZE 100	//LIST_MAX_LENGTH * (LIST_NUM_BUTTONS + 1)
+
+#DEFINE_CONSTANT ACTION_MAX_LENGTH  100
+#DEFINE_CONSTANT MAX_SEARCH_TEXT_LENGTH 150		//fuzzy search buttons can take several characters
+												//of text per single "digit" = "[7PQRS]"
+
+#DEFINE_CONSTANT MAX_HIGHLIGHT_DELAY 60
+#DEFINE_CONSTANT MIN_HIGHLIGHT_DELAY 10
+#DEFINE_CONSTANT HIGHLIGHT_DELAY_DELTA 10
+
+#DEFINE_CONSTANT DISPLAY_BROWSE		1
+#DEFINE_CONSTANT DISPLAY_NOWPLAYING	2
+
+#DEFINE_CONSTANT BROWSE_START_NODE		"music"
+#DEFINE_CONSTANT NOW_PLAYING_START_NODE	"now_playing"
+
+#DEFINE_CONSTANT BEHAVIOR_BROWSE	1
+#DEFINE_CONSTANT BEHAVIOR_DETAILS	2
+#DEFINE_CONSTANT BEHAVIOR_ACTION	3
+
+#DEFINE_CONSTANT SHOW_BUTTON_OK			4
+#DEFINE_CONSTANT SHOW_BUTTON_BROWSE		1
+#DEFINE_CONSTANT SHOW_BUTTON_PLAY		3
+#DEFINE_CONSTANT SHOW_BUTTON_DETAILS	2
+
+#DEFINE_CONSTANT DETAILS_NOW_PLAYING_TRACK	1
+#DEFINE_CONSTANT DETAILS_NOW_PLAYING_ALBUM	2 
+
+#DEFINE_CONSTANT BROWSE_AVAILABLE_INDICATOR "  >"
+
+#DEFINE_CONSTANT PHONE_KEYBOARD_PREFIX  "["
+
+#DEFINE_CONSTANT SEQUENCE_ID 1
+
+/*
+ * In some cases, the Kaleidescape server is separated from
+ * the control system by a router using NAT.  In these cases,
+ * the private IP address of the server is not the IP Address
+ * the Crestron panels must use to obtain cover art.
+ *
+ * In this case, an alternative address must be used to
+ * access cover art.  Enter that address here.  This can be
+ * a host name or an IP Address.
+ *
+ * NOTE: If your Crestron system and Kaleidescape server are
+ * on the same subnet without any NAT between them,
+ * DO NOT UNCOMMENT THE FOLLOWING CONSTANT DECLARATION.
+ */                                       
+//#DEFINE_CONSTANT SERVER_IP_ADDRESS "192.168.1.150"
+
+#HELP_BEGIN
+(c) 2006-2011 Kaleidescape Inc.  Please see legal notice below.
+
+Version 8.1.0
+Dated Mar 01, 2011
+
+This module has been created and supported by Kaleidescape Inc.
+This module is supported directly by Kaleidescape Inc.  Please
+direct all inquiries regarding this module to  Kaleidescape support
+at (650) 625-6160.  Crestron Inc. does not support this module itself.
+
+This processor is for use within the Kaleidescape SATP Module.
+
+Debug mode can be activated by opening up the console and typing:
+> userprogcmd "K debug"
+
+It can subsequently be deactivated by typing:
+> userprogcmd "K debug off"
+
+----------------------------------------------------------------------
+
+LEGAL NOTICE
+    (c) 2006-2011 Kaleidescape Inc. This Source Code is the intellectual 
+property of Kaleidescape, Inc. Kaleidescape grants the non-exclusive 
+right to modify and/or compile and/or compress the Source Code, and 
+upload such modified and/or compiled and/or compressed Source Code 
+to control systems that control at least one licensed Kaleidescape 
+System. No right is granted to otherwise copy, reproduce, modify, 
+upload, download, transmit, or distribute the Source Code, or 
+derivative works, in any way. The Source Code, and derivative works, 
+are protected by copyright, trade secret, and other intellectual 
+property laws and by international treaties, which provide rights 
+and obligations in addition to the rights and obligations set forth here.
+
+#HELP_END
+
+/*******************************************************************************************
+ * Input/Output Signal Declarations
+ ******************************************************************************************/
+
+DIGITAL_INPUT 	Connection_Open;
+
+DIGITAL_INPUT 	Browse_Select;
+DIGITAL_INPUT 	Now_Playing_Select;
+
+DIGITAL_INPUT 	List_Begin;
+DIGITAL_INPUT 	List_Back;
+
+DIGITAL_INPUT 	List_Page_Up;
+DIGITAL_INPUT 	List_Page_Down;
+
+DIGITAL_INPUT	List_Highlight_Up;
+DIGITAL_INPUT	List_Highlight_Down;
+DIGITAL_INPUT	List_Highlight_Select;
+
+DIGITAL_INPUT 	Keyboard_Cancel;
+DIGITAL_INPUT 	Keyboard_Enter;
+DIGITAL_INPUT 	Keyboard_Backspace;
+DIGITAL_INPUT 	Keyboard_Clear;
+
+DIGITAL_INPUT 	Keyboard_Search;
+DIGITAL_INPUT 	View_Search_Result;
+
+DIGITAL_INPUT	Power_On_Input;
+DIGITAL_INPUT	Power_Off_Input;
+
+DIGITAL_INPUT 	List_Select_Digital[TP_MAX_FIELDS, TP_MAX_FIELDS];
+
+                      
+ANALOG_INPUT 	Stated_Player_ID;
+ANALOG_INPUT 	Zone_ID;
+
+ANALOG_INPUT 	Time_Update_Interval;
+
+BUFFER_INPUT 	Rx$[INPUT_BUFFER_LENGTH];
+STRING_INPUT 	Command_To_Player$[MAX_MESSAGE_LENGTH];
+STRING_INPUT 	Keyboard_Input$[MAX_MESSAGE_LENGTH];
+
+STRING_INPUT 	Play_Script$[MAX_MESSAGE_LENGTH];
+
+ANALOG_INPUT 	List_Analog_Scroll_Act;
+ANALOG_INPUT	List_Analog_Highlight_Act;
+
+ANALOG_INPUT 	List_Window_Length;
+
+STRING_INPUT 	Console_Command$[MAX_MESSAGE_LENGTH];
+
+
+DIGITAL_OUTPUT 	Browse_Selected;
+DIGITAL_OUTPUT 	Now_Playing_Selected;
+
+DIGITAL_OUTPUT 	List_Scroll_Available;
+
+DIGITAL_OUTPUT 	List_Back_Available;
+
+DIGITAL_OUTPUT 	Repeat_Status;
+DIGITAL_OUTPUT 	Random_Status;
+
+DIGITAL_OUTPUT 	Keyboard_Search_Available;
+DIGITAL_OUTPUT 	Keyboard_Search_Active;
+
+DIGITAL_OUTPUT  Power_On_FB;
+DIGITAL_OUTPUT  Power_Off_FB;
+
+DIGITAL_OUTPUT 	List_Select_Digital_FB[TP_MAX_FIELDS, TP_MAX_FIELDS];
+
+STRING_OUTPUT 	Tx$;
+
+STRING_OUTPUT 	User_Defined_Event$;
+
+ANALOG_OUTPUT 	Play_Mode;
+ANALOG_OUTPUT 	Song_Length;
+ANALOG_OUTPUT 	Song_Position;
+ANALOG_OUTPUT 	Song_Remaining;
+ANALOG_OUTPUT 	Song_Level;
+STRING_OUTPUT 	Now_Playing_Song_Name$;
+STRING_OUTPUT 	Now_Playing_Album_Name$;
+STRING_OUTPUT 	Now_Playing_Artist_Name$;
+STRING_OUTPUT 	Now_Playing_Cover_Art_URL$;
+
+ANALOG_OUTPUT 	Protocol_Version;
+
+ANALOG_OUTPUT 	User_Input;
+STRING_OUTPUT 	Keyboard_Title$;
+STRING_OUTPUT 	Keyboard_Text$;
+
+STRING_OUTPUT 	Friendly_Name$;
+
+ANALOG_OUTPUT 	List_Analog_Scroll_FB;
+ANALOG_OUTPUT 	List_Analog_Scroll_Size_FB;
+ANALOG_OUTPUT	List_Analog_Highlight_FB;
+
+STRING_OUTPUT 	List_Title$;
+
+STRING_OUTPUT 	Search_Mini_Result$;
+
+STRING_OUTPUT	Now_Playing_Item$;
+STRING_OUTPUT   Rx$_Loopback;
+
+STRING_OUTPUT 	List_Serial_FB$[TP_MAX_FIELDS, TP_MAX_FIELDS];
+ANALOG_OUTPUT 	List_Status_Analog_FB[TP_MAX_FIELDS, TP_MAX_FIELDS];
+
+/*******************************************************************************************
+ * Structure Definitions
+ ******************************************************************************************/
+ 
+/*
+ * Note:  Be sure to initialize all declared STRING variables as needed
+ *        For example, in Function Main: struct.myString = "";
+ */
+ 
+STRUCTURE 	STRUCT_ListItem
+{
+	INTEGER position;
+	INTEGER queueStatus;
+	INTEGER type;
+	STRING 	handle[HANDLE_MAX_LENGTH];
+	INTEGER behavior;
+	INTEGER pop;
+};
+
+STRUCTURE 	STRUCT_BrowseNode
+{
+	STRING 	handle[HANDLE_MAX_LENGTH];
+ 	STRING 	searchText[MAX_SEARCH_TEXT_LENGTH];
+ 	INTEGER position;
+ 	INTEGER selection;
+};
+
+/*******************************************************************************************
+ * Global Variables
+ ******************************************************************************************/
+INTEGER 				_PlayerInitialized;
+INTEGER 				_DirectConnect;
+
+STRING 					_ModuleDescription[100];
+STRING					_ModuleShortDescription[20];
+STRING 					_PlayerSN[16];
+STRING					_DeviceName[50];
+STRING 					_ConnectedDeviceSN[16];
+INTEGER 				_PlayerID;
+INTEGER 				_ConnectedDeviceID;
+INTEGER					_NumVidZones;
+INTEGER					_NumAudZones;
+
+STRUCT_ListItem 		_List[LIST_MAX_LENGTH];
+
+INTEGER 				_TPWindowLength;
+
+INTEGER 				_ListPosition;
+INTEGER 				_ListSelection;
+INTEGER 				_ListLength;
+INTEGER					_ListMoved;
+INTEGER 				_LastItem;
+
+INTEGER 				_Display; //indicates what is displayed - browse, now playing, or details
+                    
+STRUCT_BrowseNode 		_BrowseNodeStack[MAX_BROWSE_NODES];
+INTEGER 				_CurrentBrowseNode;
+INTEGER 				_BottomBrowseNode;
+INTEGER 				_StackSize;
+
+STRUCT_BrowseNode 		_StoredBrowseNodeStack[MAX_BROWSE_NODES];
+INTEGER 				_StoredCurrentBrowseNode;
+INTEGER 				_StoredBottomBrowseNode;
+INTEGER 				_StoredStackSize;
+
+INTEGER 				_FirstDetailFlag;
+
+INTEGER					_AlbumDetailsPending;
+INTEGER					_AlbumDetailsLoading;
+STRING					_NowPlayingAlbumHandle[MAX_RESPONSE_ARG_LEN];
+
+SIGNED_INTEGER 			_ListMovementDirection;
+INTEGER 				_ListMovementSpeed;
+
+SIGNED_INTEGER			_HighlightMovementDirection;
+
+INTEGER 				_LastPlayMode;
+
+INTEGER 				_GetListRunningFlag;
+INTEGER 				_GetListPendingFlag;
+INTEGER					_ListMovingFlag;
+
+INTEGER 				_Debug;
+INTEGER 				_ParsingFlag;
+INTEGER					_FoundDelimiter;
+STRING					_SymbolInstance[10];
+INTEGER					_CurrentDelimiter;
+STRING					_Delimiters[2][1];
+STRING					_FieldDelimiter[2][1];
+
+INTEGER					_PowerState;
+INTEGER					_PowerStateStatus;
+
+INTEGER					_ConnectionState;
+STRING					_ConnectionCommand[MAX_CONNECTION_COMMANDS][255];
+INTEGER					_ConnectionCommandCount;
+INTEGER					_TxCount;
+
+// Define all strings needed for parsing in order to speed up parsing routine
+string			msgPLAYER_RESTART[20];
+string			msg01_BANG_020[10];
+string			msgAVAILABLE_DEVICES[20];
+string			msgMUSIC_NOW_PLAYING_STATUS[30];
+string			msgMUSIC_PLAY_STATUS[20];
+string  		msgMUSIC_TITLE[20];
+string  		msgDEVICE_INFO[20];
+string  		msgNUM_ZONES[20];
+string  		msgDEVICE_TYPE_NAME[20];
+string  		msgDEVICE_POWER_STATE[20];
+string  		msgPROTOCOL[20];
+string  		msgUSER_DEFINED_EVENT[20];
+string  		msgFRIENDLY_NAME[20];
+string  		msgCONTENT_DETAILS_OVERVIEW[30];
+string  		msgCONTENT_DETAILS[20];
+string			msgPLAYING_MUSIC_INFORMATION[30];
+string			msgBROWSE_RESULT[20];
+string			msgBROWSE_RESULTS_OVERVIEW[30];
+
+string			fieldCover_URL[10];
+
+//convert some constants to string variables for speed purposes
+string			_BROWSE_AVAILABLE_INDICATOR[10];
+
+/*******************************************************************************************
+ * Functions
+ ******************************************************************************************/
+FUNCTION initMessages()
+{
+	msgPLAYER_RESTART 	= "PLAYER_RESTART";
+	msg01_BANG_020 		= "01/!/020:"; 
+	msgAVAILABLE_DEVICES= "AVAILABLE_DEVICES";
+	msgMUSIC_NOW_PLAYING_STATUS = "MUSIC_NOW_PLAYING_STATUS";
+	msgMUSIC_PLAY_STATUS = "MUSIC_PLAY_STATUS";
+	msgMUSIC_TITLE 		= "MUSIC_TITLE";
+	msgDEVICE_INFO 		= "DEVICE_INFO";
+	msgNUM_ZONES 		= "NUM_ZONES";
+	msgDEVICE_TYPE_NAME = "DEVICE_TYPE_NAME";
+	msgDEVICE_POWER_STATE = "DEVICE_POWER_STATE";
+	msgPROTOCOL 		= "PROTOCOL";
+	msgUSER_DEFINED_EVENT = "USER_DEFINED_EVENT";
+	msgFRIENDLY_NAME 	= "FRIENDLY_NAME";
+	msgCONTENT_DETAILS_OVERVIEW = "CONTENT_DETAILS_OVERVIEW";
+	msgCONTENT_DETAILS 	= "CONTENT_DETAILS";
+	msgPLAYING_MUSIC_INFORMATION = "PLAYING_MUSIC_INFORMATION";
+	msgBROWSE_RESULT	= "BROWSE_RESULT";
+	msgBROWSE_RESULTS_OVERVIEW = "BROWSE_RESULTS_OVERVIEW";
+	
+    fieldCover_URL		= "Cover_URL";
+
+	_BROWSE_AVAILABLE_INDICATOR  = BROWSE_AVAILABLE_INDICATOR;
+}
+// Send a command to the output with a given ID.Zone/sequence/command
+FUNCTION sendRaw(INTEGER deviceID, INTEGER streamID, INTEGER sequence, STRING command)
+{
+    STRING dataOut[MAX_MESSAGE_LENGTH];
+    
+	if(streamID <> 0)
+	{
+		makeString(dataOut, "%02u.%02u/%01u/%s\n", deviceId, streamId, sequence, command);
+	}
+	else
+	{
+		makeString(dataOut, "%02u/%01u/%s\n", deviceId, sequence, command);
+	}
+	
+	if(_Debug) print("Kaleidescape (%s) Sending:  %s", _SymbolInstance, dataOut);
+	
+	//Tx$ = dataOut;
+	if( len(dataOut) > 256 )
+	{
+		print("Kaleidescape (%s) module NOT Sending data.  Message length is too long: %s\n", _SymbolInstance, dataOut);
+	}
+	else
+	{
+		Tx$ = dataOut;
+		_TxCount = _TxCount + 1;
+	}	
+}
+
+// Send a command
+FUNCTION send(STRING data)
+{
+	if(_PlayerID = 0)
+	{
+		if(Stated_Player_ID = 0)
+		{
+			print("Kaleidescape (%s) Player_Id not yet determined, not sending message: %s\n", _SymbolInstance, data);
+			return;
+		}
+		_PlayerID = Stated_Player_ID;
+		if(_Debug) print("Kaleidescape (%s) \"Send\" setting Player_Id to Stated_Player_ID (%u).\n", _SymbolInstance, _PlayerID);
+	}
+	
+	sendRaw(_PlayerID, Zone_ID, 1, data);
+	
+}
+
+
+FUNCTION switchDelimiters(INTEGER newDelimiter)
+{
+	STRING RxTemp[INPUT_BUFFER_LENGTH];
+	INTEGER lastDelimiter;
+	INTEGER start;
+	INTEGER RxTempLength;
+	
+	//if(debug)
+		print("Kaleidescape (%s) switching delimiters - %d\n", _SymbolInstance, newDelimiter);
+	
+	//First, store the current delimiter value and change the global variable
+	lastDelimiter = _CurrentDelimiter;
+	_CurrentDelimiter = newDelimiter;
+	
+	//next, save the Rx buffer out to a temp variable, then clear it
+	RxTemp = Rx$;
+	clearBuffer(Rx$);
+	
+	//finally, push an old delimiter (to trigger the gather) 
+	//and the contents of the buffer back to the Rx loopback for re-processing by the gather
+	
+	//trip the old delmiter to clear the gather
+	Rx$_Loopback = _Delimiters[lastDelimiter];
+	
+	RxTempLength = len(RxTemp);
+	for( start=1 to RxTempLength step 255 )
+	{
+		// outstring can't exceed 256 chars
+		Rx$_Loopback = mid(RxTemp, start, 255);
+	}
+}
+
+
+
+/*
+ *
+ * List request handlers
+ *
+ */
+
+//Initialize the node list
+FUNCTION initializeHeadNode()
+{
+	_BottomBrowseNode = 1;
+	_CurrentBrowseNode = 1;
+	_StackSize = 1;
+	_ListPosition = 1;
+	_ListSelection = 0;	
+	_ListMoved = OFF;
+	_BrowseNodeStack[1].handle = _BrowseNodeStack[0].handle; //retreive the starting handle (in 0)
+	_BrowseNodeStack[1].searchText = _BrowseNodeStack[0].searchText;
+
+	if(_Debug) print("Kaleidescape (%s) First node set to %s\n", _SymbolInstance, _BrowseNodeStack[_CurrentBrowseNode].handle);
+}
+
+// Retrieve the current list
+FUNCTION getList()
+{
+	STRING 	browseCommand[200];
+	INTEGER topNumber;
+	INTEGER previousListPosition;
+	INTEGER failsafeCount;
+	
+	if(_PowerState != POWER_ON) return;
+	
+	if(_Debug) print("Kaleidescape (%s) _TPWindowLength=%u _GetListPendingFlag=%u _GetListRunningFlag=%u\n", 
+						_SymbolInstance, _TPWindowLength, _GetListPendingFlag, _GetListRunningFlag);
+	
+	
+	if(_TPWindowLength = 0) return; //do nothing if length is 0
+	
+	//if neither list is selected, do nothing
+	if(!Now_Playing_Selected && !Browse_Selected) return;
+
+	if(_StackSize = 0) initializeHeadNode(); //if we have no nodes, set the first
+
+	/*
+	 * To be a bit more gentle on the processor, we will ensure that
+	 * this routine only runs after all previous BROWSE responses
+	 * have returned, and collapse multiple pending requests into a
+	 * single request.
+	 */
+		
+	if(_GetListPendingFlag) return; //if there is already a pending get list, do nothing
+	_GetListPendingFlag = ON; //set the flag to prevent re-entering this routine
+	failsafeCount = 0;
+	while(_GetListRunningFlag) //if get list is already running
+	{
+		delay(20); //check again in a moment
+		failsafeCount = failsafeCount + 1;
+		if(failsafeCount >= 25)      //failsafe - if 5 secs passes and still waiting
+		{
+			_GetListRunningFlag = OFF; //assume the last command failed, and run anyway
+			break;
+		}
+	}
+	_GetListRunningFlag = ON; //indicate that we are now going to run the command
+	_GetListPendingFlag = OFF; //clear the pending flag to allow re-entry
+
+	if(Keyboard_Search_Active = ON) //if the search window is active
+	{
+		previousListPosition = 1; //only get the first line
+		topNumber = 1;
+	}
+	else
+	{
+		previousListPosition = _ListPosition;
+		topNumber = _ListPosition + _TPWindowLength - 1;
+	}
+	
+	//Request the current node.
+	makeString(browseCommand, "BROWSE:%s::%u-%u:", _BrowseNodeStack[_CurrentBrowseNode].handle, 
+		previousListPosition, topNumber);
+	
+	//if there's a search or the keyboard is active
+	if( (NULLSTRING != _BrowseNodeStack[_CurrentBrowseNode].searchText) || (Keyboard_Search_Active = ON) )
+	{	
+		/*
+		 * note that this will send a blank filter when the keyboard is active, but nothing 
+		 * entered yet - this instructs the player to not include non-data options.
+		 */
+
+		//append the search string
+		makeString(browseCommand,"%sFILTER=%s:", browseCommand, escape(_BrowseNodeStack[_CurrentBrowseNode].searchText));
+	}
+	else
+	{
+		if(!_ListMoved)										//if we haven't explicedly moved the list
+		{
+			makeString(browseCommand, "%sSUGGEST:", browseCommand);		//ask the K player for a suggested position
+		}
+		else
+		{
+			makeString(browseCommand, "%s:", browseCommand); //if there's no search or suggestion, append a blank field
+		}
+	}
+		
+	send(browseCommand);	
+}
+ 
+// run get list only after a slight delay to collapse multiple requests into one
+FUNCTION gentlyGetList()
+{
+	wait(40) //request the list no faster than every 4/10 of a second
+	{
+		getList();
+	}
+}
+
+// Retreive the beginning of the list
+FUNCTION getTopList()
+{
+	if(_Debug) print("Kaleidescape (%s) Getting top list\n", _SymbolInstance);
+		
+	initializeHeadNode();
+	getList();
+}
+
+FUNCTION listMoved(INTEGER newValue)
+{
+	if(newValue)
+	{
+		_ListMoved = 14;  //the number of second to timeout
+		                  
+		//the main while loop will tick this down by calling checkListMoved
+		//note that the checkListMoved doesn't run every second, so this isn't precise
+	}
+	else
+	{
+		_ListMoved = OFF;
+	} 
+}
+
+FUNCTION checkListMoved(integer secondsSinceLastCall)
+{
+	if(_ListMoved)
+	{
+	    if(_ListMoved <= secondsSinceLastCall)   //expired
+	    {
+	    	_ListMoved = OFF;
+	    	gentlyGetList();
+	    }
+	    else     //if not expired, decrement
+	    {
+	    	_ListMoved = _ListMoved - secondsSinceLastCall;
+	    }
+	}
+} 
+ 
+
+/*
+ *
+ * Details request routines
+ *
+ */
+
+
+// handle requests for details intelligently.
+FUNCTION doRequestAlbumDetails()
+{
+	STRING command[MAX_MESSAGE_LENGTH];
+	INTEGER failsafeCount;
+
+	/*
+	 * Next, we check to see how many threads are waiting to get content detail.  If there's
+ 	 * already one out there, we sit tight and wait for it to finish before we attempt to do our
+	 * request
+	 */
+	if(_AlbumDetailsPending = ON) return; //if there is already a pending request, do nothing
+	_AlbumDetailsPending = ON; //set the flag to prevent re-entering this routine
+	
+	failsafeCount = 0;
+	//if we are already receiving content details...
+	while(_AlbumDetailsLoading)
+	{
+		delay(20); //check again in a moment
+		failsafeCount = failsafeCount + 1;
+		if(failsafeCount >= 25)
+		{
+			//assume the last command failed, and run anyway
+			_AlbumDetailsLoading = OFF;
+			break;
+		}
+	}
+	_AlbumDetailsPending = OFF; //clear the pending flag to allow re-entry
+	_AlbumDetailsLoading = ON; //indicate that we are now going to run the command
+	//Clear the pending flag for the proper detail and grab the handle to request.
+	
+	makeString(command, "GET_CONTENT_DETAILS:%s::", _NowPlayingAlbumHandle);	
+	send(command);
+}
+
+//Similar to the gentlyGetList function, this function starts a new thread to request the details.
+FUNCTION requestAlbumDetails(STRING handle)
+{ 
+ 	_NowPlayingAlbumHandle = handle;
+	wait(40)
+	{
+		doRequestAlbumDetails();
+	}
+}
+
+
+
+
+
+/*
+ *
+ * Button feedback management
+ *
+ */
+
+// Show back button on list
+FUNCTION renderBrowseBack()	
+{
+	List_Back_Available = ( _StackSize > 1 || NULLSTRING != _BrowseNodeStack[_CurrentBrowseNode].searchText);
+}
+
+
+// Show the search button
+FUNCTION renderSearchButton()
+{
+	//if we're looking at the now playing list or the start of the BROWSE list
+	//if(_BrowseNodeStack[_CurrentBrowseNode].handle = NOW_PLAYING_START_NODE ||
+	//   _BrowseNodeStack[_CurrentBrowseNode].handle = BROWSE_START_NODE)
+	//if we're looking at any top node
+	if(_StackSize <= 1)
+	{
+		Keyboard_Search_Available = OFF; //don't show the search
+	}
+	else if(Keyboard_Search_Active = ON || NULLSTRING != _BrowseNodeStack[_CurrentBrowseNode].searchText)
+	{
+		Keyboard_Search_Available = ON; //if we're searching, always show the keyboard
+	}
+	else if(_ListLength > _TPWindowLength) //if the list is longer than the window
+	{
+		Keyboard_Search_Available = ON;
+	}
+	else
+	{
+		Keyboard_Search_Available = OFF;
+	}
+}
+
+// Check to see if the current search is a fuzzy search (it will contain an [ )
+INTEGER_FUNCTION isSearchFuzzy()
+{
+	if( len(_BrowseNodeStack[_CurrentBrowseNode].searchText) && 
+		byte(_BrowseNodeStack[_CurrentBrowseNode].searchText, 1) = '[' )
+	{
+		return(1);
+	}
+	return(0);
+}
+
+
+
+
+/*
+ *
+ * Browse stack management
+ *
+ */
+
+
+// as Crestron doesn't allow struct copies, this routine does it for us
+FUNCTION copyBrowseNode(BYREF STRUCT_BrowseNode destination, 
+				   READONLYBYREF STRUCT_BrowseNode source	)
+{
+	destination.handle = source.handle;
+	destination.searchText = source.searchText;
+	destination.position = source.position;
+	destination.selection = source.selection;
+}
+
+// Swap a single node for another
+FUNCTION swapBrowseNode(BYREF STRUCT_BrowseNode node1, BYREF STRUCT_BrowseNode node2)
+{
+	STRUCT_BrowseNode tempNode;
+	
+	copyBrowseNode(tempNode, node1); //save struct1
+	copyBrowseNode(node1, node2); //set struct1=struct2
+	copyBrowseNode(node2, tempNode); //restore to struct2
+}
+	
+// Swap between the now playing and browse tree stacks.
+FUNCTION swapBrowseNodeStacks()
+{
+	INTEGER loop;
+	INTEGER tempCurrentBrowseNode;
+	INTEGER tempBottomNode;
+	INTEGER tempStackSize;
+	
+	_BrowseNodeStack[_CurrentBrowseNode].position = _ListPosition; //store the position
+	_BrowseNodeStack[_CurrentBrowseNode].selection = _ListSelection; //and selection
+	
+	if(_Display = _BrowseNodeStack[0].position) //if we're already showing the proper node set
+	{
+		if(_Debug) print("Kaleidescape (%s) _BrowseNodeStack[0].position=_Display=%u.  Not swapping node sets.\n", _SymbolInstance, _Display);		
+		return;	//do nothing
+	}
+	if(_Debug)
+	{
+		print("Kaleidescape (%s) _BrowseNodeStack[0].position=%u, _Display=%u.  Swapping node sets.\n",
+			_SymbolInstance, _BrowseNodeStack[0].position, _Display);
+	}
+	
+	for(loop = 0 to MAX_BROWSE_NODES)
+	{
+		swapBrowseNode(_StoredBrowseNodeStack[loop], _BrowseNodeStack[loop]); //swap each individual node.
+	}
+	
+	//Swap the Now playing stack with the Browse stack.
+	
+	tempCurrentBrowseNode = _CurrentBrowseNode;
+	tempBottomNode = _BottomBrowseNode;
+	tempStackSize = _StackSize;
+
+	_CurrentBrowseNode = _StoredCurrentBrowseNode;
+	_BottomBrowseNode = _StoredBottomBrowseNode;
+	_StackSize = _StoredStackSize;
+	
+	_StoredCurrentBrowseNode = tempCurrentBrowseNode;
+	_StoredBottomBrowseNode = tempBottomNode;
+	_StoredStackSize = tempStackSize;
+	
+	_ListPosition = _BrowseNodeStack[_CurrentBrowseNode].position; //recall the position
+	_ListSelection = _BrowseNodeStack[_CurrentBrowseNode].selection; //and selection
+	
+	if(_BrowseNodeStack[0].position = DISPLAY_NOWPLAYING)
+	{
+		listMoved(OFF);
+	}
+}
+
+
+
+// Increment the browse node Index, but roll it to 1 if over the max
+FUNCTION incrementBrowseNodeIndex(BYREF INTEGER index)
+{
+	index = index + 1;
+	if(index > MAX_BROWSE_NODES)	index = 1;
+}
+
+// Decrement the browse node index, but roll it to max if under 1
+FUNCTION decrementBrowseNodeIndex(BYREF INTEGER index)
+{
+	index = index - 1;
+	if(index = 0) index = MAX_BROWSE_NODES;
+}
+
+
+
+
+// Push a new node onto the stack
+FUNCTION pushNode(STRING node)
+{
+	//store the current info into the current node
+	_BrowseNodeStack[_CurrentBrowseNode].position = _ListPosition;
+	_BrowseNodeStack[_CurrentBrowseNode].Selection = _ListSelection;
+
+	//increment the current node
+	_StackSize = _StackSize + 1;
+	if(_StackSize > MAX_BROWSE_NODES)
+	{
+		_StackSize = MAX_BROWSE_NODES;
+	}
+	incrementBrowseNodeIndex(_CurrentBrowseNode);
+	
+	//if we've ended up on top of the head node, we will erase the next node and replace it with the head node.
+	if(_CurrentBrowseNode = _BottomBrowseNode) 
+	{
+		incrementBrowseNodeIndex(_BottomBrowseNode); //increment the first node
+		_BrowseNodeStack[_BottomBrowseNode].handle = _BrowseNodeStack[0].handle; //overwrite the new head node's handle
+		_BrowseNodeStack[_BottomBrowseNode].searchText = _BrowseNodeStack[0].searchText; //and search text
+		_BrowseNodeStack[_BottomBrowseNode].position = 1; //overwrite the position
+		_BrowseNodeStack[_BottomBrowseNode].selection = 0; //clear the selection
+	}
+	
+	_BrowseNodeStack[_CurrentBrowseNode].handle = node; //store the new node
+	_BrowseNodeStack[_CurrentBrowseNode].searchText = NULLSTRING; //clear any search value
+	
+	_ListSelection = 0;	//select nothing
+	_ListPosition = 1;	//top of the list
+	listMoved(OFF);	//new list hasn't been moved yet
+
+	if(_Debug)
+	{
+		print("Kaleidescape (%s) Pushed Node: _BottomBrowseNode=%u, _StackSize=%u, _CurrentBrowseNode=%u", 
+			_SymbolInstance, _BottomBrowseNode, _StackSize, _CurrentBrowseNode);
+	}
+}
+
+// remove the latest node from the stack
+FUNCTION popNode()
+{        
+    /*
+     * This is a failsafe - should never happen   
+     * if we're at the first node, and it's not the beginning (equal to _BrowseNodeStack[0])
+     */
+	if(_StackSize <= 1 &&
+	   ((_BrowseNodeStack[_CurrentBrowseNode].handle != _BrowseNodeStack[0].handle) || 
+	    (_BrowseNodeStack[_CurrentBrowseNode].searchText != _BrowseNodeStack[0].searchText)    ) )
+	{
+		getTopList(); //reset the list at the top
+		return;
+	}
+    
+    if(_StackSize <= 1) return; //do nothing if we're at the top node
+    
+	_StackSize = _StackSize - 1;
+	
+	decrementBrowseNodeIndex(_CurrentBrowseNode); //decrement the current node.
+	
+	_ListSelection = _BrowseNodeStack[_CurrentBrowseNode].selection; //reset this node's selection
+	_ListPosition = _BrowseNodeStack[_CurrentBrowseNode].position; //reset this node's position
+	listMoved(ON);		//indicate the list HAS moved (to prevent confusion)
+	
+	if(_Debug)
+	{
+		print("Kaleidescape (%s) Popped Node: _BottomBrowseNode=%u, _StackSize=%u, _CurrentBrowseNode=%u", 
+			_SymbolInstance, _BottomBrowseNode, _StackSize, _CurrentBrowseNode);
+	}
+}
+
+  
+
+
+/*
+ *
+ *  List Window management routines
+ *
+ */
+
+// Function to determine the position of the list scroll bar
+INTEGER_FUNCTION calculateAnalogListPosition()
+{
+	//if the list fits in the window, just center the feedback
+	if(_ListLength <= _TPWindowLength) return(MAX_INT / 2);
+		
+	return( MAX_INT - mulDiv( MAX_INT, (_ListPosition - 1), (_ListLength - _TPWindowLength) ) );
+}
+
+// Function to determine the size of the list scroll bar
+INTEGER_FUNCTION calculateAnalogListBarSize()
+{
+	//if the list fits in the window, zero size bar - s/b greyed out
+	if(_ListLength <= _TPWindowLength) return(0);
+	
+	return( mulDiv( MAX_SCROLL_BAR_SIZE, _TPWindowLength, _ListLength ) + 1 );
+}
+
+// Function to determine if a given position is within bounds
+INTEGER_FUNCTION checkListPositionBounds(INTEGER listPositionToCheck)
+{
+	if(listPositionToCheck = 0) return(1);
+	
+	if(_ListLength > _TPWindowLength) //if there's more list than window
+	{
+		if(listPositionToCheck > _ListLength - _TPWindowLength + 1)
+		{
+			return(_ListLength - _TPWindowLength + 1);
+		}
+		return(listPositionToCheck);
+	}
+	
+	return(1); //if not, then just set the position to 1
+}
+
+// Function to fill the text window with blanks, given a starting line
+FUNCTION clearTextWindow(INTEGER startLine)
+{
+	INTEGER line;
+	
+	for(line = startLine to _TPWindowLength)
+	{
+		List_Serial_FB$[line] = TPNULLSTRING; 	//populate with blank
+		List_Select_Digital_FB[line] = OFF;
+		List_Status_Analog_FB[line] = 0;	
+	}
+}
+
+// Function to update the selection on an already drawn TP window
+FUNCTION updateSelection()
+{
+	INTEGER 		line;
+	INTEGER			choices;
+	
+	if(_ListSelection > _ListLength) _ListSelection = 0;
+	
+	List_Analog_Highlight_FB = _ListSelection;
+
+	choices = 0;
+	
+	for(line = 1 to _TPWindowLength) //step through all fields, and populate the window
+	{
+		if( line <= _ListLength ) //if this reference is valid...
+		{
+			List_Select_Digital_FB[line] = (_List[line].position = _ListSelection);
+		}
+		else
+		{
+			List_Select_Digital_FB[line] = OFF;
+		}				
+	}
+} 
+
+
+// This checks the bounds of the received data and 
+// ensures that when the window size changes, the data fits properly
+FUNCTION checkWindowReposition()
+{
+	/*
+	 * _ListLength is the number of lines in the entire result set (shown or not)
+	 * _LastItem is the last thing shown in the window, which is also the number of items in the window.
+	 * _ListPosition is the item shown in the first position of the window
+	 * _TPWindowLength is the length of the window on the touch panel
+	 */
+	
+	if(_Debug) print("Kaleidescape (%s) Running checkWindowReposition()\n", _SymbolInstance);
+	
+	if(Keyboard_Search_Active = ON) return; //don't reposition if the keyboard search is active
+	
+	//if there are zero results, and there's an active search, and the search window is off
+	if( _ListLength = 0 && NULLSTRING != _BrowseNodeStack[_CurrentBrowseNode].searchText && Keyboard_Search_Active = OFF  )
+	{	    
+		_BrowseNodeStack[_CurrentBrowseNode].searchText = NULLSTRING; //clear the search (may result in more than 0 entries)
+		getList(); //get the updated list
+		return; //stop processing
+	}
+	
+	if(_ListLength <= _TPWindowLength) //if the list fits in the window
+	{
+		//if the last item on the list isn't the last item displayed
+		if(_LastItem <> _ListLength)
+		{
+			_ListPosition = 1; //reset the list to the top
+			getList(); //get the new list (will result in double-drawn window)
+		}
+	}
+	else //if the list doesn't fit in the window
+	{
+		//if the entire list doesn't fill the window (last item short of the window length)
+		if(_LastItem < _TPWindowLength)
+		{
+			//reset to the bottom of the list (last item occupies the last spot in the window)
+			_ListPosition = _ListLength - _TPWindowLength + 1;
+			getList(); //get the new list (will result in double-drawn window)
+		}	
+	}
+}
+
+FUNCTION checkTPWindowLength()
+{
+	INTEGER loop;
+	INTEGER newTPWindowLength;
+	INTEGER lastTPWindowLength;
+	
+	if(List_Window_Length = 0) return; //do nothing if given 0
+	
+	lastTPWindowLength = _TPWindowLength; //memorize the old value
+	_TPWindowLength = List_Window_Length; //set the new value
+	newTPWindowLength = _TPWindowLength; //initialize the test value
+	
+    for(loop = 1 to _TPWindowLength) // step through all TP fields
+    {
+    	if(!isSignalDefined(List_Select_Digital[loop])) // if this signal isn't defined
+    	{
+    		print("Kaleidescape (%s) ERROR, Kaleidescape SATP List_Select%d is required.\n", _SymbolInstance, loop); 
+    		if(newTPWindowLength > (loop - 1)) // store the lowest valid signal
+    		{
+    			newTPWindowLength = loop - 1;
+    		}
+    	}
+    }
+	
+    for(loop = 1 to _TPWindowLength) // step through all TP fields
+    {
+    	if(!isSignalDefined(List_Select_Digital_FB[loop])) // if this signal isn't defined
+    	{
+    		print("Kaleidescape (%s) ERROR, Kaleidescape SATP List_Selected%d is required.\n", _SymbolInstance, loop); 
+    		if(newTPWindowLength > (loop - 1)) // store the lowest valid signal
+    		{
+    			newTPWindowLength = loop - 1;
+    		}
+    	}
+    }
+
+    for(loop = 1 to _TPWindowLength) // step through all TP fields
+    {
+    	if(!isSignalDefined(List_Serial_FB$[loop])) // if this signal isn't defined
+    	{
+    		print("Kaleidescape (%s) ERROR, Kaleidescape SATP List_Text%d is required.\n", _SymbolInstance, loop); 
+    		if(newTPWindowLength > (loop - 1)) // store the lowest valid signal
+    		{
+    			newTPWindowLength = loop - 1;
+    		}
+    	}
+    }
+
+    for(loop = 1 to _TPWindowLength) // step through all TP fields
+    {
+    	if(!isSignalDefined(List_Status_Analog_FB[loop])) // if this signal isn't defined
+    	{
+    		print("Kaleidescape (%s) ERROR, Kaleidescape SATP List_Queue_Status%d is required.\n", _SymbolInstance, loop); 
+    		if(newTPWindowLength > (loop - 1)) // store the lowest valid signal
+    		{
+    			newTPWindowLength = loop - 1;
+    		}
+    	}
+    }
+    
+    if(_TPWindowLength != newTPWindowLength)
+    {
+    	print("Kaleidescape (%s) SATP setting List_Window_Length to largest valid value: %d\n", _SymbolInstance, 
+    		newTPWindowLength);
+    	_TPWindowLength = newTPWindowLength;
+    }
+    else	{
+    	if(_Debug)
+	    	print("Kaleidescape (%s) SATP setting List_Window_Length to %d\n", _SymbolInstance, _TPWindowLength);
+    }
+	
+	if(lastTPWindowLength != _TPWindowLength) //if the value has actually changed
+	{
+		getList();
+	}
+} 
+ 
+/*
+ *
+ * Connection management routines
+ *
+ */
+
+
+// Get the initial state of the zone
+FUNCTION requestStartupStatus()
+{
+	//Retreive current status
+	send("GET_MUSIC_PLAY_STATUS:");
+	send("GET_MUSIC_TITLE:");
+	send("GET_FRIENDLY_NAME:");
+	send("GET_PLAYING_MUSIC_INFORMATION:");
+			
+	send("GET_PROTOCOL:");
+	
+	//get the first list
+	getList();
+}
+
+FUNCTION initConnection()
+{
+	string command[MAX_MESSAGE_LENGTH];
+	
+	refactorConnectionSettings(Stated_Player_ID, _PlayerSN, _PlayerID, _ConnectedDeviceSN, _ConnectedDeviceID, _DirectConnect, _Debug);
+
+    //_BinaryDelimiters = ON;
+    switchDelimiters(ON);    	//attempt to turn on binary delimiters 
+    makeString(command, "SET_PROTOCOL_SETTINGS:BINARY_DELIMITERS:LATIN-1:");
+    sendRaw(1,0,0,command);
+    //Tx$ = "01/0/SET_PROTOCOL_SETTINGS:BINARY_DELIMITERS:LATIN-1:\n";
+
+    delay(100);	//pause to get a clear response
+	
+	makeString(command, "ENABLE_EVENTS:%02u.%02u:", _PlayerID, Zone_ID);
+	sendRaw(1,0,0,command);	
+}
+
+//clear out our info on the connected device (called when the connection drops)
+FUNCTION clearStatus()
+{
+	if(_Debug) print("Kaleidescape (%s) clearing status.\n", _SymbolInstance);
+
+	_FirstDetailFlag = ON;    
+	
+	_AlbumDetailsPending = OFF;
+	_AlbumDetailsLoading = OFF;
+    
+    _ListPosition = 1;
+    _ListSelection = 0;
+    listMoved(OFF);
+    
+	_PlayerId = Stated_Player_ID; //assume that the stated player ID is correct
+	
+	if(_PlayerId = 1)
+		_DirectConnect = ON; //assume state of directly connected based on the player ID
+	else
+		_DirectConnect = OFF;
+
+	Play_Mode = 999;
+	Song_Length = 0;
+	Song_Position = 0;
+	Song_Remaining = 0;
+	Song_Level = 0;	
+
+	_NumVidZones = 0;
+	_NumAudZones = 0;
+	_PlayerSN = NULLSTRING;
+	_DeviceName = NULLSTRING;	
+}
+
+FUNCTION clearFeedback()
+{
+	Play_Mode = 999;
+	Song_Length = 0;
+	Song_Position = 0;
+	Song_Remaining = 0;
+	Song_Level = 0;	
+
+ 	User_Input = 0;
+ 	Keyboard_Title$ = NULLSTRING;
+ 	Keyboard_Text$ = NULLSTRING;
+
+ 	List_Title$ = NULLSTRING;
+	Search_Mini_Result$ = NULLSTRING;
+	Now_Playing_Item$ = NULLSTRING;
+
+	Keyboard_Search_Active = OFF; //cancel the search
+	_BrowseNodeStack[_CurrentBrowseNode].searchText = NULLSTRING;
+
+    _ListPosition = 1;
+    _ListSelection = 0;
+    listMoved(OFF);
+    
+	clearTextWindow(1);
+}
+
+Function ConnectionEvent(INTEGER stateEvent)
+{
+	integer command, loop;
+	command = ConnectionHandler(stateEvent, _ConnectionState, _ConnectionCommand, _ConnectionCommandCount, _PowerState, _PowerStateStatus, _ModuleDescription, _DirectConnect, _Debug);
+	if(_Debug) print("Kaleidescape (%s) ConnectionHandler said do %d.\n", _SymbolInstance, command);
+	switch(command)
+	{
+		case(RESPONSE_NO_ACTION): 	 	return;	
+		case(RESPONSE_SEND_COMMAND): 	{}		//no additional action
+		case(RESPONSE_DIRECT_SEND):	 	Tx$ = _ConnectionCommand[MAX_CONNECTION_COMMANDS];
+		case(RESPONSE_INITIALIZE): 	 	requestStartupStatus();
+		case(RESPONSE_CLEAR_INIT):	 	clearStatus();
+		case(RESPONSE_INIT_CONN):		initConnection();
+		case(RESPONSE_POWERED_OFF):		clearFeedback();
+	}
+	
+		//for every command we're to send, 
+	for(loop = 1 to _ConnectionCommandCount)
+	{
+		Send(_ConnectionCommand[loop]);	//send it
+	}
+	_ConnectionCommandCount = 0;	//clear this
+	
+	Power_On_FB = (_PowerState = POWER_ON);
+	Power_Off_FB = (_PowerState = POWER_OFF);
+}  
+
+
+
+
+ 
+/*
+ *  Parse routines
+ *  
+ *       Kaleidescape responses and events have this format:
+ *    
+ *           01.01/1/000:COMMAND:ARG1:ARG2:ARG3:/28 
+ *           
+ *       where:
+ *       
+ *           01 is the device ID 
+ *           .01 is an optional stream ID
+ *           1 is the sequence number (the same one we sent it in the command)
+ *           000 is the status (000 means "success", anything else is an error)
+ *           COMMAND identifies the kind of data being sent to us
+ *           ARGn are the arguments of the command
+ *           28 is the checksum of the message (always two digits)   
+ *           
+ *       So we will parse the response from the beginning to the end.
+ *       Since we may be dealing with a serial connection, we must assume
+ *       that this buffer may have been corrupted in transit.  We must be
+ *       very careful to check that the syntax of the response is valid.
+ *       (This is not really necessary when using TCP/IP since the TCP 
+ *       layer ensures this for us.)
+ */
+
+
+ 
+//used to read into the available devices message and determine if our controlled device is on or offline.
+FUNCTION checkAvailableDevices(string message, string fieldDelimiter)
+{
+	string playerIdSearchString[5];
+	
+	if(_Debug) print("(%s) Searching for my device in AVAILABLE_DEVICES\n", _SymbolInstance);
+	//set up the string to look for (":00:") and store it in playerIdSearchString
+	makeString(playerIdSearchString,"%s%02d%s", fieldDelimiter, _PlayerId, fieldDelimiter);
+				
+	//search for the Player id within the message
+	if(find(playerIdSearchString, message, 27) > 0)
+	{
+		ConnectionEvent(EVENT_DEVICE_ONLINE);
+	}
+	else //logic falls here if the player isn't online
+	{
+		ConnectionEvent(EVENT_DEVICE_OFFLINE);						
+	}
+
+}
+
+
+// Parse the string within "message" and process
+FUNCTION parseMessage(STRING message, STRING args[])
+{
+	INTEGER messagePosition;
+	INTEGER messageEnd;
+	INTEGER numArgs;
+	INTEGER line;
+	INTEGER loop;
+	INTEGER ref;	
+	INTEGER finishedGettingDetails;
+	INTEGER errorCode;
+	INTEGER binaryDelimited;
+	INTEGER eventTrigger;
+	INTEGER isZoneMessage;
+	//STRING  fieldDelimiter[1];
+	//STRING  args[MAX_RESPONSE_ARGS][MAX_RESPONSE_ARG_LEN]; // the args within the message
+	STRING	playerIdSearchString[5];
+	
+	INTEGER messageErrorCode;
+
+	messageEnd = len(message);
+    if(byte(message, messageEnd) = 4)
+    {
+    	binaryDelimited = ON;
+    	messageEnd = messageEnd - 1;
+    }
+    else
+    {
+    	binaryDelimited = OFF;
+	    // Remove trailing carriage return and/or linefeed
+	    while (messageEnd > 0 && (byte(message, messageEnd) = CR || 
+	    					  byte(message, messageEnd) = LF) )
+	    {
+	        messageEnd = messageEnd - 1;
+	    }
+	}
+		
+	/*
+	 * trap the PLAYER_RESTART even if the message isn't addressed to us, 
+	 * and if it lacks the leading 000:
+	 */
+	if(  mid(message,6, 14) = msgPLAYER_RESTART  )
+	{	     
+		ConnectionEvent(EVENT_PLAYER_RESTART);
+		return;
+	}
+
+	if( left(message,9) = msg01_BANG_020 )
+	{
+		ConnectionEvent(EVENT_01_BANG_020);
+	}
+    
+    //if the device isn't yet online, engage our parser for device 01/0
+    if( _ConnectionState < STATE_DEVICE_ONLINE )
+    {
+		//if this is an info message about the attached device, call the special parser
+		if( byte(message,1) = '0' &&     // 01x0x000
+		    byte(message,2) = '1' &&
+		    byte(message,4) = '0' && //sequence
+		    byte(message,6) = '0' && //error code 100's
+		    byte(message,7) = '0' && //error code 10's
+		    byte(message,8) = '0'  ) //error code 1's
+		{
+			eventTrigger = parse010MessageEvent(message, messageEnd, _PlayerID, _DirectConnect, _ConnectedDeviceSN, _ConnectedDeviceID, _Debug);
+			if(eventTrigger)
+				ConnectionEvent(eventTrigger);
+			return;
+		}    
+    }
+	
+	if(!_DirectConnect) //only check if we're not directly connected
+	{
+		//check for the available devices change message
+		if( mid(message, 10, 17) = msgAVAILABLE_DEVICES )
+		{
+			checkAvailableDevices(message, _FieldDelimiter[binaryDelimited]);
+		}
+	}
+	
+	//determine if the message is valid
+	messageErrorCode = checkMessage(message, _PlayerId, Zone_ID, 
+									SEQUENCE_ID, messageEnd, _DirectConnect, _Debug);	
+    if (messageErrorCode != MESSAGE_GOOD)
+    {
+    	if(_Debug) print("Kaleidescape (%s) Ignoring message:  %s\n", _SymbolInstance, message);
+    	return;
+    } 
+    	
+	if(_Debug) print("Kaleidescape (%s) Received:  %s\n", _SymbolInstance, message);
+    ConnectionEvent(EVENT_VALID_MESSAGE);
+    
+	
+	//Start after the header and checksum
+	messagePosition = 1;
+	if(byte(message,3) = '.') //if there's a stream ID
+	{
+		isZoneMessage = on;
+	    messagePosition = messagePosition + 8; //start after the header (w/stream ID)
+    }
+    else
+    {
+    	isZoneMessage = off;
+	    messagePosition = messagePosition + 5; //start after the header
+    }
+    if(!binaryDelimited)
+    {    
+    	messageEnd = messageEnd - 3;	//skip over the checksum of a printable delimited message
+    }
+    
+    //Initialize our parsing variables.
+    numArgs = 0;
+
+	getNArguments(args, numArgs, 2, message, messagePosition, messageEnd);
+
+    if(byte(args[0],1)!='0' || byte(args[0],2)!='0' || byte(args[0],3)!='0') //if there is an error condition noted by the player
+    //(faster than !args[0]="000")
+    {
+       	errorCode = atoi(args[0]);
+    	ConnectionEvent(EVENT_ERROR_OFFSET + errorCode);
+    	    	    
+    	if(errorCode = 17 && _StackSize > 1)	//if we received an invalid node error, and we're not on the top node
+    	{
+			popNode();							//pop up one
+			getList();							//refetch the list
+			return;
+    	}
+    	    
+    	printPlayerError(atoi(args[0]),args[1], _PlayerId); //pass the error code to the error handler  
+    	return;
+   	} 
+
+    //handle the following message regardless if addressed to our zone or not
+	if(args[1] = msgDEVICE_POWER_STATE)
+	{
+  		getNArguments(args, numArgs, Zone_ID+3, message, messagePosition, messageEnd);
+  		
+  		//print("power state args[2]=%s.  atoi(args[2]=%d\n", args[2], atoi(args[2]));
+  		
+  		if(byte(args[Zone_ID+2],1) != '0')
+  			ConnectionEvent(EVENT_POWER_STATE_ON);
+  		else
+  			ConnectionEvent(EVENT_POWER_STATE_OFF);
+  		
+	}
+	
+	//do not process the any more messages if they're not related to the zone
+	if(!isZoneMessage) return;
+
+	
+	if(args[1] = msgMUSIC_PLAY_STATUS)
+	{		
+	    getNArguments(args, numArgs, 6, message, messagePosition, messageEnd);
+		Play_Mode		= atoi(args[2]);
+		Song_Length		= atoi(args[4]);
+		Song_Position	= atoi(args[5]);
+		
+		if(Song_Length <> 0) //trap div by zero errors when playback stops
+		{
+			Song_Level = mulDiv(Song_Position, MAX_INT, Song_Length);
+		}
+		else
+		{
+			Song_Level = 0;
+		}
+			
+		Song_Remaining = Song_Length - Song_Position;
+		
+		if(_LastPlayMode != Play_Mode) //if the play mode has changed
+		{
+			_LastPlayMode = Play_Mode; //remember the play mode
+			gentlyGetList(); //refresh the list (gently)
+		}
+	}
+	else if(args[1] = msgMUSIC_TITLE)
+	{
+		getNArguments(args, numArgs, 7, message, messagePosition, messageEnd);
+		Now_Playing_Song_Name$ = args[2];
+		Now_Playing_Artist_Name$ = args[3];
+		Now_Playing_Album_Name$ = args[4];
+		
+		//retrieve the current song data (For the Cover URL only at this time)
+		if(args[6] != _NowPlayingAlbumHandle && args[6] != NULLSTRING) //Check to see if we have a new, non-null content handle
+		{
+			Now_Playing_Cover_Art_URL$ = NULLSTRING;					//clear the cover art
+			requestAlbumDetails(args[6]);						//retrieve the new details info (including cover art)
+		}
+		if( args[6] = NULLSTRING )										//if it's a null album handle
+		{
+			Now_Playing_Cover_Art_URL$ = NULLSTRING;					//clear the cover art
+			_NowPlayingAlbumHandle = NULLSTRING;						//clear the handle to allow reloading cover after stop/play
+		}
+		
+		gentlyGetList();
+	}
+    else if(args[1] = msgMUSIC_NOW_PLAYING_STATUS) //we get this message when now playing information has changed
+    {
+    	getNArguments(args, numArgs, 6, message, messagePosition, messageEnd);
+    	Repeat_Status = (byte(args[4],1) = '1');
+    	Random_Status = (byte(args[5],1) = '1');
+    	
+    	gentlyGetList(); //refresh the current list
+    }  
+    
+    else if(args[1] = msgPLAYING_MUSIC_INFORMATION)
+    {
+    	getNArguments(args, numArgs, 4, message, messagePosition, messageEnd);
+    	if(isSignalDefined(Now_Playing_Item$))
+    	{
+	    	Now_Playing_Item$ = args[3];
+	    }
+	}
+	     
+	else if(args[1] = msgBROWSE_RESULTS_OVERVIEW)
+	{
+		getNArguments(args, numArgs, 6, message, messagePosition, messageEnd);
+		//_BrowseNodeStack[_CurrentBrowseNode].handle = args[2];	//this should be redundant
+		
+		if(Keyboard_Search_Active = ON) //if the search page is on
+		{
+			makeString(Keyboard_Title$, "Search %s", args[3]); //show the title there
+		}
+		else
+		{
+			if(NULLSTRING != _BrowseNodeStack[_CurrentBrowseNode].searchText) //if this is a search node
+			{
+				if(isSearchFuzzy())
+				{
+					makeString(List_Title$, "%s (Matching)", args[3]);
+				}
+				else
+				{
+					makeString(List_Title$, "%s (Matching \"%s\")", args[3], _BrowseNodeStack[_CurrentBrowseNode].searchText); 
+					//List_Title$ = args[3] + " (Matching " + DOUBLE_QUOTE + 
+					//	_BrowseNodeStack[_CurrentBrowseNode].searchText + DOUBLE_QUOTE + ")";
+				}
+			}
+			else
+			{
+				List_Title$ = args[3];
+			}
+		}
+			
+		_LastItem = atoi(args[4]);
+		_ListLength = atoi(args[5]);
+
+		//if the length is 0, we're not searching, and not on the top, it's an invalid node.
+		if(_ListLength = 0 && !Keyboard_Search_Active && NULLSTRING = _BrowseNodeStack[_CurrentBrowseNode].searchText && _StackSize > 1)
+		{
+			if(_Debug) print("Kaleidescape (%s) Empty node, popping.\n", _SymbolInstance);
+			popNode();
+			getList();
+			return;
+		}
+		
+		renderBrowseBack();	
+		
+		if(_ListLength = 0)
+		{
+			List_Scroll_Available = OFF;
+			List_Analog_Scroll_Size_FB = calculateAnalogListBarSize();
+			
+			if(Keyboard_Search_Active = ON)
+			{
+				makeString(Search_Mini_Result$, "No matching entries");
+				_GetListRunningFlag = OFF;
+				return;
+			}
+			clearTextWindow(1);
+			_GetListRunningFlag = OFF;
+		}
+		checkWindowReposition();
+		renderSearchButton();
+	}
+	else if(args[1] = msgBROWSE_RESULT)
+	{
+		getNArguments(args, numArgs, 10, message, messagePosition, messageEnd);
+		line = atoi(args[2]);		
+		
+		if(line > _TPWindowLength)
+		{
+			if(_Debug) print("Kaleidescape (%s) Not rendering out-of-bound line number %d", _SymbolInstance, line);
+			return;
+		}		
+		
+		//Position of this item within the whole list
+		_List[line].position = atoi(args[3]);
+		List_Select_Digital_FB[line] = (_List[line].position = _ListSelection);
+				
+		//_List[line].Display = args[4]; //Text to display
+		List_Status_Analog_FB[line] = atoi(args[5]); //Now_Playing status
+		_List[line].behavior = atoi(args[7]);
+		_List[line].handle = args[8];
+		_List[line].pop = atoi(args[9]);
+
+		if(line=1) //if this is the first line of the result
+		{
+			if(Keyboard_Search_Active = ON) //if we're in the process of searching
+			{
+				if(_ListLength > 1) //if there's more than 1 line in the total set
+				{
+					if(isSearchFuzzy())
+					{
+						makeString(Search_Mini_Result$, "\"%s\"\rand %d more", args[4], _ListLength);
+						//Search_Mini_Result$ = DOUBLE_QUOTE + args[4] + DOUBLE_QUOTE + 
+						//	"\rand " + itoa(_ListLength) + " more";
+					}
+					else
+					{
+						//note number of entries
+						makeString(Search_Mini_Result$, "%d entries",  _ListLength);
+						//Search_Mini_Result$ = itoa(_ListLength) + " entries";
+					}
+				}
+				else
+				{
+					//note the single result
+					makeString(Search_Mini_Result$, "\"%s\"", args[4]);
+					//Search_Mini_Result$ = DOUBLE_QUOTE + args[4] + DOUBLE_QUOTE;
+				}
+				_GetListRunningFlag = OFF;
+				return;
+			}
+			
+			_ListPosition = _List[line].position;	//store the absolute position as the list position
+			
+			List_Scroll_Available = _ListLength > _TPWindowLength;
+			List_Analog_Scroll_FB = calculateAnalogListPosition();
+			List_Analog_Scroll_Size_FB = calculateAnalogListBarSize();
+		}
+
+		
+		if(_List[line].Behavior = BEHAVIOR_BROWSE) // if this is a browse selection
+		{
+			List_Serial_FB$[line] = args[4] + _BROWSE_AVAILABLE_INDICATOR; //add the browse indicator
+		} 
+		else
+		{
+			List_Serial_FB$[line] = args[4]; //populate with data
+		}
+				
+		if(line = _LastItem) //if this is the last line
+		{
+			//blank the rest of the text window
+			clearTextWindow(line + 1);
+			_GetListRunningFlag = OFF; //clear the running flag
+		}
+	}
+	else if(args[1] = msgCONTENT_DETAILS) //if this is a detail
+    {
+    	getNArguments(args, numArgs, 5, message, messagePosition, messageEnd);
+    	
+    	if (_AlbumDetailsLoading && args[3] = fieldCover_URL)
+    	{
+  			if(args[4] != NULLSTRING)
+			{
+				#IF_NOT_DEFINED SERVER_IP_ADDRESS
+					Now_Playing_Cover_Art_URL$ = args[4];
+				#ENDIF
+					
+				#IF_DEFINED SERVER_IP_ADDRESS
+					Now_Playing_Cover_Art_URL$ = processNAT(args[4], SERVER_IP_ADDRESS);
+				#ENDIF
+			}
+			else
+			{
+				Now_Playing_Cover_Art_URL$ = NULLSTRING;
+			}
+			_AlbumDetailsLoading = OFF;
+    	}
+    }    
+  	else if(args[1] = msgDEVICE_INFO) //what type of device are we talking to (sanity check)
+  	{  
+  		getNArguments(args, numArgs, 4, message, messagePosition, messageEnd);
+		_PlayerSN = args[3];
+  		ConnectionEvent(EVENT_DEVICE_INFO);
+		
+  	} 	
+  	else if(args[1] = msgNUM_ZONES)	//sanity check - ensure we've got a device that supports our zone
+  	{
+ 		getNArguments(args, numArgs, 4, message, messagePosition, messageEnd);
+ 		
+ 		_NumVidZones = atoi(args[2]);
+ 		_NumAudZones = atoi(args[3]); 
+ 		
+ 		if( validateDevice(_ModuleShortDescription, Stated_Player_ID, _DeviceName, _numVidZones, _numAudZones, Zone_ID) )
+ 			ConnectionEvent(EVENT_VALIDATED_CONFIG);
+  	}
+  	else if(args[1] = msgDEVICE_TYPE_NAME)
+  	{
+  		getNArguments(args, numArgs, 3, message, messagePosition, messageEnd);
+  		_DeviceName = args[2];
+  	}  	  	
+	else if(args[1] = msgPROTOCOL)
+	{
+		getNArguments(args, numArgs, 3, message, messagePosition, messageEnd);
+		Protocol_Version = atoi(args[2]); //indicate the protocol version number
+	}     
+    else if(args[1] = msgUSER_DEFINED_EVENT)
+    {
+    	getNArguments(args, numArgs, 3, message, messagePosition, messageEnd);
+    	User_Defined_Event$ = args[2];
+    	delay(1);
+    	User_Defined_Event$ = NULLSTRING;
+    }       
+    else if(args[1] = msgFRIENDLY_NAME)
+    {
+    	getNArguments(args, numArgs, 3, message, messagePosition, messageEnd);
+    	Friendly_Name$ = args[2];
+    }    
+}
+
+// Process changes in the receive buffer.
+FUNCTION processRx()
+{
+	STRING message[MAX_MESSAGE_LENGTH];	// temporary variable to hold individual message
+	STRING  args[MAX_RESPONSE_ARGS][MAX_RESPONSE_ARG_LEN]; // the args within the message.  Defined here to speed up processing.
+	INTEGER loop;
+	   
+    while(1)
+    {
+    	message = gather(_Delimiters[_CurrentDelimiter], Rx$);
+    	_FoundDelimiter = _FoundDelimiter + 1;
+    	
+    	//clear the args before passing into the message parse
+    	for(loop= 0 to MAX_RESPONSE_ARGS)
+    	{
+    		args[loop] = NULLSTRING;
+    	}
+    	
+    	parseMessage(message, args);
+    }
+} 
+
+
+
+/*
+ *
+ *  Functions to handle user input
+ *
+ */
+
+// Perform the action associated with the given button
+FUNCTION doButtonItem(INTEGER listIndex)
+{
+	STRING 	tempString[100];
+	INTEGER loop;
+	
+	switch(_List[listIndex].behavior)
+	{
+		case(BEHAVIOR_BROWSE):
+		{
+			pushNode(_List[listIndex].handle); //create the new node		
+			getList(); //go get the list
+			return; //do not perform any pop actions
+		}
+		case(BEHAVIOR_ACTION):
+		{
+			if(_List[listIndex].pop = 0)		//if there's no pop needed
+			{
+				listMoved(OFF);				//indicate that we're no longer moving the list
+												//needed to fix selecting an item in Now Playing
+			}
+			
+			makeString(tempString,"PERFORM_ACTION:%s:::", _List[listIndex].handle);
+			send(tempString);
+		}
+	}
+	
+	//if we're at the top of the list, do not try and pop the node	
+	if(_StackSize > 1 && _List[listIndex].pop > 0)
+	{
+		//pop the number of nodes as indicated by the pop number
+		for(loop = 1 to _List[listIndex].pop)
+		{
+			popNode();
+		}
+		getList();
+	}
+		
+}
+
+// Function to handle the two Place selections - browse and nowplaying
+FUNCTION handlePlaceSelections(INTEGER selectedPlace)
+{
+	if(Keyboard_Search_Active = ON) //if the search is active
+	{
+		Keyboard_Search_Active = OFF; //clear it
+		
+		//if there is no results, clear the search
+		if(_ListLength = 0) _BrowseNodeStack[_CurrentBrowseNode].searchText = NULLSTRING;
+	}
+	
+	//if the display is reselected
+	if(_Display = selectedPlace)
+	{
+		if(_Debug) print("Kaleidescape (%s) Getting top list\n", _SymbolInstance);
+		getTopList();
+		return; //pass back to the PUSH that it's just a reselect
+	}
+	if(_Debug) print("Kaleidescape (%s) Setting Feedback\n", _SymbolInstance);
+	
+	_Display = selectedPlace; //remember the state;
+	Browse_Selected = (_Display = DISPLAY_BROWSE); //set the proper feedback
+	Now_Playing_Selected = (_Display = DISPLAY_NOWPLAYING);
+	
+	if(_Debug) print("Kaleidescape (%s) Swapping nodes\n", _SymbolInstance);
+	swapBrowseNodeStacks(); //swap the browse node stacks.
+	getList(); //get the list
+	return; //pass back to the push that it's a new select
+}
+
+// Move the list by a given amount
+FUNCTION moveList(SIGNED_INTEGER direction)
+{
+	SIGNED_INTEGER newListPosition;
+
+	newListPosition = _ListPosition + direction;
+
+	if(newListPosition <= 0) //bounds check the lower bound
+	{
+		newListPosition = 1;
+	}
+	else
+	{
+		//bounds check the upper bound
+		newListPosition = checkListPositionBounds(newListPosition);	
+	}
+
+	if(_ListPosition <> newListPosition) //if the result is different then the current position
+	{
+		_ListPosition = newListPosition; //set the new position
+		getList(); //retrieve the new list
+	}
+}
+
+// handle all the page up/down arrow presses and releases
+FUNCTION accelerateListMovement(SIGNED_INTEGER newMovementDirection)
+{
+	SIGNED_INTEGER 	motion;
+	INTEGER 		lastListPosition;
+	
+	
+	_ListMovementSpeed 		= abs(newMovementDirection); //starting speed
+	_ListMovementDirection 	= newMovementDirection;
+	listMoved(ON);
+	
+	moveList(newMovementDirection); //move the list
+	
+
+	//if this is a cancel command, kill the wait to allow next press to activate immediately
+	if(newMovementDirection = 0) 
+	{
+		//zeroing these variables will kill any loop on its next pass
+		//cancelWait(ACCELERATING_LIST_MOVEMENT);
+		return;
+	}
+	
+	if(_ListMovingFlag) return;  //if the list is already moving, do nothing
+    _ListMovingFlag = ON;
+    
+	while(_ListMovementSpeed > 0)
+	{
+		while(_GetListRunningFlag) //if the get list is still running
+		{
+			delay(50); //pause for a split second
+		}
+	    
+	    //if the speed went to stop while we were waiting, break out of the loop
+	    if(_ListMovementSpeed = 0) break;
+	    
+		motion = (_ListMovementSpeed * _ListMovementDirection); //move the position
+		lastListPosition = _ListPosition; //remember the last position
+				
+		moveList(motion);
+		
+		//if the list didn't move quit trying (reached a bound)
+		if(lastListPosition = _ListPosition) break;
+			
+		_ListMovementSpeed = _ListMovementSpeed * 2; //accelerate
+		if(_ListMovementSpeed > _TPWindowLength / 2)
+		{
+			_ListMovementSpeed = _TPWindowLength / 2; //max acceleration
+		}				
+	}		
+
+	_ListMovingFlag = OFF;
+}
+
+// Move the list highlight to the specified location.
+FUNCTION setHighlight(INTEGER newSelection)
+{
+	if(newSelection < _ListSelection)
+	{
+		//Bounds check the highlight.
+		if(newSelection < 1)
+		{
+			_ListSelection = 1;
+		}
+		else
+		{
+			_ListSelection = newSelection;
+		}
+				
+		//Now handle the situation where the list selection went off screen.
+		if(_ListSelection < _ListPosition) 
+		{
+			moveList(_ListSelection - _ListPosition);
+		}
+		
+		//If we're not already in the process of grabbing a list, then update the selection.
+		if(!_GetListRunningFlag) updateSelection();
+	}
+	else if(newSelection > _ListSelection)
+	{
+		//Bounds check the highlight
+		if(newSelection > _ListLength) 
+		{
+			_ListSelection = _ListLength;
+		}
+		else
+		{
+			_ListSelection = newSelection;
+		}
+
+		//Now handle the situation where the list selection went off screen.
+		if(_ListSelection >= _ListPosition + _TPWindowLength)
+		{
+			moveList(_ListSelection - (_ListPosition + _TPWindowLength) + 1);
+		}
+		
+		//If we're not already in the process of grabbing a list, then update the selection.
+		if(!_GetListRunningFlag) updateSelection();
+	}
+	else
+	{
+		//do nothing
+	}
+}
+
+// handle all the highlight up/down arrow presses and releases
+FUNCTION accelerateHighlightMovement(SIGNED_INTEGER newMovementDirection)
+{
+	_HighlightMovementDirection = newMovementDirection;
+	
+	//Start by checking to see if the highlight is on screen or not.
+	if(_ListSelection < _ListPosition || _ListSelection >= _ListPosition + _LastItem)
+	{
+		//The highlight is not on screen, so put it onscreen in the appropriate place.
+		if(_HighlightMovementDirection < 0)
+		{
+			setHighlight(_ListPosition + _LastItem - 1);
+		}
+		else if(_HighlightMovementDirection > 0)
+		{
+			setHighlight(_ListPosition);
+		}
+	}
+	else
+	{	
+		//The highlight is on screen, so move it in the appropriate direction.
+		setHighlight(_ListSelection + newMovementDirection);
+	}
+	/* This is a very hard and likely to break.  Before use, must be rewritten to not create and destroy the wait in the same pass.
+	keep in mind that waits are not thread safe!
+	
+	//Now begin the repeats.
+	wait(MAX_HIGHLIGHT_DELAY, ACCELERATING_HIGHLIGHT_MOVEMENT) //used as a non-reentrant fork
+	{
+		SIGNED_INTEGER 	delayTime;
+		INTEGER 		lastSelection;
+		
+		delayTime = MAX_HIGHLIGHT_DELAY;
+		
+		while(_HighlightMovementDirection <> 0)
+		{
+			while(_GetListRunningFlag) //if the get list is still running
+			{
+				delay(50); //pause for a split second
+			}
+		
+			//Determine how far to move the highlight.
+			lastSelection = _ListSelection; //remember the last highlight position.
+					
+			setHighlight(_ListSelection + _HighlightMovementDirection);
+			
+			//if the highlight didn't move quit trying (reached a bound)
+			if(lastSelection = _ListSelection) break;
+				
+			delayTime = delayTime - HIGHLIGHT_DELAY_DELTA;
+			
+			if(delayTime < MIN_HIGHLIGHT_DELAY) delayTime = MIN_HIGHLIGHT_DELAY;
+			
+			delay(delayTime);
+		}		
+	}
+
+	//if this is a cancel command, kill the wait to allow next press to activate immediately
+	if(newMovementDirection = 0) cancelWait(ACCELERATING_HIGHLIGHT_MOVEMENT);
+	*/
+}
+
+
+
+
+
+/*******************************************************************************************
+ * Event Handlers
+ ******************************************************************************************/
+CHANGE Rx$ 
+{
+	//ensure only 1 thread at a time (not truly thread-safe, but close enough)    
+    if(_ParsingFlag) TerminateEvent;
+    _ParsingFlag = ON;
+	processRx();
+	_ParsingFlag = OFF;
+}
+
+
+CHANGE Command_To_Player$ 
+{
+	STRING command[MAX_MESSAGE_LENGTH];
+	command = Command_To_Player$ + ":";	//can't pass the STRING_INPUT by reference
+	send(command);
+}
+                            
+CHANGE Keyboard_Input$
+{
+	INTEGER newLetter;
+	STRING 	pendingCharacter[1];
+	
+	switch(len(Keyboard_Input$))
+	{
+		case(0): //no chars, do nothing
+		{
+		}
+		case(1): //1 char, use the cheaper appendTitleCaps routine
+		{
+			pendingCharacter = Keyboard_Input$;
+			_BrowseNodeStack[_CurrentBrowseNode].searchText = appendTitleCaps(_BrowseNodeStack[_CurrentBrowseNode].searchText, 
+				pendingCharacter);
+			pendingCharacter = NULLSTRING;
+		}
+		default://if more than 1 char
+		{
+			//if this is a telephone keypad style command
+			if(left(Keyboard_Input$, 1) = PHONE_KEYBOARD_PREFIX)
+			{
+				/*
+				 * expecting a set of keys from the program like [2ABC] which performs a
+				 * fuzzy filter useful for a telephone keypad style of search.
+				 */				
+				 
+				//if the new "alpha-digit" doesn't fit in the search
+				if( len(_BrowseNodeStack[_CurrentBrowseNode].searchText) + len(Keyboard_Input$) > 
+					 MAX_SEARCH_TEXT_LENGTH )
+				{	
+					if(_Debug) print("Kaleidescape (%s) Search string size exceeded - not adding key to search\n", _SymbolInstance);
+				}
+				else
+				{
+					//append the new text
+					_BrowseNodeStack[_CurrentBrowseNode].searchText = _BrowseNodeStack[_CurrentBrowseNode].searchText + Keyboard_Input$;
+				}
+				
+				if(!isSearchFuzzy()) //if the search didn't start as fuzzy
+				{
+					//make it fuzzy by bracketing the first char
+					_BrowseNodeStack[_CurrentBrowseNode].searchText = "[" + left(_BrowseNodeStack[_CurrentBrowseNode].searchText, 1) + "]" +
+						right(_BrowseNodeStack[_CurrentBrowseNode].searchText, len(_BrowseNodeStack[_CurrentBrowseNode].searchText) - 1);
+				}
+			}
+			else //if a large string is passed to search, append that string to the search
+			{
+				//append the new text
+				_BrowseNodeStack[_CurrentBrowseNode].searchText = _BrowseNodeStack[_CurrentBrowseNode].searchText + Keyboard_Input$;
+				
+				//make title caps
+				_BrowseNodeStack[_CurrentBrowseNode].searchText = toTitleCaps(_BrowseNodeStack[_CurrentBrowseNode].searchText);
+			}
+		}
+	}
+	
+	if(isSearchFuzzy()) //if it's a fuzzy search
+	{
+		makeString(Keyboard_Text$, "***"); //write fill text
+		if(_Debug) print("Kaleidescape (%s) search is fuzzy.\n", _SymbolInstance);
+	}
+	else
+	{
+		Keyboard_Text$ = nullToSpace(_BrowseNodeStack[_CurrentBrowseNode].searchText);
+		if(_Debug) print("Kaleidescape (%s) search isn't fuzzy.\n", _SymbolInstance);
+	}
+	
+	if(Keyboard_Search_Active = ON)
+	{
+		_ListPosition = 1; //top of the list
+		_ListSelection = 0; //nothing selected
+		getList();
+	}
+}
+                                                                            
+PUSH Keyboard_Backspace
+{
+	INTEGER fuzzyStart;
+	                  
+	if(right(_BrowseNodeStack[_CurrentBrowseNode].searchText, 1) = chr(']')) //if it's a fuzzy search char
+	{
+		//find the start of this fuzzy char
+		fuzzyStart = reversefind(chr('['), _BrowseNodeStack[_CurrentBrowseNode].searchText);
+		
+		//remove the last chars
+		_BrowseNodeStack[_CurrentBrowseNode].searchText = left(_BrowseNodeStack[_CurrentBrowseNode].searchText, fuzzyStart - 1);
+	}	
+	else
+	{
+		//remove the last char
+		_BrowseNodeStack[_CurrentBrowseNode].searchText = shaveRightCharacter(_BrowseNodeStack[_CurrentBrowseNode].searchText, 1);
+	}
+	
+	Keyboard_Text$ = _BrowseNodeStack[_CurrentBrowseNode].searchText;
+	
+	if(Keyboard_Search_Active = ON)	{
+		_ListPosition = 1; //top of the list
+		_ListSelection = 0; //nothing selected
+		getList();
+	}
+}
+  	
+PUSH Keyboard_Clear
+{
+	_BrowseNodeStack[_CurrentBrowseNode].searchText = NULLSTRING;
+	Keyboard_Text$ = _BrowseNodeStack[_CurrentBrowseNode].searchText;
+	if(Keyboard_Search_Active = ON)
+	{
+		_ListPosition 	= 1; //top of the list
+		_ListSelection 	= 0; //nothing selected
+		getList();
+	}
+}
+
+PUSH View_Search_Result
+PUSH Keyboard_Enter
+{     
+	if(Keyboard_Search_Active = ON)
+	{
+		Keyboard_Search_Active = OFF; //toggle the state
+		if(_ListLength = 1) //if there's only a single item in the list
+		{
+			_BrowseNodeStack[_CurrentBrowseNode].searchText = NULLSTRING; //clear the search
+
+			doButtonItem(1); //perform the single item action
+		}
+		else
+		{
+			getList(); //populate the resulting beneath
+		}
+	}
+}
+
+PUSH Keyboard_Cancel
+{
+ 	if(Keyboard_Search_Active = ON)
+ 	{
+ 		Keyboard_Search_Active = OFF; //cancel the search
+ 		_BrowseNodeStack[_CurrentBrowseNode].searchText = NULLSTRING;
+ 		getList();
+ 	}
+
+}
+	
+CHANGE Play_Script$
+{
+	STRING command[MAX_MESSAGE_LENGTH];
+	
+	if(Play_Script$ != NULLSTRING) //if the name is not null
+	{
+		makeString(command, "PLAY_SCRIPT:%s:", Play_Script$);
+		//command = "PLAY_SCRIPT:" + Play_Script$ + ":"; //build the command
+		send(command); //send the built command
+		Play_Script$ = NULLSTRING; //blank the input to allow re-triggering the same name
+	}
+}	
+	
+PUSH Connection_Open
+{
+	ConnectionEvent(EVENT_PORT_OPEN);
+}
+
+RELEASE Connection_Open
+{
+	ConnectionEvent(EVENT_PORT_CLOSED);	
+}
+
+PUSH List_Page_Up
+{
+	accelerateListMovement(-_TPWindowLength + 1);
+}
+
+PUSH List_Page_Down
+{
+	accelerateListMovement(_TPWindowLength - 1);
+}
+
+RELEASE List_Page_Up
+RELEASE List_Page_Down
+{
+	accelerateListMovement(0); //stop movement
+}
+
+CHANGE List_Analog_Scroll_Act
+{
+	INTEGER newPosition;
+	
+	if(_ListLength <= _TPWindowLength) terminateEvent; //if the list fits the window, do nothing
+		
+	newPosition = mulDiv(MAX_INT - List_Analog_Scroll_Act, _ListLength + 1, MAX_INT) + 1;
+	
+	//make range within half of the bug size (relative window length) of each end of the bar
+		
+	if(newPosition <= _TPWindowLength / 2)
+	{
+		//if the list position is at less than half the window length set it to the lowest point
+		newPosition = 1;
+	}
+	else
+	{
+		//otherwise, knock off the top half of the window
+		newPosition = newPosition - _TPWindowLength/2;	
+	}
+		
+    //bounds check to make out of bound values legit
+	newPosition = checkListPositionBounds(newPosition);
+	
+	if(_Debug)
+	{
+		print("Kaleidescape (%s) Browse Scroll Received, new_position=%u, _ListPosition=%u\n", _SymbolInstance,
+			newPosition, _ListPosition);
+	}
+	
+	if(newPosition = _ListPosition) terminateEvent;
+		
+	listMoved(ON);
+	_ListPosition = newPosition;
+	getList();	
+}
+
+PUSH List_Begin
+{
+	getTopList();
+}
+
+PUSH List_Back
+{
+	//if we're in the middle of search
+	if(Keyboard_Search_Active = ON || NULLSTRING != _BrowseNodeStack[_CurrentBrowseNode].searchText)
+	{
+		Keyboard_Search_Active = OFF; //cancel the search
+		_BrowseNodeStack[_CurrentBrowseNode].searchText = NULLSTRING; //clear the search parameters
+		_BrowseNodeStack[_CurrentBrowseNode].selection = 0; //clear any stored selection
+		_ListSelection = 0; //clear the shown selection
+		_BrowseNodeStack[_CurrentBrowseNode].position = 1; //reset the stored position
+		_ListPosition = 1; //reposition the list to the top
+		getList();
+		terminateEvent; //do nothing else
+	}
+	
+	if(_StackSize > 1)
+	{
+		popNode();
+		getList();
+	}
+	else
+	{
+		popNode(); //pop node will ensure that the current node is OK
+	}
+}
+
+
+PUSH List_Select_Digital
+{
+    INTEGER myListSelection;
+
+    myListSelection = getLastModifiedArrayIndex();
+    
+    if(myListSelection > _ListLength) terminateEvent; //if there's nothing there, do nothing
+    
+    if(_List[myListSelection].position = _ListSelection) //if it's already selected
+    {    	
+    	doButtonItem(myListSelection);
+    }
+    else
+    {  
+    	_ListSelection = _List[myListSelection].position; //select this item
+    
+	    updateSelection(); //update the display
+		
+   		doButtonItem(myListSelection);
+   	
+   		//if we're viewing the NOWPLAYING list clear the list selection on next window update
+		if(_BrowseNodeStack[0].position = DISPLAY_NOWPLAYING) _ListSelection = 0;
+	}
+}
+
+/*
+ * _ListLength is the number of lines in the entire result set (shown or not)
+ * _LastItem is the last thing shown in the window, which is also the number of items in the window.
+ * _ListPosition is the item shown in the first position of the window
+ * _TPWindowLength is the length of the window on the touch panel
+ */
+
+//Moves the list selection up one item.
+PUSH List_Highlight_Up
+{
+	accelerateHighlightMovement(-1);		
+}	
+
+//Moves the list selection down one item.
+PUSH List_Highlight_Down
+{
+	accelerateHighlightMovement(1);
+}
+
+RELEASE List_Highlight_Up
+RELEASE List_Highlight_Down
+{
+	accelerateHighlightMovement(0); //stop movement
+}
+
+CHANGE List_Analog_Highlight_Act
+{
+	setHighlight(List_Analog_Highlight_Act);
+}
+
+//Selected the actively highlighted item.
+PUSH List_Highlight_Select
+{
+	//Ensure that the highlight is valid and on-screen.
+	if(_ListSelection > 0 && _ListSelection <= _ListLength && _ListSelection >= _ListPosition 
+		&& _ListSelection < _ListPosition + _TPWindowLength) 
+	{	    	
+		//Select the on screen item.
+   		doButtonItem(_ListSelection - _ListPosition + 1);
+   	
+   		//if we're viewing the NOWPLAYING list clear the list selection on next window update
+		if(_BrowseNodeStack[0].position = DISPLAY_NOWPLAYING) _ListSelection = 0;
+	}
+}
+
+PUSH Browse_Select
+{	
+	if(_Debug) print("Kaleidescape (%s) Browse Select pushed\n", _SymbolInstance);
+	handlePlaceSelections(DISPLAY_BROWSE); //perform Browse selection actions
+}
+
+PUSH Now_Playing_Select
+{
+	handlePlaceSelections(DISPLAY_NOWPLAYING); //perform NowPlaying selection actions
+} 
+ 
+PUSH Keyboard_Search
+{
+ 	if(Keyboard_Search_Active = ON) //toggle the state
+ 	{
+ 		Keyboard_Search_Active = OFF;
+ 	}
+ 	else
+ 	{
+ 		Keyboard_Search_Active = ON; 		
+ 		Keyboard_Text$ = nullToSpace(_BrowseNodeStack[_CurrentBrowseNode].searchText); //show the current node's search
+ 	} 	
+	getList();	
+}
+
+
+ 
+CHANGE List_Window_Length
+{
+	checkTPWindowLength();
+}
+
+
+
+PUSH Power_On_Input
+{
+	ConnectionEvent(EVENT_POWER_ON_PUSH);
+}
+ 
+RELEASE Power_On_Input
+{
+	ConnectionEvent(EVENT_POWER_ON_RELEASE);
+}
+
+PUSH Power_Off_Input	//This is here to inform the S+ that we're asking for standby and to set the power state.
+{
+	ConnectionEvent(EVENT_POWER_OFF_PUSH);
+}
+
+
+CHANGE Console_Command$
+{
+	STRING command[MAX_MESSAGE_LENGTH];
+	
+	command = upper(Console_Command$);
+	
+	if(command="K DEBUG")
+	{
+		print("Enabling Kaleidescape (%s) module debugging output.\n", _SymbolInstance);
+		print("%s\n",_ModuleDescription);
+		_Debug = ON;
+	}		
+	if( command="K STOP DEBUG" || command="K NO DEBUG" || command="K DEBUG STOP" ) 
+	{		
+		print("Disabling Kaleidescape (%s) module debugging output.\n", _SymbolInstance);
+		_Debug = OFF;
+	}		
+	if( command="K HELP" || command = "K?" || command="K ?" )
+	{
+		print("\n\nAll commands must be prefixed with userprogcmd.\n");
+		print("use \"K debug\" to start debugging and \"K stop debug\" to stop.\n");
+		print("\"K debug\" will start debugging only on the module using that device ID.\n");
+		print("use \"K ver\" to obtain the module version information.\n");
+	}
+	if( command="K VER" || command="K VERSION" )
+	{
+		print("(%s) %s\n", _SymbolInstance,_ModuleDescription);
+	}
+	if( command="K STOP" )
+	{
+		send("STOP:");
+	}
+}
+
+/*******************************************************************************************
+ * Main()
+ ******************************************************************************************/
+FUNCTION Main()
+{
+	INTEGER lastDate;
+	INTEGER idleCount;
+	STRING  command[255];
+	INTEGER lastFoundDelimiter;
+	INTEGER lastTxCount;
+	INTEGER lastRxEmpty;	
+	STRING  otherDelimiter[2];
+	
+	_Delimiters[0] = "\x0A";	//printable (line-feed)
+	_Delimiters[1] = "\x04";	//binary
+	
+	_FieldDelimiter[0] = ":";	//printable
+	_FieldDelimiter[1] = "\x02";//binary
+
+	_SymbolInstance = getSymbolInstanceUMC();
+	
+	_ModuleDescription = "Kaleidescape Crestron SATP Module v8.1.0.  Mar 01, 2011" 
+			+ " Library version " + getLibraryVersion();
+			
+	_ModuleShortDescription = "SATP Module";
+			
+    initMessages();
+    
+    waitForInitializationComplete();
+    
+    delay(500); //wait an additional few seconds for ALL logic to be done propogating
+    
+	initializeHeadNode();
+    
+    //_Debug = ON;
+    _Debug = OFF;
+    
+	_ParsingFlag = OFF;
+
+    print("%s - Control Protocol Device ID %d\n", _ModuleDescription, Stated_Player_ID);
+    
+        //Initialize the browse node stack.
+    _Display = DISPLAY_BROWSE;
+    Browse_Selected = ON;
+    _BrowseNodeStack[0].position = DISPLAY_BROWSE; //_BrowseNodeStack[0].position used as an indication of the list type
+    _BrowseNodeStack[0].handle = BROWSE_START_NODE; //_BrowseNodeStack[0].handle is the starting node
+    _BrowseNodeStack[0].searchText = NULLSTRING;
+    
+    //Initialize the Now Playing stack.
+    _StoredBrowseNodeStack[0].position = DISPLAY_NOWPLAYING;
+    _StoredBrowseNodeStack[0].handle = NOW_PLAYING_START_NODE;
+    
+    checkTPWindowLength();
+
+    ConnectionEvent(EVENT_MODULE_START);
+    
+    //wait an additional random amount of time to prevent all modules init'ing at once
+    delay(random(0,300));
+	
+	if(Connection_Open)	//if connection is already open (event may not have triggered)
+	{
+		ConnectionEvent(EVENT_PORT_OPEN);
+	}
+	
+	//power state not yet managed by this module
+	//if(Leave_Standby)
+	//{
+	//	ConnectionEvent(EVENT_POWER_ON_PUSH);
+	//}
+	
+	
+	
+	while(1)
+	{
+		delay(200); //every other second
+		idleCount = idleCount + 2;
+		
+		checkListMoved(2);   //indicate how many seconds between calls
+		
+		if( (idleCount % 10) = 0)  //every 10 seconds
+		{
+			ConnectionEvent(EVENT_10_SECONDS);
+		}
+		
+		if(idleCount >= 30)
+		{
+			idleCount = 0;
+			ConnectionEvent(EVERY_30_SECONDS);
+		}
+
+		if( lastDate != GetDateNum() ) //check if the day has changed
+		{
+			lastDate = GetDateNum(); //store the last date
+			ConnectionEvent(EVENT_MIDNIGHT);
+		}			
+		
+		//if we haven't found any delimiters in this or the last time slice
+		if( !lastFoundDelimiter && !_FoundDelimiter )
+		{
+			// if there's been a TX in the last slice (over 2 seconds ago)
+			if (lastTxCount > 0)
+			{
+				if( Rx$ = NULLSTRING )	//if the buffer is still empty
+				{
+					ConnectionEvent(EVENT_SEND_TIMEOUT);
+				}
+			}
+			
+			// if there's data lingering in the buffer without a delimiter
+			if( !LastRxEmpty && ( Rx$ != NULLSTRING ) )
+			{
+				if( find( _Delimiters[!_CurrentDelimiter], Rx$ ) )  //otherDelimiter, Rx$ ) )
+				{
+					//if the other delimiter is found, toggle the flag and ping with a generic message
+					if(_Debug) print("(%s) Found other delimiter in receive buffer.  Switching delimiters.  _CurrentDelimiter = %d\n", _SymbolInstance, _CurrentDelimiter);
+					
+					switchDelimiters(!_CurrentDelimiter);
+					//_CurrentDelimiter = !_CurrentDelimiter;
+					//send("GET_DEVICE_POWER_STATE:");
+				}
+				else
+				{
+					//if we're here, the buffer contains unrecognized data.
+					if(_Debug) print("(%s) Garbage in receive buffer, clearing:  %s\n", _SymbolInstance, Rx$);
+					ClearBuffer(Rx$);
+				}
+			}
+		}
+		
+		// set the variables for the next go-round
+		lastFoundDelimiter = _FoundDelimiter;
+		_FoundDelimiter = _FoundDelimiter - lastFoundDelimiter; //to ensure this number is correct even if interrupted by a thread operation
+		
+		lastTxCount = _TxCount;
+		_TxCount = _TxCount - lastTxCount;
+		
+		if( Rx$ = NULLSTRING ) LastRxEmpty = ON;
+		else lastRxEmpty = OFF;		
+	}
+	
+}

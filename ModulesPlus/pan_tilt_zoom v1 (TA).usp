@@ -1,0 +1,556 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:
+System Name:
+System Number:
+Programmer:      Etienne Dervin
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+// #ENABLE_DYNAMIC
+#SYMBOL_NAME "pan_tilt_zoom v1 (TA)"
+
+#DEFINE_CONSTANT  IP_DELAY 25
+#DEFINE_CONSTANT  RS422_DELAY 10
+
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+
+DIGITAL_INPUT  IP;
+DIGITAL_INPUT  ip_connected;
+
+DIGITAL_INPUT  pan_left, pan_right; //Cam left right
+DIGITAL_INPUT  tilt_up, tilt_dn;  //Cam Up Down
+
+DIGITAL_INPUT  tilt_up_pan_left;
+DIGITAL_INPUT  tilt_up_pan_right;
+DIGITAL_INPUT  tilt_down_pan_left;
+DIGITAL_INPUT  tilt_down_pan_right;
+
+DIGITAL_INPUT  zoom_tele, zoom_wide;
+ 
+DIGITAL_OUTPUT  _SKIP_, _SKIP_;
+DIGITAL_OUTPUT  pan_left_fb, pan_right_fb; //Cam left right
+DIGITAL_OUTPUT  tilt_up_fb, tilt_dn_fb;  //Cam Up Down
+
+DIGITAL_OUTPUT  tilt_up_pan_left_fb;
+DIGITAL_OUTPUT  tilt_up_pan_right_fb;
+DIGITAL_OUTPUT  tilt_down_pan_left_fb;
+DIGITAL_OUTPUT  tilt_down_pan_right_fb;
+
+DIGITAL_OUTPUT  zoom_tele_fb, zoom_wide_fb;
+ 
+ANALOG_INPUT   pan_spd, tilt_spd, zoom_spd;
+STRING_OUTPUT  cmd$;
+
+
+Integer iBusyFlag, iReleaseFlag, iIPFlag;
+
+Function fSendSingleCommand(String sCommand, Integer iValue)
+{
+    // TODO:  Add local variable declarations here
+
+    // TODO:  Add code here
+  if(IP)
+  {
+    iBusyFlag = 1;
+    makestring(cmd$, "GET /cgi-bin/aw_ptz?cmd=%s%02u&res=1 HTTP/1.0\n\n", sCommand, iValue);
+    Wait(IP_DELAY)
+    {
+      iBusyFlag = 0;
+    }
+  }
+  else
+  {
+    iBusyFlag = 1;
+    makestring(cmd$, "%s%02u\x0d", sCommand, iValue);
+    Wait(RS422_DELAY)
+    {
+      iBusyFlag = 0;
+    }
+  }
+}
+
+Function fSendDoubleCommand(String sCommand, Integer iValue1, Integer iValue2)
+{
+    // TODO:  Add local variable declarations here
+
+    // TODO:  Add code here
+  if(IP)
+  {
+    iBusyFlag = 1;
+    makestring(cmd$, "GET /cgi-bin/aw_ptz?cmd=%s%02u%02u&res=1 HTTP/1.0\n\n", sCommand, iValue1, iValue2);
+    Wait(IP_DELAY)
+    {
+      iBusyFlag = 0;
+    }
+  }
+  else
+  {
+    iBusyFlag = 1;
+    makestring(cmd$, "%s%02u%02u\x0d", sCommand, iValue1, iValue2);
+    Wait(RS422_DELAY)
+    {
+      iBusyFlag = 0;
+    }
+  }
+}
+
+Function fSendStopCommand(String sCommand)
+{
+  if(IP)
+  {
+    while(ip_connected = 0)
+    {
+      processlogic();
+    }
+    makestring(cmd$, "GET /cgi-bin/aw_ptz?cmd=%s&res=1 HTTP/1.0\n\n", sCommand);
+//    Delay(IP_DELAY/2);
+//    makestring(cmd$, "GET /cgi-bin/aw_ptz?cmd=%s&res=1 HTTP/1.0\n\n", sCommand);
+    iIPFlag = 1;
+//    Delay(IP_DELAY);
+  }
+  else
+  {
+    makestring(cmd$, "%s\x0d", sCommand);
+    Delay(RS422_DELAY);
+  }
+}
+
+/*
+push pan_right//51:min-99:max
+{
+  if(iBusyFlag = 0 && iReleaseFlag = 0)
+  {
+    pan_right_fb = 1;
+    fSendSingleCommand("#P", 50 + pan_spd);
+  }
+}
+
+release pan_left, pan_right
+{
+  if(iReleaseFlag = 0)
+  {
+    iReleaseFlag = 1;
+    While(iBusyFlag)
+    {
+      ProcessLogic();
+    }  
+    if(IP)
+    {
+      cmd$="GET /cgi-bin/aw_ptz?cmd=#PTS5050&res=1 HTTP/1.0\n\n";
+      Delay(IP_DELAY);
+    }
+    else
+    {
+      cmd$="#PTS5050\x0d";
+      Delay(RS422_DELAY);
+    }
+    pan_left_fb = 0;
+    pan_right_fb = 0;
+    iReleaseFlag = 0;
+  }
+}
+*/
+
+push ip_connected
+{
+  iIPFlag = 0;
+}
+
+
+push pan_right  //51:min-99:max
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(pan_right)       // Make sure button hasn't been released in the mean time
+    {
+      pan_right_fb = 1;
+      fSendSingleCommand("#P", 50 + pan_spd);
+    }
+  }
+}
+
+release pan_right
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(pan_right = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#PTS5050");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      pan_right_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
+
+
+push pan_left  //1:max-49:min
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(pan_left)        // Make sure button hasn't been released in the mean time
+    {
+      pan_left_fb = 1;
+      fSendSingleCommand("#P", 50 - pan_spd);
+    }
+  }
+}
+
+release pan_left
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(pan_left = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#PTS5050");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      pan_left_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
+
+
+push tilt_up//51:min-99:max
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_up)          // Make sure button hasn't been released in the mean time
+    {
+      tilt_up_fb = 1;
+      fSendSingleCommand("#T", 50 + tilt_spd);
+    }
+  }
+}
+
+release tilt_up
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_up = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#PTS5050");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      tilt_up_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
+
+
+push tilt_dn //1:max-49:min
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_dn)          // Make sure button hasn't been released in the mean time
+    {
+      tilt_dn_fb = 1;
+      fSendSingleCommand("#T", 50 - tilt_spd);
+    }
+  }
+}
+
+release tilt_dn
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_dn = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#PTS5050");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      tilt_dn_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
+
+//****************************************//
+
+push tilt_up_pan_left
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_up_pan_left)  // Make sure button hasn't been released in the mean time
+    {
+      tilt_up_pan_left_fb = 1;
+      fSendDoubleCommand("#PTS", 50 - pan_spd, 50 + tilt_spd);
+    }
+  }
+}
+
+release tilt_up_pan_left
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_up_pan_left = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#PTS5050");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      tilt_up_pan_left_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
+
+
+push tilt_up_pan_right
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_up_pan_right)          // Make sure button hasn't been released in the mean time
+    {
+      tilt_up_pan_right_fb = 1;
+      fSendDoubleCommand("#PTS", 50 + pan_spd, 50 + tilt_spd);
+    }
+  }
+}
+
+release tilt_up_pan_right
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_up_pan_right = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#PTS5050");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      tilt_up_pan_right_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
+
+
+push tilt_down_pan_left
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_down_pan_left)  // Make sure button hasn't been released in the mean time
+    {
+      tilt_down_pan_left_fb = 1;
+      fSendDoubleCommand("#PTS", 50 - pan_spd, 50 - tilt_spd);
+    }
+  }
+}
+
+release tilt_down_pan_left
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_down_pan_left = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#PTS5050");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      tilt_down_pan_left_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
+
+
+push tilt_down_pan_right
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_down_pan_right)  // Make sure button hasn't been released in the mean time
+    {
+      tilt_down_pan_right_fb = 1;
+      fSendDoubleCommand("#PTS", 50 + pan_spd, 50 - tilt_spd);
+    }
+  }
+}
+
+release tilt_down_pan_right
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(tilt_down_pan_right = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#PTS5050");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      tilt_down_pan_right_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
+
+push zoom_wide  //51:min-99:max
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(zoom_wide)       // Make sure button hasn't been released in the mean time
+    {
+      zoom_wide_fb = 1;
+      fSendSingleCommand("#Z", 50 - zoom_spd);
+    }
+  }
+}
+
+release zoom_wide
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(zoom_wide = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#Z50");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      zoom_wide_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
+
+
+push zoom_tele  //51:min-99:max
+{
+  if(iBusyFlag = 0)
+  {
+    While(iReleaseFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(zoom_tele)       // Make sure button hasn't been released in the mean time
+    {
+      zoom_tele_fb = 1;
+      fSendSingleCommand("#Z", 50 + zoom_spd);
+    }
+  }
+}
+
+release zoom_tele
+{
+  if(iReleaseFlag = 0)
+  {                        
+    iReleaseFlag = 1;
+    WHILE(iBusyFlag)  //  Wait until previous command processed
+    {
+      ProcessLogic();
+    }
+    if(zoom_tele = 0)  // Make sure button hasn't been pushed again in the mean time
+    {
+      fSendStopCommand("#Z50");
+	    while(iIPFlag)
+	    {
+	      ProcessLogic();
+	    }
+      zoom_tele_fb = 0;
+    }
+    iReleaseFlag = 0;
+  }
+}
