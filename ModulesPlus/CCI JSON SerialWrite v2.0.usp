@@ -1,0 +1,86 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:  Control Concepts, Inc.
+System Name:  CCI JSON Suite v2.0
+Programmer:   VNG
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#CATEGORY "0" 
+#SYMBOL_NAME "CCI JSON SerialWrite v2.0"
+#HINT "This module is intended to be used within the context of the CCI JSON suite"
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+
+#DEFINE_CONSTANT TRUE 1
+#DEFINE_CONSTANT FALSE 0
+#DEFINE_CONSTANT NULL ""
+#DEFINE_CONSTANT MAX_INPUTS 10
+#DEFINE_CONSTANT MAX_INPUT_SIZE 255
+#DEFINE_CONSTANT MAX_TOKEN_NAMES 10
+#DEFINE_CONSTANT MAX_TOKEN_SIZE 255
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+#USER_SIMPLSHARP_LIBRARY "CCI.JsonConfig.Lib2"
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+//DIGITAL_INPUT Store;
+DIGITAL_INPUT _skip_;
+STRING_INPUT SerialValue[MAX_INPUTS][MAX_INPUT_SIZE];
+
+JStringWriter SerialWriter;
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+STRING_PARAMETER _skip_, _skip_, _skip_, _skip_, _skip_, _skip_, _skip_, _skip_, _skip_, _skip_,
+                 Token_Name[MAX_TOKEN_NAMES][MAX_TOKEN_SIZE];
+INTEGER_PARAMETER ProcessorID;
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+
+THREADSAFE CHANGE SerialValue
+{
+  INTEGER i;
+  i = GETLASTMODIFIEDARRAYINDEX();
+  SerialWriter.UpdateValue(Token_Name[i], SerialValue[i]);
+}
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+
+Function Main()
+{
+  INTEGER i;
+  WaitForInitializationComplete();
+  
+  FOR(i=1 TO MAX_INPUTS)
+  {
+    SerialWriter.AddJPath(Token_Name[i]);
+  }
+  
+  SerialWriter.Configure(ProcessorID);
+
+}
+
+

@@ -1,0 +1,116 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name:  Control Concepts, Inc.
+System Name:  CCI JSON Suite v2.0
+Programmer:   VNG
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#CATEGORY "0" 
+#SYMBOL_NAME "CCI JSON FileProcessor v2.0"
+#HINT "This module is intended to be used within the context of the CCI JSON suite"
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+
+#DEFINE_CONSTANT TRUE 1
+#DEFINE_CONSTANT FALSE 0
+#DEFINE_CONSTANT NULL ""
+#DEFINE_CONSTANT MAX_FILE_NAME_SIZE 255
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+#USER_SIMPLSHARP_LIBRARY "CCI.JsonConfig.Lib2"
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+DIGITAL_INPUT Read_File,
+              Write_File,
+              Debug;
+
+FileProcessor Processor;
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+
+STRING_PARAMETER _skip_, _skip_, _skip_, JsonFile[MAX_FILE_NAME_SIZE];
+INTEGER_PARAMETER ProcessorID;
+
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+INTEGER Ready;
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+EventHandler OnDebugMessageChange ( FileProcessor sender, DebugMessageArgs args )
+{
+  IF(Debug)
+  {
+    TRACE("%s", args.Payload);
+  }
+}
+
+EventHandler OnReady ( FileProcessor sender, ReadyEventArgs args )
+{
+  Ready = TRUE;
+  IF(Read_File)
+  {
+    Processor.ReadFile();
+  }
+}
+
+PUSH Read_File
+{
+  IF(Ready = TRUE)
+  {
+     Processor.ReadFile();
+  }
+}
+
+PUSH Write_File
+{
+  IF(Ready = TRUE)
+  {
+     Processor.WriteFile();
+  }
+}
+
+
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+
+Function Main()
+{
+  INTEGER i;
+  WaitForInitializationComplete();
+  Ready = FALSE;
+  
+  RegisterEvent(Processor, OnDebugMessageChange, OnDebugMessageChange);
+  RegisterEvent(Processor, OnReady, OnReady);
+
+  Processor.Configure(ProcessorID, JsonFile);
+}
+
+

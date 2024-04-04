@@ -1,0 +1,135 @@
+#CATEGORY "0" // Hidden
+#SYMBOL_NAME "Qsys Core"
+
+#USER_SIMPLSHARP_LIBRARY "QscQsys"
+
+Digital_Input Initialize, UseExternalConnection;
+
+analog_input DebugMode, DeploymentMode, Port;
+
+string_input TestingHost[255], DeploymentHost[255], Username[100], Password[100];
+
+Buffer_Input Response[65534];
+
+Digital_Output IsInitialized, IsConnected, IsLoggedIn, IsRedundant, IsEmulator;
+
+String_Output DesignName, Command;
+
+String_Parameter _skip_,_skip_, _skip_, _skip_, _skip_, _skip_, _skip_, _skip_, _skip_, _skip_, CoreID[100];
+
+integer waitTillStart, _port;
+string _username[100], _password[100];
+
+QsysCore processor;
+
+threadsafe Push Initialize
+{
+	while(!waitTillStart)
+	{}
+	if(DeploymentMode = 1)
+	processor.Initialize(CoreID, DeploymentHost, _port, _username, _password, UseExternalConnection);
+	else if(DeploymentMode = 0)
+	processor.Initialize(CoreID, TestingHost, _port, _username, _password, UseExternalConnection);
+}
+
+Threadsafe Change DebugMode
+{
+	processor.Debug(DebugMode);
+}
+
+threadsafe change TestingHost, DeploymentHost, DeploymentMode
+{
+	if(DeploymentMode = 0 && len(TestingHost))
+	{
+		processor.Host = TestingHost;
+	}
+	else if(DeploymentMode = 1 && len(DeploymentHost))
+	{
+		processor.Host = DeploymentHost;
+	}
+}
+
+Threadsafe Change Username
+{
+	_username = Username;
+}
+
+Threadsafe Change Password
+{
+	_password = Password;
+}
+
+Threadsafe Change Port
+{
+	_port = Port;
+}
+
+Callback Function NewIsRegistered(string id, integer value)
+{
+	if(value = 1)
+	IsInitialized = ON;
+	else
+	IsInitialized = OFF;
+}
+
+Callback Function NewIsConnected(string id, integer value)
+{
+	if(value = 1)
+	IsConnected = ON;
+	else
+	IsConnected = OFF;
+}
+
+Callback Function NewCoreStatus(string id, string dName, integer redundant, integer emulator)
+{
+	DesignName = dName;
+	IsRedundant = redundant;
+	IsEmulator = emulator;
+}
+
+callback function NewIsLoggedIn(string id, integer status)
+{
+	IsLoggedIn = status;
+}
+
+callback function NewSendingCommand(string id, string comm)
+{
+	string tx[65534];
+	
+	tx = comm;
+	Command = tx;
+}
+
+callback GatherEventHandler RxGatherHandler(GatherEventArgs e)
+{
+	try
+	{
+		if(e.Results = 0)
+		{
+			processor.NewExternalResponse(e.RxString);		
+		}
+	}
+	catch
+	{   
+		GenerateUserError("RxGatherHandler Exception: %s\n", GetExceptionMessage());
+	}
+	ReArmGatherAsync(e.Input);
+}
+
+Function Main()
+{    
+	_port = 1710;
+	if(GatherAsync("\x00", Response, RxGatherHandler, 500) = -1)
+	{
+	}
+	
+	RegisterDelegate(processor, onIsRegistered, NewIsRegistered);  
+	RegisterDelegate(processor, onIsConnected, NewIsConnected);
+	RegisterDelegate(processor, onNewCoreStatus, NewCoreStatus);
+	RegisterDelegate(processor, onIsLoggedIn, NewIsLoggedIn);
+	RegisterDelegate(processor, onSendingCommand, NewSendingCommand);
+	
+	//do not remove delay, we need to wait until all objects are instatiated and ready
+	delay(1000);
+	waitTillStart = 1;
+}
