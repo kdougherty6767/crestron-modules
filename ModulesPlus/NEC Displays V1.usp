@@ -1,0 +1,105 @@
+/*
+Dealer Name: Aatel
+System Name: NEC Displays
+Programmer: KelseyD
+*/
+
+//Compiler Directives
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#ENABLE_TRACE
+#ENCODING_ASCII
+
+//Inputs and Outputs
+DIGITAL_INPUT Poll_All, Power_Toggle, Power_On, Power_Off, _SKIP_;
+DIGITAL_INPUT HDMI_1, HDMI_2, HDMI_3, Display_Port;
+DIGITAL_INPUT Volume[101];
+BUFFER_INPUT _SKIP_, _SKIP_, From_Device_Rx[500];
+
+DIGITAL_OUTPUT _SKIP_, _SKIP_, Power_On_Fb, Power_Off_Fb, _SKIP_, HDMI_1_Fb, HDMI_2_Fb, HDMI_3_Fb, Display_Port_Fb;
+STRING_OUTPUT _SKIP_, _SKIP_, To_Device_Tx;
+
+INTEGER_PARAMETER _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, Monitor_ID;
+
+
+//Global Variables
+INTEGER Sending, PowerOnFb, PowerOffFb, VolumeFb, VolumeMuteOnFb, HDMI1Fb, HDMI2Fb, HDMI3Fb, DisplayPortFb;
+STRING TX[3000], RX[3000];
+
+
+
+String_Function Calculate_BCC(String cmd)
+{
+   	Integer cmdLength,i,result;
+	cmdLength = len(cmd);
+	Result = Byte(cmd,1);
+
+	for(i = 2 to cmdLength)
+	{
+ 		result = result ^ Byte(cmd,i); 	   	
+	}
+ 
+    Return (chr(low(Result)));
+}
+
+Function AddCommand(String cmd)
+{
+	String temp[50],Result[5];
+	
+    MakeString(temp,"\x01\x30%s%s",chr(low(Monitor_ID+64)),cmd);
+	
+    Result = Calculate_BCC(right(temp,len(temp)-1));
+	temp = temp + Result + "\x0D";
+	To_Device_Tx = temp;
+}
+
+PUSH Power_On
+{	
+	AddCommand("\x30\x41\x30\x43\x02\x43\x32\x30\x33\x44\x36\x30\x30\x30\x31\x03");	    
+}
+
+PUSH Power_Off
+{	
+	AddCommand("\x30\x41\x30\x43\x02\x43\x32\x30\x33\x44\x36\x30\x30\x30\x34\x03");	
+}
+
+PUSH HDMI_1
+{
+    AddCommand("\x30\x45\x30\x41\x02\x30\x30\x36\x30\x30\x30\x31\x31\x03");
+}
+
+PUSH HDMI_2
+{
+    AddCommand("\x30\x45\x30\x41\x02\x30\x30\x36\x30\x30\x30\x31\x32\x03");
+}
+
+PUSH HDMI_3
+{
+    AddCommand("\x30\x45\x30\x41\x02\x30\x30\x36\x30\x30\x30\x31\x33\x03");
+}
+
+PUSH Display_Port
+{
+    AddCommand("\x30\x45\x30\x41\x02\x30\x30\x36\x30\x30\x30\x30\x46\x03");
+}
+
+PUSH Volume
+{
+	string temp[50];
+	integer b1, b2;
+	temp = itohex(getlastmodifiedarrayindex() - 1);
+	b1 = byte(temp, 1);
+	b2 = byte(temp, 2);
+
+	Trace("The value of temp is %s and the value of b1 is %s and the value of b2 is %s", temp, chr(b1), chr(b2));
+
+	if(len(temp) < 2)
+	{
+		MakeString(temp, "\x30\x45\x30\x41\x02\x30\x30\x36\x32\x30\x30\x30%s\x03", chr(b1));
+		AddCommand(temp);
+	}
+	else {
+		MakeString(temp, "\x30\x45\x30\x41\x02\x30\x30\x36\x32\x30\x30%s%s\x03", chr(b1), chr(b2));
+		AddCommand(temp);
+	}
+}
