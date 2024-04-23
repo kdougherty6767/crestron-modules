@@ -17,9 +17,9 @@ DIGITAL_INPUT Volume[101];
 BUFFER_INPUT _SKIP_, _SKIP_, From_Device_Rx[500];
 
 DIGITAL_OUTPUT _SKIP_, _SKIP_, Power_On_Fb, Power_Off_Fb, _SKIP_, HDMI_1_Fb, HDMI_2_Fb, HDMI_3_Fb, Display_Port_Fb;
-STRING_OUTPUT _SKIP_, _SKIP_, To_Device_Tx;
+STRING_OUTPUT _SKIP_, _SKIP_, To_Device_Tx, Processed_Rx;
 
-INTEGER_PARAMETER _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, Monitor_ID;
+INTEGER_PARAMETER Monitor_ID;
 
 
 //Global Variables
@@ -53,9 +53,77 @@ Function AddCommand(String cmd)
 	To_Device_Tx = temp;
 }
 
+Function ProcessResponse(string type, string value)
+{
+	//type - input selection feedback
+	if(type = "\x30\x30\x36\x30")
+	{
+		if(value = "\x30\x30\x31\x31")
+			{
+				HDMI1Fb = on;
+				HDMI2Fb = off;
+				HDMI3Fb = off;
+				DisplayPortFb = off;
+			}
+			else if(value = "\x30\x30\x31\x32")
+			{
+				HDMI1Fb = off;
+				HDMI2Fb = on;
+				HDMI3Fb = off;
+				DisplayPortFb = off;
+			}
+			else if(value = "\x30\x30\x31\x33")
+			{
+				HDMI1Fb = off;
+				HDMI2Fb = off;
+				HDMI3Fb = on;
+				DisplayPortFb = off;
+			}
+			else if(value = "\x30\x30\x30\x46")
+			{
+				HDMI2Fb = off;
+				HDMI1Fb = off;
+				HDMI3Fb = off;
+				DisplayPortFb = on;
+			}
+			else {trace("Unknown response. Unable to match input feedback");}
+			HDMI_1_Fb = HDMI1Fb;
+			HDMI_2_Fb = HDMI2Fb;
+			HDMI_3_Fb = HDMI3Fb;
+			Display_Port_Fb = DisplayPortFb;
+	}
+	//type - power fb
+	else if(type = "\x43\x32\x30\x33" || type = "\x30\x30\x44\x36")
+	{
+		if(value = "\x30\x30\x30\x34")
+		{
+			PowerOffFb = on;
+			PowerOnFb = off;
+		}
+		else if(value = "\x30\x30\x30\x31")
+		{
+			PowerOffFb = off;
+			PowerOnFb = on;
+		}
+		else {trace("Unknown respose. Unable to get power feedback");}
+		Power_On_Fb = PowerOnFb;
+		Power_Off_Fb = PowerOffFb;
+	}
+	else {trace("Unable to process response.. Type = %s and Value = %s", type, value);}
+}
+
+PUSH Poll_All
+{
+	//Power Poll
+	AddCommand("\x30\x41\x30\x36\x02\x30\x31\x44\x36\x03");
+	delay(100);
+	//Input Poll
+	AddCommand("\x30\x43\x30\x36\x02\x30\x30\x36\x30\x03");
+}
+
 PUSH Power_On
-{	
-	AddCommand("\x30\x41\x30\x43\x02\x43\x32\x30\x33\x44\x36\x30\x30\x30\x31\x03");	    
+{
+	AddCommand("\x30\x41\x30\x43\x02\x43\x32\x30\x33\x44\x36\x30\x30\x30\x31\x03");    
 }
 
 PUSH Power_Off
@@ -91,7 +159,7 @@ PUSH Volume
 	b1 = byte(temp, 1);
 	b2 = byte(temp, 2);
 
-	Trace("The value of temp is %s and the value of b1 is %s and the value of b2 is %s", temp, chr(b1), chr(b2));
+	//Trace("The value of temp is %s and the value of b1 is %s and the value of b2 is %s", temp, chr(b1), chr(b2));
 
 	if(len(temp) < 2)
 	{
@@ -103,3 +171,22 @@ PUSH Volume
 		AddCommand(temp);
 	}
 }
+
+CHANGE From_Device_Rx
+{
+	string temp[50], temp2[50], temp3[50], value[50], type[50];
+	temp = gather("\x0D", From_Device_Rx);
+	Processed_Rx = temp;
+	value = right(temp, 7);
+	type = left(temp, 14);
+	ProcessResponse(right(type, 4), left(value, 4));
+}
+
+Function Main()
+{
+	WaitForInitializationComplete();
+	AddCommand("\x30\x41\x30\x36\x02\x30\x31\x44\x36\x03");
+	delay(100);
+	AddCommand("\x30\x43\x30\x36\x02\x30\x30\x36\x30\x03");
+}
+
